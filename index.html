@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kalimah">
+<meta name="theme-color" content="#0B0B0C">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Kalimah Word Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@500;600&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Single-column phone layout, black canvas, gold for the one thing that matters, pastels only to tell decks and ratings apart */
+  --bg:#0B0B0C; --surface:#131315; --raise:#1B1B1E; --line:#26262A;
+  --text:#ECE7DC; --muted:#8E897F; --faint:#5C5952;
+  --gold:#C8A862; --gold-dim:rgba(200,168,98,.14);
+  --sand:#E3D2A6; --sky:#A9C5D6; --lav:#BCB4D9; --sage:#AAC4A5; --rose:#E1B4AD; --mint:#B2D3C8;
+  --f-ar:"Amiri","Geeza Pro","Noto Naskh Arabic",serif;
+  --f-display:"Cormorant Garamond",Georgia,serif;
+  --f-body:"Figtree",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:1.5px solid var(--gold);outline-offset:3px;border-radius:10px}
+.app{max-width:520px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 22px) 20px calc(env(safe-area-inset-bottom) + 104px)}
+.ar{font-family:var(--f-ar);direction:rtl;line-height:1.9}
+h1,h2{font-family:var(--f-display);font-weight:500;text-wrap:balance;margin:0;letter-spacing:.005em}
+h1{font-size:2.1rem;line-height:1.15}
+h2{font-size:1.35rem}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:24px}
+.fade{animation:fade .35s ease both}
+@keyframes fade{from{opacity:.35;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* brand */
+.brand{display:flex;align-items:center;justify-content:space-between}
+.brand .mark{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-size:1.25rem;color:var(--gold);letter-spacing:.04em}
+.brand .ar{color:var(--gold);font-size:1.5rem;opacity:.85}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px}
+.stat b{display:block;font-family:var(--f-display);font-weight:500;font-size:2rem;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+.stat span{font-size:.78rem;color:var(--muted)}
+.stat.gold b{color:var(--gold)}
+
+/* session card */
+.session{border:1px solid rgba(200,168,98,.35);background:linear-gradient(180deg,rgba(200,168,98,.07),rgba(200,168,98,0) 70%);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.session p{margin:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:14px;padding:0 20px;font-weight:600;letter-spacing:.01em;transition:transform .15s ease,opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn.gold{background:var(--gold);color:#16130B}
+.btn.ghost{border:1px solid var(--line);color:var(--text)}
+.btn.full{width:100%}
+
+/* decks */
+.decks{display:flex;flex-direction:column;gap:8px}
+.deck{display:grid;grid-template-columns:10px 1fr auto;gap:14px;align-items:center;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;transition:border-color .2s}
+.deck.on{border-color:rgba(200,168,98,.55)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.deck .name{font-weight:600;font-size:.98rem}
+.deck .sub{font-size:.8rem;color:var(--muted)}
+.deck .side{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.deck .side .ar{font-size:1.15rem;line-height:1.3;color:var(--c)}
+.deck .count{font-size:.75rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{grid-column:2/4;height:3px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:3px}
+.now{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+
+/* study */
+.top{display:flex;align-items:center;gap:14px}
+.iconbtn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--line);color:var(--muted)}
+.prog{flex:1;height:3px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--gold);transition:width .3s}
+.top .n{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+.flash{position:relative;width:100%;min-height:390px;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:22px 22px 26px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.pill{align-self:flex-start;font-size:.72rem;letter-spacing:.06em;padding:4px 10px;border-radius:999px;color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent)}
+.word{font-size:4.2rem;line-height:1.6;margin-top:18px;color:var(--text)}
+.speak{position:absolute;top:16px;right:16px}
+.hint{margin-top:auto;font-size:.85rem;color:var(--faint)}
+.tr{font-style:italic;color:var(--muted);font-size:1rem}
+.en{font-family:var(--f-display);font-size:1.75rem;line-height:1.2;color:var(--gold);text-wrap:balance}
+.type{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.ex{margin-top:14px;padding-top:16px;border-top:1px solid var(--line);width:100%;display:flex;flex-direction:column;gap:4px}
+.ex .ar{font-size:1.45rem;line-height:2}
+.ex p{margin:0}
+.ex .t{font-size:.9rem;color:var(--muted)}
+.ref{font-size:.75rem;color:var(--gold);letter-spacing:.06em}
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.rate button{border-radius:14px;padding:10px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:1px;background:color-mix(in srgb,var(--c) 11%,var(--bg));border:1px solid color-mix(in srgb,var(--c) 30%,transparent);color:var(--c)}
+.rate b{font-weight:600;font-size:.92rem}
+.rate small{font-size:.72rem;opacity:.75;font-variant-numeric:tabular-nums}
+
+/* quiz */
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{flex:1;height:38px;border-radius:9px;font-size:.88rem;color:var(--muted)}
+.seg button.on{background:var(--raise);color:var(--gold)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:34px;padding:0 14px;border-radius:999px;border:1px solid var(--line);font-size:.84rem;color:var(--muted);display:inline-flex;align-items:center;gap:8px}
+.chip.on{border-color:var(--c,var(--gold));color:var(--text)}
+.chip .dot{width:7px;height:7px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:26px 20px;text-align:center;min-height:170px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.q .ar{font-size:3.4rem;line-height:1.7}
+.q .enq{font-family:var(--f-display);font-size:1.9rem;color:var(--gold);line-height:1.2}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{min-height:56px;border-radius:14px;border:1px solid var(--line);background:var(--surface);padding:10px 16px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:border-color .2s,background .2s}
+.opt.aropt{justify-content:center;font-size:1.7rem}
+.opt.ok{border-color:var(--sage);background:color-mix(in srgb,var(--sage) 12%,var(--bg));color:var(--sage)}
+.opt.no{border-color:var(--rose);background:color-mix(in srgb,var(--rose) 10%,var(--bg));color:var(--rose)}
+.score{font-family:var(--f-display);font-size:4rem;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+
+/* words */
+.search{width:100%;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:0 16px;font:inherit}
+.search::placeholder{color:var(--faint)}
+.list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.row{width:100%;text-align:left;display:grid;grid-template-columns:8px 1fr auto;gap:14px;align-items:center;padding:12px 2px;border-bottom:1px solid var(--line)}
+.row .st{width:8px;height:8px;border-radius:50%;background:var(--s)}
+.row .m{font-size:.95rem}
+.row .m small{display:block;color:var(--muted);font-style:italic;font-size:.82rem}
+.row .ar{font-size:1.6rem;line-height:1.5}
+.detail{grid-column:1/4;padding:4px 0 6px 22px;display:flex;flex-direction:column;gap:4px}
+.detail .ar{font-size:1.3rem;text-align:right}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.78rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:7px;height:7px;border-radius:50%;background:var(--s)}
+
+/* tab bar */
+.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(11,11,12,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:8px 12px calc(env(safe-area-inset-bottom) + 8px)}
+.tabs nav{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;color:var(--faint);padding:6px 0}
+.tabs button.on{color:var(--gold)}
+.tabs svg{width:22px;height:22px}
+.foot{font-size:.78rem;color:var(--faint);display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.link{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.done{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:40px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="app" id="view"></main>
+<div class="tabs" id="tabs"><nav>
+  <button data-tab="today" aria-label="Today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l2.6 2.6H18.4V9.4L21 12l-2.6 2.6v3.8h-3.8L12 21l-2.6-2.6H5.6v-3.8L3 12l2.6-2.6V5.6h3.8z"/></svg>Today</button>
+  <button data-tab="quiz" aria-label="Quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 12.5l2.3 2.3 4.7-5"/></svg>Quiz</button>
+  <button data-tab="words" aria-label="Words"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 6h14M5 12h14M5 18h9"/></svg>Words</button>
+</nav></div>
+
+<script>
+/* ---------- Content ---------- */
+const DECKS=[
+  {id:'fatiha',name:'Al-Fātiḥah',ar:'الفاتحة',note:'Every word you recite in each rakʿah',c:'var(--sand)'},
+  {id:'part',name:'Connectors',ar:'حروف',note:'Small words that appear on every page',c:'var(--sky)'},
+  {id:'pron',name:'Pronouns',ar:'ضمائر',note:'He, they, you, we and their endings',c:'var(--lav)'},
+  {id:'names',name:'Allah & His Names',ar:'أسماء الله',note:'Names that close many āyāt',c:'var(--sage)'},
+  {id:'noun',name:'Core Nouns',ar:'أسماء',note:'Earth, sky, people, mercy and more',c:'var(--rose)'},
+  {id:'verb',name:'Core Verbs',ar:'أفعال',note:'Said, believed, created, sent down',c:'var(--mint)'}
+];
+const AY={
+ f1:['بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ','In the name of Allah, the Most Gracious, the Most Merciful','1:1'],
+ f2:['الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ','All praise is for Allah, Lord of the worlds','1:2'],
+ f4:['مَالِكِ يَوْمِ الدِّينِ','Master of the Day of Judgement','1:4'],
+ f5:['إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ','You alone we worship, and You alone we ask for help','1:5'],
+ f6:['اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ','Guide us to the straight path','1:6'],
+ f7:['صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ','The path of those You have blessed, not of those who earned anger, nor of those astray','1:7'],
+ i1:['قُلْ هُوَ اللَّهُ أَحَدٌ','Say: He is Allah, the One','112:1'],
+ i2:['اللَّهُ الصَّمَدُ','Allah, the Eternal Refuge','112:2'],
+ i3:['لَمْ يَلِدْ وَلَمْ يُولَدْ','He neither begets, nor was He begotten','112:3'],
+ i4:['وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ','And there is none comparable to Him','112:4'],
+ nas:['قُلْ أَعُوذُ بِرَبِّ النَّاسِ','Say: I seek refuge in the Lord of mankind','114:1'],
+ falaq:['مِنْ شَرِّ مَا خَلَقَ','From the evil of what He created','113:2'],
+ iqra:['اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ','Read in the name of your Lord who created','96:1'],
+ qadr1:['إِنَّا أَنْزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ','Indeed, We sent it down on the Night of Decree','97:1'],
+ qadr5:['سَلَامٌ هِيَ حَتَّىٰ مَطْلَعِ الْفَجْرِ','Peace it is, until the rise of dawn','97:5'],
+ nasr:['إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ','When the help of Allah comes, and the victory','110:1'],
+ nasr3:['إِنَّهُ كَانَ تَوَّابًا','Indeed, He is ever accepting of repentance','110:3'],
+ b2:['ذَٰلِكَ الْكِتَابُ لَا رَيْبَ فِيهِ','That is the Book, there is no doubt in it','2:2'],
+ b3:['الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ','Those who believe in the unseen','2:3'],
+ b5:['أُولَٰئِكَ هُمُ الْمُفْلِحُونَ','It is they who are the successful','2:5'],
+ b6:['إِنَّ الَّذِينَ كَفَرُوا سَوَاءٌ عَلَيْهِمْ','Indeed, those who disbelieve, it is all the same to them','2:6'],
+ asr2:['إِنَّ الْإِنْسَانَ لَفِي خُسْرٍ','Indeed, mankind is in loss','103:2'],
+ asr3:['إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ','Except those who believe and do righteous deeds','103:3'],
+ asr3b:['وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ','And urge one another to truth, and urge one another to patience','103:3'],
+ kursi:['اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ','Allah, there is no god but Him, the Ever-Living, the Sustainer','2:255'],
+ qadir:['إِنَّ اللَّهَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ','Indeed, Allah has power over all things','2:20'],
+ sabr:['إِنَّ اللَّهَ مَعَ الصَّابِرِينَ','Indeed, Allah is with the patient','2:153'],
+ dunya:['رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ','Our Lord, give us good in this world and good in the Hereafter, and protect us from the punishment of the Fire','2:201'],
+ nur:['اللَّهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ','Allah is the Light of the heavens and the earth','24:35'],
+ qulub:['أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ','Surely, in the remembrance of Allah do hearts find rest','13:28'],
+ yusr:['فَإِنَّ مَعَ الْعُسْرِ يُسْرًا','So surely, with hardship comes ease','94:5'],
+ ilm:['رَبِّ زِدْنِي عِلْمًا','My Lord, increase me in knowledge','20:114'],
+ mawt:['كُلُّ نَفْسٍ ذَائِقَةُ الْمَوْتِ','Every soul will taste death','3:185'],
+ mulk:['تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ','Blessed is He in whose hand is the dominion','67:1'],
+ rahma:['لَا تَقْنَطُوا مِنْ رَحْمَةِ اللَّهِ','Do not despair of the mercy of Allah','39:53'],
+ salah:['وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ','And establish prayer and give zakah','2:43'],
+ atiu:['أَطِيعُوا اللَّهَ وَأَطِيعُوا الرَّسُولَ','Obey Allah and obey the Messenger','4:59'],
+ taqwa:['يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ','O you who believe, be mindful of Allah','3:102'],
+ qarib:['وَإِذَا سَأَلَكَ عِبَادِي عَنِّي فَإِنِّي قَرِيبٌ','And when My servants ask you about Me, indeed I am near','2:186'],
+ ibada:['وَمَا خَلَقْتُ الْجِنَّ وَالْإِنْسَ إِلَّا لِيَعْبُدُونِ','I did not create jinn and mankind except to worship Me','51:56'],
+ ruju:['إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ','Indeed we belong to Allah, and to Him we will return','2:156'],
+ zilzal:['فَمَنْ يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُ','Whoever does an atom’s weight of good will see it','99:7'],
+ wus:['لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا','Allah does not burden a soul beyond its capacity','2:286'],
+ ghafur:['إِنَّ اللَّهَ غَفُورٌ رَحِيمٌ','Indeed, Allah is Forgiving, Merciful','2:173'],
+ hakim:['وَاللَّهُ عَلِيمٌ حَكِيمٌ','And Allah is All-Knowing, All-Wise','9:60'],
+ basir:['إِنَّهُ هُوَ السَّمِيعُ الْبَصِيرُ','Indeed, He is the All-Hearing, the All-Seeing','17:1'],
+ aziz:['وَهُوَ الْعَزِيزُ الْحَكِيمُ','And He is the Almighty, the All-Wise','59:1'],
+ sharh:['قَالَ رَبِّ اشْرَحْ لِي صَدْرِي','He said: My Lord, expand my chest for me','20:25'],
+ yasha:['يَهْدِي مَنْ يَشَاءُ','He guides whom He wills','2:142'],
+ kun:['كُنْ فَيَكُونُ','Be, and it is','2:117'],
+ ana:['إِنِّي أَنَا رَبُّكَ','Indeed, I am your Lord','20:12'],
+ anta:['إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ','Indeed, You are the All-Hearing, the All-Knowing','2:127'],
+ nahnu:['إِنَّا نَحْنُ نَزَّلْنَا الذِّكْرَ','Indeed, it is We who sent down the Reminder','15:9'],
+ kum:['ادْعُونِي أَسْتَجِبْ لَكُمْ','Call upon Me; I will respond to you','40:60'],
+ bal:['بَلْ تُؤْثِرُونَ الْحَيَاةَ الدُّنْيَا','But you prefer the life of this world','87:16'],
+ qad:['قَدْ أَفْلَحَ الْمُؤْمِنُونَ','Certainly the believers have succeeded','23:1'],
+ hal:['هَلْ أَتَاكَ حَدِيثُ الْغَاشِيَةِ','Has the story of the Overwhelming Event reached you?','88:1'],
+ layl:['وَاللَّيْلِ إِذَا يَغْشَىٰ','By the night when it covers','92:1'],
+ nahar:['وَالنَّهَارِ إِذَا تَجَلَّىٰ','And the day when it shines','92:2'],
+ hadha:['هَٰذَا يَوْمُ الْفَصْلِ','This is the Day of Decision','77:38'],
+ janna:['وَادْخُلِي جَنَّتِي','And enter My Paradise','89:30'],
+ qawm:['يَا قَوْمِ اعْبُدُوا اللَّهَ','O my people, worship Allah','7:59'],
+ sabil:['فِي سَبِيلِ اللَّهِ','In the way of Allah','2:154'],
+ bayt:['فَلْيَعْبُدُوا رَبَّ هَٰذَا الْبَيْتِ','So let them worship the Lord of this House','106:3'],
+ azim:['وَإِنَّكَ لَعَلَىٰ خُلُقٍ عَظِيمٍ','And indeed, you are of a great moral character','68:4'],
+ yalamun:['هَلْ يَسْتَوِي الَّذِينَ يَعْلَمُونَ وَالَّذِينَ لَا يَعْلَمُونَ','Are those who know equal to those who do not know?','39:9']
+};
+/* [deck, arabic, transliteration, meaning, type, example] — roughly in order of how often they occur */
+const RAW=[
+ ['fatiha','بِسْمِ','bismi','in the name of','phrase','f1'],
+ ['fatiha','اللَّه','Allāh','Allah','name','f1'],
+ ['fatiha','الرَّحْمَٰن','ar-Raḥmān','the Most Gracious','name','f1'],
+ ['fatiha','الرَّحِيم','ar-Raḥīm','the Most Merciful','name','f1'],
+ ['fatiha','الْحَمْدُ','al-ḥamdu','all praise','noun','f2'],
+ ['fatiha','رَبّ','rabb','Lord, Sustainer','noun','f2'],
+ ['fatiha','الْعَالَمِين','al-ʿālamīn','the worlds','noun','f2'],
+ ['fatiha','مَالِك','mālik','Master, Owner','noun','f4'],
+ ['fatiha','يَوْم','yawm','day','noun','f4'],
+ ['fatiha','الدِّين','ad-dīn','judgement; religion','noun','f4'],
+ ['fatiha','إِيَّاكَ','iyyāka','You alone','pronoun','f5'],
+ ['fatiha','نَعْبُدُ','naʿbudu','we worship','verb','f5'],
+ ['fatiha','نَسْتَعِينُ','nastaʿīnu','we ask for help','verb','f5'],
+ ['fatiha','اهْدِنَا','ihdinā','guide us','verb','f6'],
+ ['fatiha','الصِّرَاط','aṣ-ṣirāṭ','the path','noun','f6'],
+ ['fatiha','الْمُسْتَقِيم','al-mustaqīm','the straight','adjective','f6'],
+ ['fatiha','أَنْعَمْتَ','anʿamta','You have blessed','verb','f7'],
+ ['fatiha','عَلَيْهِمْ','ʿalayhim','upon them','phrase','f7'],
+ ['fatiha','غَيْر','ghayr','not, other than','particle','f7'],
+ ['fatiha','الْمَغْضُوب','al-maghḍūb','those who earned anger','noun','f7'],
+ ['fatiha','الضَّالِّين','aḍ-ḍāllīn','those who went astray','noun','f7'],
+
+ ['part','مِنْ','min','from, of','particle','falaq'],
+ ['part','فِي','fī','in','particle','qadr1'],
+ ['part','مَا','mā','what; not','particle','ibada'],
+ ['part','لَا','lā','no, not','particle','kursi'],
+ ['part','إِنَّ','inna','indeed, truly','particle','asr2'],
+ ['part','عَلَىٰ','ʿalā','on, upon, over','particle','qadir'],
+ ['part','إِلَىٰ','ilā','to, towards','particle','ruju'],
+ ['part','الَّذِينَ','alladhīna','those who','particle','asr3'],
+ ['part','الَّذِي','alladhī','the one who','particle','mulk'],
+ ['part','وَ','wa','and','particle','f5'],
+ ['part','إِلَّا','illā','except, but','particle','ibada'],
+ ['part','لَمْ','lam','did not','particle','i3'],
+ ['part','إِذَا','idhā','when','particle','nasr'],
+ ['part','قَدْ','qad','certainly, already','particle','qad'],
+ ['part','بِ','bi','with, by, in','particle','f1'],
+ ['part','يَا','yā','O (calling)','particle','taqwa'],
+ ['part','مَعَ','maʿa','with','particle','yusr'],
+ ['part','عَنْ','ʿan','about, from','particle','qarib'],
+ ['part','حَتَّىٰ','ḥattā','until','particle','qadr5'],
+ ['part','بَلْ','bal','rather, but','particle','bal'],
+ ['part','هَلْ','hal','is …? (question)','particle','hal'],
+ ['part','مَنْ','man','who, whoever','particle','zilzal'],
+ ['part','كُلّ','kull','all, every','noun','mawt'],
+ ['part','ذَٰلِكَ','dhālika','that','particle','b2'],
+ ['part','هَٰذَا','hādhā','this','particle','hadha'],
+ ['part','ثُمَّ','thumma','then, afterwards','particle',''],
+ ['part','أَوْ','aw','or','particle',''],
+ ['part','إِنْ','in','if','particle',''],
+ ['part','لَوْ','law','if only, if (unreal)','particle',''],
+ ['part','عِنْدَ','ʿinda','with, near','particle',''],
+ ['part','بَيْنَ','bayna','between','particle',''],
+ ['part','قَبْلِ','qabli','before','particle',''],
+ ['part','بَعْدِ','baʿdi','after','particle',''],
+
+ ['pron','هُوَ','huwa','he, it','pronoun','i1'],
+ ['pron','هُمْ','hum','they','pronoun','b5'],
+ ['pron','أَنْتَ','anta','you (one man)','pronoun','anta'],
+ ['pron','أَنْتُمْ','antum','you (plural)','pronoun',''],
+ ['pron','نَحْنُ','naḥnu','we','pronoun','nahnu'],
+ ['pron','أَنَا','anā','I','pronoun','ana'],
+ ['pron','هِيَ','hiya','she, it','pronoun','qadr5'],
+ ['pron','ـكُمْ','-kum','your, you (plural ending)','pronoun','kum'],
+ ['pron','ـهُمْ','-hum','their, them (ending)','pronoun','f7'],
+ ['pron','ـنَا','-nā','our, us (ending)','pronoun','dunya'],
+ ['pron','ـهُ','-hu','his, him (ending)','pronoun','i4'],
+ ['pron','ـنِي','-nī','me (ending)','pronoun','ilm'],
+ ['pron','أُولَٰئِكَ','ulāʾika','those (people)','pronoun','b5'],
+
+ ['names','الصَّمَد','aṣ-Ṣamad','the Eternal Refuge','name','i2'],
+ ['names','أَحَد','aḥad','One','name','i1'],
+ ['names','عَلِيم','ʿalīm','All-Knowing','name','hakim'],
+ ['names','حَكِيم','ḥakīm','All-Wise','name','aziz'],
+ ['names','غَفُور','ghafūr','Forgiving','name','ghafur'],
+ ['names','قَدِير','qadīr','All-Powerful','name','qadir'],
+ ['names','سَمِيع','samīʿ','All-Hearing','name','basir'],
+ ['names','بَصِير','baṣīr','All-Seeing','name','basir'],
+ ['names','عَزِيز','ʿazīz','Almighty','name','aziz'],
+ ['names','الْحَيّ','al-Ḥayy','the Ever-Living','name','kursi'],
+ ['names','الْقَيُّوم','al-Qayyūm','the Sustainer of all','name','kursi'],
+ ['names','تَوَّاب','tawwāb','Accepting of repentance','name','nasr3'],
+
+ ['noun','إِلَٰه','ilāh','god, deity','noun','kursi'],
+ ['noun','أَرْض','arḍ','earth, land','noun','nur'],
+ ['noun','السَّمَاوَات','as-samāwāt','the heavens','noun','nur'],
+ ['noun','النَّاس','an-nās','mankind, people','noun','nas'],
+ ['noun','شَيْء','shayʾ','thing','noun','qadir'],
+ ['noun','قَوْم','qawm','people, nation','noun','qawm'],
+ ['noun','كِتَاب','kitāb','book, scripture','noun','b2'],
+ ['noun','نَفْس','nafs','soul, self','noun','wus'],
+ ['noun','قُلُوب','qulūb','hearts','noun','qulub'],
+ ['noun','عَذَاب','ʿadhāb','punishment','noun','dunya'],
+ ['noun','حَقّ','ḥaqq','truth, right','noun','asr3b'],
+ ['noun','رَسُول','rasūl','messenger','noun','atiu'],
+ ['noun','عِلْم','ʿilm','knowledge','noun','ilm'],
+ ['noun','جَنَّة','jannah','garden, Paradise','noun','janna'],
+ ['noun','نَار','nār','fire','noun','dunya'],
+ ['noun','سَبِيل','sabīl','way, path','noun','sabil'],
+ ['noun','خَيْر','khayr','good; better','noun','zilzal'],
+ ['noun','عِبَاد','ʿibād','servants','noun','qarib'],
+ ['noun','الدُّنْيَا','ad-dunyā','this world','noun','dunya'],
+ ['noun','الْآخِرَة','al-ākhirah','the Hereafter','noun','dunya'],
+ ['noun','رَحْمَة','raḥmah','mercy','noun','rahma'],
+ ['noun','نُور','nūr','light','noun','nur'],
+ ['noun','صَلَاة','ṣalāh','prayer','noun','salah'],
+ ['noun','زَكَاة','zakāh','obligatory charity','noun','salah'],
+ ['noun','صَبْر','ṣabr','patience','noun','asr3b'],
+ ['noun','إِنْسَان','insān','human being','noun','asr2'],
+ ['noun','لَيْل','layl','night','noun','layl'],
+ ['noun','نَهَار','nahār','daytime','noun','nahar'],
+ ['noun','بَيْت','bayt','house','noun','bayt'],
+ ['noun','عَظِيم','ʿaẓīm','great, tremendous','adjective','azim'],
+ ['noun','الْمَوْت','al-mawt','death','noun','mawt'],
+ ['noun','ذِكْر','dhikr','remembrance, reminder','noun','qulub'],
+ ['noun','آيَات','āyāt','signs, verses','noun',''],
+ ['noun','أَجْر','ajr','reward','noun',''],
+ ['noun','أَمْر','amr','command, matter','noun',''],
+ ['noun','مَلَائِكَة','malāʾikah','angels','noun',''],
+
+ ['verb','قَالَ','qāla','he said','verb','sharh'],
+ ['verb','قُلْ','qul','say!','verb','i1'],
+ ['verb','كَانَ','kāna','he was','verb','nasr3'],
+ ['verb','آمَنُوا','āmanū','they believed','verb','asr3'],
+ ['verb','عَمِلُوا','ʿamilū','they did','verb','asr3'],
+ ['verb','كَفَرُوا','kafarū','they disbelieved','verb','b6'],
+ ['verb','يُؤْمِنُونَ','yuʾminūna','they believe','verb','b3'],
+ ['verb','خَلَقَ','khalaqa','he created','verb','iqra'],
+ ['verb','اقْرَأْ','iqraʾ','read! recite!','verb','iqra'],
+ ['verb','جَاءَ','jāʾa','he came','verb','nasr'],
+ ['verb','أَنْزَلْنَا','anzalnā','We sent down','verb','qadr1'],
+ ['verb','يَشَاءُ','yashāʾu','he wills','verb','yasha'],
+ ['verb','أَعُوذُ','aʿūdhu','I seek refuge','verb','nas'],
+ ['verb','أَطِيعُوا','aṭīʿū','obey!','verb','atiu'],
+ ['verb','اتَّقُوا','ittaqū','be mindful (of Allah)!','verb','taqwa'],
+ ['verb','كُنْ','kun','be!','verb','kun'],
+ ['verb','يَعْلَمُونَ','yaʿlamūna','they know','verb','yalamun'],
+ ['verb','جَعَلَ','jaʿala','he made','verb',''],
+ ['verb','أَرْسَلْنَا','arsalnā','We sent','verb',''],
+ ['verb','آتَىٰ','ātā','he gave','verb','']
+];
+const WORDS=RAW.map(r=>({id:r[0]+':'+r[2],d:r[0],ar:r[1],tr:r[2],en:r[3],t:r[4],ex:AY[r[5]]||null}));
+const BYID=Object.fromEntries(WORDS.map(w=>[w.id,w]));
+const DECK=Object.fromEntries(DECKS.map(d=>[d.id,d]));
+
+/* ---------- State ---------- */
+const KEY='kalimah.v1', NEW_PER_DAY=10, DAY=864e5;
+function fresh(){return {cards:{},focus:'fatiha',newDay:'',newCount:0,days:[]}}
+let S=(()=>{try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.cards)return Object.assign(fresh(),s)}catch(e){}return fresh()})();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const dk=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const sod=()=>{const d=new Date();d.setHours(0,0,0,0);return d.getTime()};
+
+/* Spaced repetition: 0 again, 1 hard, 2 good, 3 easy */
+function sched(c,r,now){
+  c=Object.assign({ivl:0,ease:2.5,reps:0},c||{});
+  if(r===0){c.reps=0;c.ivl=0;c.ease=Math.max(1.3,c.ease-.2)}
+  else if(r===1){c.ivl=Math.max(1,Math.round(c.ivl*1.2));c.ease=Math.max(1.3,c.ease-.15);c.reps++}
+  else if(r===2){c.ivl=c.reps===0?2:c.reps===1?4:Math.max(c.ivl+1,Math.round(c.ivl*c.ease));c.reps++}
+  else {c.ivl=c.reps===0?4:Math.max(c.ivl+2,Math.round(Math.max(c.ivl,1)*c.ease*1.3));c.ease+=.15;c.reps++}
+  const start=new Date(now);start.setHours(0,0,0,0);
+  c.due=c.ivl===0?now:start.getTime()+c.ivl*DAY;
+  return c;
+}
+const fmtIvl=n=>n===0?'now':n<30?n+'d':n<365?Math.round(n/30)+'mo':(n/365).toFixed(1)+'y';
+function status(id){const c=S.cards[id];if(!c)return 'new';if(c.ivl>=21)return 'mastered';if(c.ivl>=7)return 'known';return 'learning'}
+const STC={new:'var(--faint)',learning:'var(--sand)',known:'var(--sage)',mastered:'var(--gold)'};
+const learned=id=>{const c=S.cards[id];return !!c&&c.ivl>=1};
+function dueIds(){const n=Date.now();return WORDS.filter(w=>S.cards[w.id]&&S.cards[w.id].due<=n).sort((a,b)=>S.cards[a.id].due-S.cards[b.id].due).map(w=>w.id)}
+function newLeft(){return Math.max(0,NEW_PER_DAY-(S.newDay===dk(Date.now())?S.newCount:0))}
+function newIds(){
+  const order=[S.focus,...DECKS.map(d=>d.id).filter(x=>x!==S.focus)];
+  const out=[];for(const d of order)for(const w of WORDS)if(w.d===d&&!S.cards[w.id])out.push(w.id);
+  return out.slice(0,newLeft());
+}
+function streak(){const set=new Set(S.days);let d=sod();if(!set.has(dk(d)))d-=DAY;let n=0;while(set.has(dk(d))){n++;d-=DAY}return n}
+
+/* ---------- Speech (device voice, not recitation) ---------- */
+const canSpeak='speechSynthesis' in window;
+function speak(t){try{const u=new SpeechSynthesisUtterance(t.replace(/ـ/g,''));u.lang='ar-SA';u.rate=.75;const v=speechSynthesis.getVoices().find(v=>/^ar/i.test(v.lang));if(v)u.voice=v;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+const spk=t=>canSpeak?`<button class="iconbtn speak" data-act="speak" data-t="${t}" aria-label="Hear pronunciation"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16.5 8.5a5 5 0 010 7"/></svg></button>`:'';
+
+/* ---------- Views ---------- */
+let tab='today', sess=null, quiz=null, W={q:'',deck:'all',open:null}, askReset=false;
+const $v=document.getElementById('view');
+const exHTML=w=>w.ex?`<div class="ex"><p class="ar">${w.ex[0]}</p><p class="t">${w.ex[1]}</p><span class="ref">Qur’an ${w.ex[2]}</span></div>`:'';
+
+function vToday(){
+  const due=dueIds().length, nw=newIds().length, total=WORDS.length, lc=WORDS.filter(w=>learned(w.id)).length;
+  const decks=DECKS.map(d=>{const ws=WORDS.filter(w=>w.d===d.id);const l=ws.filter(w=>learned(w.id)).length;const on=S.focus===d.id;
+    return `<button class="deck ${on?'on':''}" style="--c:${d.c}" data-act="focus" data-d="${d.id}">
+      <span class="dot"></span>
+      <span><span class="name">${d.name}</span><br><span class="sub">${on?'<span class="now">Learning now</span>':d.note}</span></span>
+      <span class="side"><span class="ar">${d.ar}</span><span class="count">${l} / ${ws.length}</span></span>
+      <span class="bar"><i style="width:${ws.length?l/ws.length*100:0}%"></i></span></button>`}).join('');
+  const parts=[];if(due)parts.push(`${due} review${due>1?'s':''}`);if(nw)parts.push(`${nw} new word${nw>1?'s':''}`);
+  return `<div class="stack fade">
+   <div class="brand"><span class="mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l2.6 2.6H18.4V9.4L21 12l-2.6 2.6v3.8h-3.8L12 21l-2.6-2.6H5.6v-3.8L3 12l2.6-2.6V5.6h3.8z"/></svg>Kalimah</span><span class="ar">كَلِمَة</span></div>
+   <div><h1>Understand what you recite.</h1><p class="muted" style="margin:8px 0 0">The Qur’an’s most frequent words, a few each day, starting with Al-Fātiḥah.</p></div>
+   <div class="stats"><div class="stat gold"><b>${due}</b><span>Due today</span></div><div class="stat"><b>${lc}</b><span>of ${total} learned</span></div><div class="stat"><b>${streak()}</b><span>Day streak</span></div></div>
+   <div class="session">${parts.length?`<div><div class="eyebrow">Today’s session</div><p style="margin-top:4px;font-size:1.05rem">${parts.join(' · ')}</p></div><button class="btn gold full" data-act="start">Begin session</button>`
+     :`<div><div class="eyebrow">Today’s session</div><p style="margin-top:4px;font-size:1.05rem">All done for today. Come back tomorrow, in shāʾ Allāh.</p></div><button class="btn ghost full" data-act="tab" data-tab="quiz">Practise with a quiz</button>`}</div>
+   <div class="stack" style="gap:12px"><div class="eyebrow">Decks · tap one to learn it next</div><div class="decks">${decks}</div></div>
+   <div class="foot"><span>Progress is saved in this browser on this device.</span>
+     ${askReset?`<span class="confirm">Erase all progress? <button class="btn ghost" style="height:34px" data-act="reset-yes">Erase</button><button class="link" data-act="reset-no">Cancel</button></span>`:`<button class="link" data-act="reset">Reset progress</button>`}</div>
+  </div>`;
+}
+
+function vStudy(){
+  if(!sess.queue.length){
+    return `<div class="done fade"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1"><path d="M12 3l2.6 2.6H18.4V9.4L21 12l-2.6 2.6v3.8h-3.8L12 21l-2.6-2.6H5.6v-3.8L3 12l2.6-2.6V5.6h3.8z"/></svg>
+      <h1>Session complete</h1><p class="muted" style="margin:0">${sess.seen} word${sess.seen===1?'':'s'} reviewed${sess.newSeen?`, ${sess.newSeen} of them new`:''}.<br>Bārak Allāhu fīk.</p>
+      <button class="btn gold" data-act="exit" style="min-width:200px">Back to Today</button></div>`;
+  }
+  const w=BYID[sess.queue[0]], d=DECK[w.d], isNew=!S.cards[w.id], done=sess.total-sess.queue.length;
+  const now=Date.now();
+  const rates=[['Again','var(--rose)'],['Hard','var(--sand)'],['Good','var(--sage)'],['Easy','var(--sky)']].map((r,i)=>
+    `<button style="--c:${r[1]}" data-act="rate" data-r="${i}"><b>${r[0]}</b><small>${fmtIvl(sched(S.cards[w.id],i,now).ivl)}</small></button>`).join('');
+  return `<div class="stack" style="gap:18px">
+   <div class="top"><button class="iconbtn" data-act="exit" aria-label="End session"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+     <div class="prog"><i style="width:${sess.total?done/sess.total*100:0}%"></i></div><span class="n">${done} / ${sess.total}</span></div>
+   <div class="flash fade" ${sess.rev?'':'data-act="reveal" role="button" tabindex="0" aria-label="Reveal meaning"'}>
+     <span class="pill" style="--c:${d.c}">${d.name}${isNew?' · new':''}</span>${spk(w.ar)}
+     <div class="ar word">${w.ar}</div>
+     ${sess.rev?`<div class="tr">${w.tr}</div><div class="en">${w.en}</div><div class="type">${w.t}</div>${exHTML(w)}`:`<p class="hint">Tap the card to reveal the meaning</p>`}
+   </div>
+   ${sess.rev?`<div class="rate">${rates}</div>`:`<button class="btn ghost full" data-act="reveal">Show meaning</button>`}
+  </div>`;
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function makeQuiz(mode,deck){
+  let pool=WORDS.filter(w=>deck==='all'||w.d===deck);
+  const qs=shuffle(pool.slice()).slice(0,10).map(w=>{
+    const others=shuffle((pool.length>=6?pool:WORDS).filter(o=>o.id!==w.id&&o.en!==w.en)).slice(0,3);
+    return {w,opts:shuffle([w,...others])};
+  });
+  return {mode,deck,qs,i:0,pick:null,score:0,started:true};
+}
+function vQuiz(){
+  if(!quiz||!quiz.started){
+    const q=quiz||{mode:'ar',deck:'all'};
+    const chips=[{id:'all',name:'All words',c:'var(--gold)'},...DECKS].map(d=>`<button class="chip ${q.deck===d.id?'on':''}" style="--c:${d.c}" data-act="qdeck" data-d="${d.id}"><span class="dot" style="--c:${d.c}"></span>${d.name}</button>`).join('');
+    return `<div class="stack fade">
+      <div><div class="eyebrow">Quiz</div><h1 style="margin-top:6px">Ten quick questions.</h1><p class="muted" style="margin:8px 0 0">Choose the right meaning. Quiz answers don’t change your review schedule.</p></div>
+      <div class="stack" style="gap:10px"><div class="eyebrow">Direction</div><div class="seg"><button class="${q.mode==='ar'?'on':''}" data-act="qmode" data-m="ar">Arabic → English</button><button class="${q.mode==='en'?'on':''}" data-act="qmode" data-m="en">English → Arabic</button></div></div>
+      <div class="stack" style="gap:10px"><div class="eyebrow">Words from</div><div class="chips">${chips}</div></div>
+      <button class="btn gold full" data-act="qstart">Start quiz</button></div>`;
+  }
+  if(quiz.i>=quiz.qs.length){
+    const n=quiz.qs.length,s=quiz.score;
+    const msg=s===n?'Every one right. Māshāʾ Allāh.':s>=n*.7?'Strong result. Keep going.':'A good start. The daily session will help these stick.';
+    return `<div class="done fade"><div class="eyebrow">Your score</div><div class="score">${s}<span style="font-size:1.6rem;color:var(--muted)"> / ${n}</span></div><p class="muted" style="margin:0">${msg}</p>
+      <div style="display:flex;gap:10px"><button class="btn gold" data-act="qagain">Try another</button><button class="btn ghost" data-act="qsetup">Change settings</button></div></div>`;
+  }
+  const {w,opts}=quiz.qs[quiz.i], ar=quiz.mode==='ar';
+  const o=opts.map(x=>{let cls='';if(quiz.pick){if(x.id===w.id)cls='ok';else if(x.id===quiz.pick)cls='no'}
+    return `<button class="opt ${ar?'':'aropt ar'} ${cls}" data-act="qpick" data-id="${x.id}" ${quiz.pick?'disabled':''}>${ar?`<span>${x.en}</span>`:x.ar}</button>`}).join('');
+  return `<div class="stack" style="gap:18px">
+    <div class="top"><button class="iconbtn" data-act="qsetup" aria-label="End quiz"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="prog"><i style="width:${quiz.i/quiz.qs.length*100}%"></i></div><span class="n">${quiz.i+1} / ${quiz.qs.length}</span></div>
+    <div class="q fade">${ar?`<div class="ar">${w.ar}</div>`:`<div class="enq">${w.en}</div>`}${quiz.pick?`<div class="tr">${w.tr}${ar?'':' · '+w.ar}</div>`:''}</div>
+    <div class="opts">${o}</div>
+    ${quiz.pick?`${w.ex?`<div class="ex" style="text-align:center;margin:0">${exHTML(w).replace('<div class="ex">','').replace(/<\/div>$/,'')}</div>`:''}<button class="btn gold full" data-act="qnext">${quiz.i+1<quiz.qs.length?'Next':'See score'}</button>`:''}
+  </div>`;
+}
+
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[ً-ٰٟۖ-ۭـʿʾ’-]/g,'').replace(/[أإآٱ]/g,'ا');
+function vWords(){
+  const q=norm(W.q.trim());
+  const list=WORDS.filter(w=>(W.deck==='all'||w.d===W.deck)&&(!q||norm(w.en+' '+w.tr+' '+w.ar).includes(q)));
+  const chips=[{id:'all',name:'All',c:'var(--gold)'},...DECKS].map(d=>`<button class="chip ${W.deck===d.id?'on':''}" style="--c:${d.c}" data-act="wdeck" data-d="${d.id}">${d.id==='all'?'':`<span class="dot" style="--c:${d.c}"></span>`}${d.name}</button>`).join('');
+  const rows=list.map(w=>{const st=status(w.id),open=W.open===w.id;
+    return `<button class="row" data-act="wopen" data-id="${w.id}" aria-expanded="${open}"><span class="st" style="--s:${STC[st]}" title="${st}"></span><span class="m">${w.en}<small>${w.tr}</small></span><span class="ar">${w.ar}</span>
+      ${open?`<span class="detail"><span class="type">${DECK[w.d].name} · ${w.t} · ${st}</span>${w.ex?`<span class="ar">${w.ex[0]}</span><span class="muted" style="font-size:.88rem">${w.ex[1]}</span><span class="ref">Qur’an ${w.ex[2]}</span>`:''}${canSpeak?`<span class="link" data-act="speak" data-t="${w.ar}" style="font-size:.85rem">Hear it</span>`:''}</span>`:''}</button>`}).join('');
+  return `<div class="stack fade" style="gap:18px">
+    <div><div class="eyebrow">Word list</div><h1 style="margin-top:6px">${WORDS.length} words</h1></div>
+    <input class="search" id="wq" type="search" placeholder="Search English, transliteration or Arabic" value="${W.q.replace(/"/g,'&quot;')}" autocomplete="off">
+    <div class="chips">${chips}</div>
+    <div class="legend">${Object.entries(STC).map(([k,c])=>`<span><i style="--s:${c}"></i>${k[0].toUpperCase()+k.slice(1)}</span>`).join('')}</div>
+    <div class="list">${rows||'<p class="muted">No words match that search.</p>'}</div></div>`;
+}
+
+function render(){
+  document.getElementById('tabs').style.display=(tab==='study')?'none':'';
+  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  $v.innerHTML=tab==='today'?vToday():tab==='study'?vStudy():tab==='quiz'?vQuiz():vWords();
+}
+
+/* ---------- Actions ---------- */
+function startSession(){
+  const due=dueIds(), nw=newIds();
+  // interleave new words among reviews
+  const q=[];let i=0,j=0;while(i<due.length||j<nw.length){if(i<due.length)q.push(due[i++]);if(i<due.length)q.push(due[i++]);if(j<nw.length)q.push(nw[j++])}
+  sess={queue:q,total:q.length,rev:false,seen:0,newSeen:0,counted:new Set()};
+  tab='study';render();scrollTo(0,0);
+}
+function rate(r){
+  const id=sess.queue.shift(), now=Date.now(), today=dk(now);
+  if(!S.cards[id]){if(S.newDay!==today){S.newDay=today;S.newCount=0}S.newCount++;sess.newSeen++}
+  S.cards[id]=sched(S.cards[id],r,now);
+  if(!sess.counted.has(id)){sess.counted.add(id);sess.seen++}
+  if(!S.days.includes(today))S.days.push(today);
+  if(r===0){sess.queue.splice(Math.min(3,sess.queue.length),0,id);sess.total++}
+  sess.rev=false;save();render();
+}
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act],[data-tab]');if(!el)return;
+  const a=el.dataset.act;
+  if(!a&&el.dataset.tab){tab=el.dataset.tab;askReset=false;if(tab==='quiz'&&quiz&&quiz.i>=quiz.qs?.length)quiz.started=false;render();scrollTo(0,0);return}
+  switch(a){
+    case 'speak':e.stopPropagation();speak(el.dataset.t);return;
+    case 'start':startSession();break;
+    case 'reveal':sess.rev=true;render();break;
+    case 'rate':rate(+el.dataset.r);break;
+    case 'exit':sess=null;tab='today';render();break;
+    case 'focus':S.focus=el.dataset.d;save();render();break;
+    case 'tab':tab=el.dataset.tab;render();break;
+    case 'reset':askReset=true;render();break;
+    case 'reset-no':askReset=false;render();break;
+    case 'reset-yes':S=fresh();save();askReset=false;render();break;
+    case 'qmode':quiz=Object.assign(quiz||{deck:'all'},{mode:el.dataset.m,started:false});render();break;
+    case 'qdeck':quiz=Object.assign(quiz||{mode:'ar'},{deck:el.dataset.d,started:false});render();break;
+    case 'qstart':case 'qagain':{const q=quiz||{mode:'ar',deck:'all'};quiz=makeQuiz(q.mode,q.deck);render();break}
+    case 'qsetup':quiz.started=false;render();break;
+    case 'qpick':{if(quiz.pick)break;quiz.pick=el.dataset.id;if(quiz.pick===quiz.qs[quiz.i].w.id)quiz.score++;render();break}
+    case 'qnext':quiz.i++;quiz.pick=null;render();break;
+    case 'wdeck':W.deck=el.dataset.d;W.open=null;render();break;
+    case 'wopen':W.open=W.open===el.dataset.id?null:el.dataset.id;render();break;
+  }
+});
+document.addEventListener('input',e=>{if(e.target.id==='wq'){W.q=e.target.value;const pos=e.target.selectionStart;render();const i=document.getElementById('wq');i.focus();try{i.setSelectionRange(pos,pos)}catch(_){}}});
+document.addEventListener('keydown',e=>{
+  if(tab!=='study'||!sess||!sess.queue.length)return;
+  if(!sess.rev&&(e.key===' '||e.key==='Enter')){e.preventDefault();sess.rev=true;render()}
+  else if(sess.rev&&['1','2','3','4'].includes(e.key))rate(+e.key-1);
+});
+if(canSpeak){try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{}}catch(e){}}
+render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+</script>
+</body>
+</html>

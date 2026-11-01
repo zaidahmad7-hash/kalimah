@@ -1,0 +1,16 @@
+{
+  "name": "Kalimah · Quran Word Trainer",
+  "short_name": "Kalimah",
+  "description": "Learn the most frequent words of the Quran, a few each day, starting with Al-Fatihah.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0B0C",
+  "theme_color": "#0B0B0C",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
