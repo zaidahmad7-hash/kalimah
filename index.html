@@ -8,8 +8,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kalimah">
 <meta name="theme-color" content="#0B0B0C">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="icon" type="image/png" href="favicon.png?v=2">
 <link rel="manifest" href="manifest.webmanifest">
 <title>Kalimah Word Trainer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -432,7 +432,7 @@ function vToday(){
       <span class="bar"><i style="width:${ws.length?l/ws.length*100:0}%"></i></span></button>`}).join('');
   const parts=[];if(due)parts.push(`${due} review${due>1?'s':''}`);if(nw)parts.push(`${nw} new word${nw>1?'s':''}`);
   return `<div class="stack fade">
-   <div class="brand"><span class="mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3l2.6 2.6H18.4V9.4L21 12l-2.6 2.6v3.8h-3.8L12 21l-2.6-2.6H5.6v-3.8L3 12l2.6-2.6V5.6h3.8z"/></svg>Kalimah</span><span class="ar">كَلِمَة</span></div>
+   <div class="brand"><span class="mark"><svg width="26" height="26" viewBox="10 10 80 80" aria-hidden="true"><ellipse cx="50.0" cy="46.0" rx="18.0" ry="16.0" fill="currentColor"/><polygon points="50.0,25.5 44.0,33.0 56.0,33.0" fill="currentColor"/><rect x="30.0" y="45.5" width="40.0" height="28.0" fill="currentColor"/><rect x="49.4" y="20.0" width="1.2" height="7.0" fill="currentColor"/><ellipse cx="50.0" cy="16.5" rx="3.5" ry="3.5" fill="currentColor"/><ellipse cx="51.7" cy="15.7" rx="3.5" ry="3.5" fill="#0B0B0C"/><rect x="17.0" y="37.0" width="6.0" height="36.5" fill="currentColor"/><rect x="15.8" y="45.0" width="8.4" height="2.0" fill="currentColor"/><polygon points="17.0,37.0 23.0,37.0 20.0,29.0" fill="currentColor"/><rect x="77.0" y="37.0" width="6.0" height="36.5" fill="currentColor"/><rect x="75.8" y="45.0" width="8.4" height="2.0" fill="currentColor"/><polygon points="77.0,37.0 83.0,37.0 80.0,29.0" fill="currentColor"/><rect x="13.0" y="73.5" width="74.0" height="2.3" fill="currentColor"/><rect x="45.5" y="62.0" width="9.0" height="11.5" fill="#0B0B0C"/><ellipse cx="50.0" cy="62.0" rx="4.5" ry="4.5" fill="#0B0B0C"/><rect x="34.8" y="56.0" width="4.4" height="8.0" fill="#0B0B0C"/><ellipse cx="37.0" cy="56.0" rx="2.2" ry="2.2" fill="#0B0B0C"/><rect x="60.8" y="56.0" width="4.4" height="8.0" fill="#0B0B0C"/><ellipse cx="63.0" cy="56.0" rx="2.2" ry="2.2" fill="#0B0B0C"/></svg>Kalimah</span><span class="ar">كَلِمَة</span></div>
    <div><h1>Understand what you recite.</h1><p class="muted" style="margin:8px 0 0">The Qur’an’s most frequent words, a few each day, starting with Al-Fātiḥah.</p></div>
    <div class="stats"><div class="stat gold"><b>${due}</b><span>Due today</span></div><div class="stat"><b>${lc}</b><span>of ${total} learned</span></div><div class="stat"><b>${streak()}</b><span>Day streak</span></div></div>
    <div class="session">${parts.length?`<div><div class="eyebrow">Today’s session</div><p style="margin-top:4px;font-size:1.05rem">${parts.join(' · ')}</p></div><button class="btn gold full" data-act="start">Begin session</button>`
@@ -445,7 +445,7 @@ function vToday(){
 
 function vStudy(){
   if(!sess.queue.length){
-    return `<div class="done fade"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1"><path d="M12 3l2.6 2.6H18.4V9.4L21 12l-2.6 2.6v3.8h-3.8L12 21l-2.6-2.6H5.6v-3.8L3 12l2.6-2.6V5.6h3.8z"/></svg>
+    return `<div class="done fade"><svg width="64" height="64" viewBox="10 10 80 80" aria-hidden="true" style="color:var(--gold)"><ellipse cx="50.0" cy="46.0" rx="18.0" ry="16.0" fill="currentColor"/><polygon points="50.0,25.5 44.0,33.0 56.0,33.0" fill="currentColor"/><rect x="30.0" y="45.5" width="40.0" height="28.0" fill="currentColor"/><rect x="49.4" y="20.0" width="1.2" height="7.0" fill="currentColor"/><ellipse cx="50.0" cy="16.5" rx="3.5" ry="3.5" fill="currentColor"/><ellipse cx="51.7" cy="15.7" rx="3.5" ry="3.5" fill="#0B0B0C"/><rect x="17.0" y="37.0" width="6.0" height="36.5" fill="currentColor"/><rect x="15.8" y="45.0" width="8.4" height="2.0" fill="currentColor"/><polygon points="17.0,37.0 23.0,37.0 20.0,29.0" fill="currentColor"/><rect x="77.0" y="37.0" width="6.0" height="36.5" fill="currentColor"/><rect x="75.8" y="45.0" width="8.4" height="2.0" fill="currentColor"/><polygon points="77.0,37.0 83.0,37.0 80.0,29.0" fill="currentColor"/><rect x="13.0" y="73.5" width="74.0" height="2.3" fill="currentColor"/><rect x="45.5" y="62.0" width="9.0" height="11.5" fill="#0B0B0C"/><ellipse cx="50.0" cy="62.0" rx="4.5" ry="4.5" fill="#0B0B0C"/><rect x="34.8" y="56.0" width="4.4" height="8.0" fill="#0B0B0C"/><ellipse cx="37.0" cy="56.0" rx="2.2" ry="2.2" fill="#0B0B0C"/><rect x="60.8" y="56.0" width="4.4" height="8.0" fill="#0B0B0C"/><ellipse cx="63.0" cy="56.0" rx="2.2" ry="2.2" fill="#0B0B0C"/></svg>
       <h1>Session complete</h1><p class="muted" style="margin:0">${sess.seen} word${sess.seen===1?'':'s'} reviewed${sess.newSeen?`, ${sess.newSeen} of them new`:''}.<br>Bārak Allāhu fīk.</p>
       <button class="btn gold" data-act="exit" style="min-width:200px">Back to Today</button></div>`;
   }

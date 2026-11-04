@@ -1,5 +1,5 @@
 // Kalimah offline support: keeps the app and its fonts available without a connection.
-const CACHE = 'kalimah-v1';
+const CACHE = 'kalimah-v2';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'favicon.png'];
 
 self.addEventListener('install', e => {
