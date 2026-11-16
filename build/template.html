@@ -6,12 +6,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Kalimah">
+<meta name="apple-mobile-web-app-title" content="MyQuranApp">
 <meta name="theme-color" content="#0B0B0C">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="icon" type="image/png" href="favicon.png?v=2">
 <link rel="manifest" href="manifest.webmanifest">
-<title>Kalimah Quran Reader</title>
+<title>MyQuranApp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
@@ -280,7 +280,7 @@ function follow(){
 function playWord(s,v,p){if(P&&!P.paused)togglePause();wAudio.src='https://audio.qurancdn.com/wbw/'+pad(s)+'_'+pad(v)+'_'+pad(p)+'.mp3';wAudio.play().catch(()=>{})}
 function meta(){
   if(!('mediaSession' in navigator)||!P)return;const m=S(P.s),en=P.parts[P.pi]==='en';
-  try{navigator.mediaSession.metadata=new MediaMetadata({title:m[2]+' '+P.s+':'+P.v,artist:en?'English · Saheeh International':'Arabic · Mishary Alafasy',album:'Kalimah',artwork:[{src:'icon-512.png',sizes:'512x512',type:'image/png'}]})}catch(e){}
+  try{navigator.mediaSession.metadata=new MediaMetadata({title:m[2]+' '+P.s+':'+P.v,artist:en?'English · Saheeh International':'Arabic · Mishary Alafasy',album:'MyQuranApp',artwork:[{src:'icon-512.png',sizes:'512x512',type:'image/png'}]})}catch(e){}
 }
 if('mediaSession' in navigator){const ms=navigator.mediaSession,h=(a,f)=>{try{ms.setActionHandler(a,f)}catch(e){}};
   h('play',()=>{if(P&&P.paused)togglePause()});h('pause',()=>{if(P&&!P.paused)togglePause()});
@@ -326,7 +326,7 @@ window.addEventListener('hashchange',route);
 function renderHome(){
   const list=INDEX.filter(x=>!q||(x[0]+' '+x[2]+' '+x[3]).toLowerCase().replace(/[-'’ʿ]/g,'').includes(q.toLowerCase().replace(/[-'’ʿ\s]/g,''))||x[1].includes(q));
   const cont=LAST&&S(LAST.s)?`<a class="cont" href="#surah-${LAST.s}-${LAST.v}"><span class="t"><span class="eyebrow">Continue reading</span><b>${S(LAST.s)[2]} · ayah ${LAST.v}</b><span class="muted" style="font-size:.85rem">${S(LAST.s)[3]}</span></span><span class="go">${ICON.arrow}</span></a>`:'';
-  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}Kalimah<span class="ar">كَلِمَة</span></span></div>
+  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}MyQuranApp<span class="ar">قُرْآنِي</span></span></div>
   <div class="stack" style="padding-top:14px">
     <div><h1>Read the Qur’an and understand every word.</h1><p class="muted" style="margin:8px 0 0">Each Arabic word has its English meaning underneath. Tap a word to hear it, and save any ayah to come back to.</p></div>
     ${cont}
@@ -335,7 +335,7 @@ function renderHome(){
       <input class="search" id="q" type="search" placeholder="Search by name, meaning or number" value="${esc(q)}" autocomplete="off">
       <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${x[2]}</b><small>${x[3]} · ${x[5]} ayahs · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${x[4]==='meccan'?'Makkah':'Madinah'}</span></small></span><span class="ar">${x[1]}</span></a>`).join('')||'<p class="muted">No surah matches that search.</p>'}</div>
     </div>
-    <p class="foot">Word meanings from the Quranic Arabic Corpus (Quran.com). Translation: Saheeh International. Recitation: Mishary Alafasy.<br>Version 2.2 · saved ayahs</p>
+    <p class="foot">Word meanings from the Quranic Arabic Corpus (Quran.com). Translation: Saheeh International. Recitation: Mishary Alafasy.<br>Version 2.3 · MyQuranApp</p>
   </div>`;
 }
 

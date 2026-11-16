@@ -1,4 +1,4 @@
-# Kalimah · Quran Reader
+# MyQuranApp
 
 A calm black-and-gold Quran reader for iPhone. Every Arabic word shows its English meaning underneath, so you can follow what you recite.
 

@@ -1,6 +1,6 @@
 {
-  "name": "Kalimah · Quran Reader",
-  "short_name": "Kalimah",
+  "name": "MyQuranApp",
+  "short_name": "MyQuranApp",
   "description": "Read the Quran with the English meaning under every Arabic word.",
   "start_url": "./",
   "scope": "./",
