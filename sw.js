@@ -1,7 +1,7 @@
 // MyQuranApp offline support.
 // App page: network first, so updates arrive. Surah data, fonts and icons: cache first, so reading works offline.
-const CACHE = 'kalimah-v10';
-const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'apple-touch-icon.png?v=3', 'favicon.png?v=3', 'icon-192.png', 'data/1.json', 'fonts/amiri-quran.woff2', 'fonts/amiri.woff2', 'fonts/nastaliq.woff2'];
+const CACHE = 'kalimah-v11';
+const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'apple-touch-icon.png?v=3', 'favicon.png?v=3', 'icon-192.png', 'data/1.json', 'fonts/amiri-quran.woff2', 'fonts/amiri.woff2', 'fonts/nastaliq.woff2', 'fonts/indopak.woff2', 'fonts/hafs.woff2'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
