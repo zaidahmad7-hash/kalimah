@@ -149,6 +149,22 @@ h1{font-size:2.1rem;line-height:1.15}
 .tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;color:var(--faint);padding:6px 0}
 .tabs a.on{color:var(--gold)}
 .tabs svg{width:22px;height:22px}
+.player{position:fixed;left:0;right:0;z-index:9;bottom:calc(env(safe-area-inset-bottom) + 62px);max-width:620px;margin:0 auto;padding:0 10px;display:none}
+.player.on{display:block}
+.player>div{background:var(--raise)}
+.pr{display:flex;align-items:center;gap:6px;border:1px solid rgba(200,168,98,.35);border-bottom:0;border-radius:18px 18px 0 0;padding:10px 10px 8px 14px}
+.pinfo{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.pinfo b{font-weight:600;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pinfo span{font-size:.75rem;color:var(--gold)}
+.pc{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:var(--text);flex:none}
+.pc svg{width:18px;height:18px}
+.pc.big{width:44px;height:44px;background:var(--gold);color:#16130B}
+.player .seg{border:1px solid rgba(200,168,98,.35);border-top:1px solid var(--line);border-radius:0 0 18px 18px;padding:6px;display:flex;gap:4px}
+.seg{display:flex;gap:4px;background:var(--surface);border-radius:12px;padding:3px;margin-top:8px}
+.player .seg{margin-top:0}
+.seg button{flex:1;height:34px;border-radius:9px;font-size:.82rem;color:var(--muted)}
+.seg button.on{background:var(--bg);color:var(--gold);box-shadow:inset 0 0 0 1px rgba(200,168,98,.4)}
+body.hasplayer .app{padding-bottom:calc(env(safe-area-inset-bottom) + 210px)}
 .foot{font-size:.75rem;color:var(--faint);padding-top:10px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -159,6 +175,7 @@ h1{font-size:2.1rem;line-height:1.15}
   <a href="#" id="t-read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg>Read</a>
   <a href="#saved" id="t-saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.5 4h11v16l-5.5-4-5.5 4z"/></svg>Saved words</a>
 </nav></div>
+<div class="player" id="player" aria-label="Audio player"></div>
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
 
@@ -172,13 +189,16 @@ const ICON={
  aa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 18l5-12 5 12M4.8 14h6.4M14.5 18l3.2-8 3.3 8M15.6 15.5h4.3"/></svg>',
  bm:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 4h11v16l-5.5-4-5.5 4z"/></svg>',
  bmf:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 4h11v16l-5.5-4-5.5 4z"/></svg>',
+ prev:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 6h2v12H7zM19 6v12l-9-6z"/></svg>',
+ next:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 6h2v12h-2zM5 6v12l9-6z"/></svg>',
+ x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 6l12 12M18 6L6 18"/></svg>',
  arrow:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
 };
 const PICKS=[[1,'Al-Fātiḥah','The Opener',null],[2,'Āyat al-Kursī','2 : 255',255,'آية الكرسي'],[112,'Al-Ikhlāṣ','Sincerity',null],[113,'Al-Falaq','The Daybreak',null],[114,'An-Nās','Mankind',null],[67,'Al-Mulk','The Sovereignty',null],[36,'Yā-Sīn','Ya Sin',null],[18,'Al-Kahf','The Cave',null]];
 
 /* ---------- storage (safe) ---------- */
 const store={get(k,d){try{const v=localStorage.getItem('kalimah.'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('kalimah.'+k,JSON.stringify(v))}catch(e){}}};
-let PREF=Object.assign({wbw:true,tx:true,size:2},store.get('pref',{}));
+let PREF=Object.assign({wbw:true,tx:true,size:2,listen:'ar',cont:false},store.get('pref',{}));
 let SAVED=store.get('saved',[]);       // [{k:'s:v:i', a, w, t, s, v, p}]
 let LAST=store.get('last',null);        // {s, v}
 const SIZES=[24,28,32,38,44];
@@ -194,28 +214,79 @@ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'
 const cache={};
 async function loadSurah(n){if(cache[n])return cache[n];const r=await fetch('data/'+n+'.json');if(!r.ok)throw new Error('load');return cache[n]=await r.json()}
 
-/* ---------- audio ---------- */
-const audio=new Audio(); let playing=null; // {mode:'ayah'|'all'|'word', s, v}
-function stopAudio(){try{audio.pause()}catch(e){}playing=null;markPlaying()}
-function playUrl(urls,onend){
-  let i=0;audio.onended=onend||(()=>{playing=null;markPlaying()});
-  audio.onerror=()=>{i++;if(i<urls.length){audio.src=urls[i];audio.play().catch(()=>{})}else{playing=null;markPlaying()}};
+/* ---------- audio ----------
+   P = the recitation queue. parts = what to play for each ayah: Arabic, English, or both. */
+const audio=new Audio(), wAudio=new Audio(); audio.preload='auto';
+let P=null; // {s, v, seq, parts, pi, paused, tts}
+const LISTEN={ar:'Arabic',en:'English',both:'Arabic + English'};
+const AR=(s,v)=>['https://everyayah.com/data/Alafasy_128kbps/'+pad(s)+pad(v)+'.mp3','https://verses.quran.com/Alafasy/mp3/'+pad(s)+pad(v)+'.mp3'];
+const EN=(s,v)=>['https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/'+pad(s)+pad(v)+'.mp3'];
+const partsFor=()=>PREF.listen==='en'?['en']:PREF.listen==='both'?['ar','en']:['ar'];
+const ttsOK='speechSynthesis' in window;
+function halt(){try{audio.pause()}catch(e){}if(ttsOK)try{speechSynthesis.cancel()}catch(e){}}
+function stopAudio(){halt();P=null;markPlaying()}
+function startAyah(s,v,seq){halt();try{wAudio.pause()}catch(e){}P={s,v,seq,parts:partsFor(),pi:0,paused:false,tts:false};follow();playPart()}
+function playPart(){
+  if(!P)return;const {s,v}=P,part=P.parts[P.pi];P.tts=false;markPlaying();meta();
+  const urls=part==='ar'?AR(s,v):EN(s,v);let i=0;
+  audio.onended=advance;
+  audio.onerror=()=>{if(!P)return;i++;if(i<urls.length){audio.src=urls[i];audio.play().catch(()=>{})}else if(part==='en')speakEnglish();else advance()};
   audio.src=urls[0];audio.play().catch(()=>{});
 }
-const ayahUrls=(s,v)=>['https://everyayah.com/data/Alafasy_128kbps/'+pad(s)+pad(v)+'.mp3','https://verses.quran.com/Alafasy/mp3/'+pad(s)+pad(v)+'.mp3'];
-function playAyah(s,v,all){
-  playing={mode:all?'all':'ayah',s,v};markPlaying();
-  playUrl(ayahUrls(s,v),()=>{
-    if(playing&&playing.mode==='all'&&v<S(s)[5]){ensureRendered(v+1);const el=document.getElementById('a-'+(v+1));if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});playAyah(s,v+1,true)}
-    else{playing=null;markPlaying()}
-  });
+async function speakEnglish(){ // backup when the recorded English isn't reachable: the phone reads the translation
+  let d=cache[P.s];if(!d)try{d=await loadSurah(P.s)}catch(e){}
+  const text=d&&d.v[P.v-1]?d.v[P.v-1].en:'';
+  if(!text||!ttsOK||!P||P.paused){advance();return}
+  P.tts=true;const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=.95;u.onend=()=>{if(P&&P.tts&&!P.paused)advance()};
+  speechSynthesis.cancel();speechSynthesis.speak(u);
 }
-function playWord(s,v,p){playing={mode:'word',s,v};playUrl(['https://audio.qurancdn.com/wbw/'+pad(s)+'_'+pad(v)+'_'+pad(p)+'.mp3'])}
+function advance(){
+  if(!P||P.paused)return;
+  if(P.pi+1<P.parts.length){P.pi++;playPart();return}
+  if(P.seq&&P.v<S(P.s)[5]){P.v++;P.pi=0;P.parts=partsFor();follow();playPart();return}
+  if(P.seq&&PREF.cont&&P.s<114){P.s++;P.v=1;P.pi=0;P.parts=partsFor();loadSurah(P.s).catch(()=>{});if(R.view==='read')location.hash='surah-'+P.s;playPart();return}
+  P=null;markPlaying();
+}
+function step(d){if(!P)return;const nv=P.v+d;if(nv<1||nv>S(P.s)[5])return;halt();P.v=nv;P.pi=0;P.paused=false;P.parts=partsFor();follow();playPart()}
+function togglePause(){
+  if(!P)return;
+  if(P.paused){P.paused=false;if(P.tts){speakEnglish()}else audio.play().catch(()=>{})}
+  else{P.paused=true;audio.pause();if(ttsOK)speechSynthesis.cancel()}
+  markPlaying();
+}
+function setListen(m){PREF.listen=m;store.set('pref',PREF);if(P){halt();P.parts=partsFor();P.pi=0;P.paused=false;playPart()}markPlaying();
+  document.querySelectorAll('[data-act="listen"]').forEach(b=>b.classList.toggle('on',b.dataset.m===m))}
+function follow(){
+  if(!P||R.view!=='read'||!cur||cur.s!==P.s)return;ensureRendered(P.v+5);
+  const el=document.getElementById('a-'+P.v);
+  if(el&&document.visibilityState==='visible')el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  LAST={s:P.s,v:P.v};store.set('last',LAST);
+}
+function playWord(s,v,p){if(P&&!P.paused)togglePause();wAudio.src='https://audio.qurancdn.com/wbw/'+pad(s)+'_'+pad(v)+'_'+pad(p)+'.mp3';wAudio.play().catch(()=>{})}
+function meta(){
+  if(!('mediaSession' in navigator)||!P)return;const m=S(P.s),en=P.parts[P.pi]==='en';
+  try{navigator.mediaSession.metadata=new MediaMetadata({title:m[2]+' '+P.s+':'+P.v,artist:en?'English · Saheeh International':'Arabic · Mishary Alafasy',album:'Kalimah',artwork:[{src:'icon-512.png',sizes:'512x512',type:'image/png'}]})}catch(e){}
+}
+if('mediaSession' in navigator){const ms=navigator.mediaSession,h=(a,f)=>{try{ms.setActionHandler(a,f)}catch(e){}};
+  h('play',()=>{if(P&&P.paused)togglePause()});h('pause',()=>{if(P&&!P.paused)togglePause()});
+  h('nexttrack',()=>step(1));h('previoustrack',()=>step(-1));}
+const playerEl=document.getElementById('player');
 function markPlaying(){
   document.querySelectorAll('.ayah.playing').forEach(e=>e.classList.remove('playing'));
   document.querySelectorAll('[data-act="ayah-play"]').forEach(b=>{b.innerHTML=ICON.play+'Listen'});
-  if(playing&&playing.mode!=='word'){const el=document.getElementById('a-'+playing.v);if(el){el.classList.add('playing');const b=el.querySelector('[data-act="ayah-play"]');if(b)b.innerHTML=ICON.pause+'Pause'}}
-  const pa=document.getElementById('playall');if(pa){pa.innerHTML=playing&&playing.mode==='all'?ICON.pause:ICON.play;pa.classList.toggle('on',!!(playing&&playing.mode==='all'))}
+  const here=P&&cur&&cur.s===P.s&&R.view==='read';
+  if(here){const el=document.getElementById('a-'+P.v);if(el){el.classList.add('playing');const b=el.querySelector('[data-act="ayah-play"]');if(b&&!P.paused)b.innerHTML=ICON.pause+'Pause'}}
+  const pa=document.getElementById('playall');if(pa){const on=here&&P.seq&&!P.paused;pa.innerHTML=on?ICON.pause:ICON.play;pa.classList.toggle('on',on)}
+  document.body.classList.toggle('hasplayer',!!P);
+  if(!P){playerEl.classList.remove('on');return}
+  const part=P.parts[P.pi];
+  playerEl.classList.add('on');
+  playerEl.innerHTML=`<div class="pr"><a class="pinfo" href="#surah-${P.s}-${P.v}"><b>${S(P.s)[2]} ${P.s}:${P.v}</b><span>${P.paused?'Paused':'Playing '+(part==='en'?'English':'Arabic')}${P.tts?' (phone voice)':''}</span></a>
+    <button class="pc" data-act="p-prev" aria-label="Previous ayah">${ICON.prev}</button>
+    <button class="pc big" data-act="p-toggle" aria-label="${P.paused?'Play':'Pause'}">${P.paused?ICON.play:ICON.pause}</button>
+    <button class="pc" data-act="p-next" aria-label="Next ayah">${ICON.next}</button>
+    <button class="pc" data-act="p-stop" aria-label="Stop">${ICON.x}</button></div>
+    <div class="seg">${Object.entries(LISTEN).map(([k,l])=>`<button class="${PREF.listen===k?'on':''}" data-act="listen" data-m="${k}">${l}</button>`).join('')}</div>`;
 }
 
 /* ---------- routing ---------- */
@@ -226,7 +297,7 @@ function parse(){const h=location.hash.slice(1);let m;
   if(h==='saved')return{view:'saved'};return{view:'home'}}
 async function route(){
   const nr=parse();closeSheet();
-  if(!(nr.view==='read'&&R.view==='read'&&nr.s===R.s))stopAudio();
+  if(P&&nr.view==='read'&&nr.s!==P.s)stopAudio();
   R=nr;review=null;
   document.getElementById('t-read').classList.toggle('on',R.view!=='saved');
   document.getElementById('t-saved').classList.toggle('on',R.view==='saved');
@@ -313,7 +384,9 @@ function wordSheet(s,v,i){
     <div class="row2"><button class="btn ghost" data-act="wplay">${ICON.play}Hear it</button><button class="btn ${sv?'saved':'gold'}" data-act="wsave">${sv?ICON.bmf+'Saved':ICON.bm+'Save word'}</button></div>`);
 }
 function settingsSheet(){
-  openSheet(`<h2 style="margin-bottom:6px">Reading settings</h2><div class="set">
+  openSheet(`<h2 style="margin-bottom:6px">Reading and listening</h2><div class="set">
+    <div class="r" style="flex-direction:column;align-items:stretch"><span>Listen to</span><div class="seg">${Object.entries(LISTEN).map(([k,l])=>`<button class="${PREF.listen===k?'on':''}" data-act="listen" data-m="${k}">${l}</button>`).join('')}</div></div>
+    <div class="r"><span>Keep playing into the next surah</span><button class="tog ${PREF.cont?'on':''}" data-act="pref" data-k="cont" aria-label="Continue into next surah"></button></div>
     <div class="r"><span>Word meanings under Arabic</span><button class="tog ${PREF.wbw?'on':''}" data-act="pref" data-k="wbw" aria-label="Word meanings"></button></div>
     <div class="r"><span>Full translation of each ayah</span><button class="tog ${PREF.tx?'on':''}" data-act="pref" data-k="tx" aria-label="Translation"></button></div>
     <div class="r"><span>Arabic size</span><span class="steps"><button data-act="size" data-d="-1" aria-label="Smaller">ا−</button><button data-act="size" data-d="1" aria-label="Larger">ا+</button></span></div>
@@ -349,8 +422,13 @@ document.addEventListener('click',async e=>{
     case 'wsave':{const i=SAVED.findIndex(x=>x.k===selW.k);if(i>=0)SAVED.splice(i,1);else SAVED.push({k:selW.k,a:selW.a,w:selW.w,t:selW.t,s:selW.s,v:selW.v,p:selW.p});store.set('saved',SAVED);
       const sv=i<0;el.className='btn '+(sv?'saved':'gold');el.innerHTML=sv?ICON.bmf+'Saved':ICON.bm+'Save word';
       const w=document.querySelector(`.w[data-v="${selW.v}"][data-i="${selW.i}"]`);if(w)w.classList.toggle('sv',sv);break}
-    case 'ayah-play':{const v=+el.dataset.v;if(playing&&playing.v===v&&playing.mode!=='word')stopAudio();else playAyah(cur.s,v,false);break}
-    case 'playall':{if(playing&&playing.mode==='all'){stopAudio();break}let v=1;if(LAST&&LAST.s===cur.s)v=LAST.v;playAyah(cur.s,v,true);const el2=document.getElementById('a-'+v);if(el2)el2.scrollIntoView({block:'start'});break}
+    case 'ayah-play':{const v=+el.dataset.v;if(P&&P.s===cur.s&&P.v===v){togglePause()}else startAyah(cur.s,v,false);break}
+    case 'playall':{if(P&&P.s===cur.s&&P.seq){togglePause();break}let v=1;if(LAST&&LAST.s===cur.s)v=LAST.v;startAyah(cur.s,v,true);break}
+    case 'p-prev':step(-1);break;
+    case 'p-next':step(1);break;
+    case 'p-toggle':togglePause();break;
+    case 'p-stop':stopAudio();break;
+    case 'listen':setListen(el.dataset.m);break;
     case 'more':ensureRendered(shown+30);break;
     case 'settings':settingsSheet();break;
     case 'pref':PREF[el.dataset.k]=!PREF[el.dataset.k];store.set('pref',PREF);applyPref();el.classList.toggle('on',PREF[el.dataset.k]);break;
