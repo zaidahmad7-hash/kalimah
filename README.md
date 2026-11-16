@@ -1,27 +1,19 @@
-# Kalimah · Quran Word Trainer
+# Kalimah · Quran Reader
 
-A minimalist black-and-gold web app for learning the most frequent words of the Quran, starting with every word of Al-Fātiḥah.
+A calm black-and-gold Quran reader for iPhone. Every Arabic word shows its English meaning underneath, so you can follow what you recite.
 
-- **Daily session** with spaced repetition (10 new words a day)
-- **Quiz** in both directions, Arabic → English and English → Arabic
-- **Word list** with search and progress status
-- Works offline and installs to the iPhone home screen
+- All 114 surahs, ayah by ayah, with word-by-word meanings and a full translation
+- Tap any word to hear it and save it; review saved words later
+- Listen to each ayah, or play a whole surah (Mishary Alafasy)
+- Remembers where you stopped; works offline
 
 ## Install on iPhone
+Open https://zaidahmad7-hash.github.io/kalimah/ in Safari → Share → Add to Home Screen.
 
-1. Open the GitHub Pages link in **Safari**.
-2. Tap **Share**, then **Add to Home Screen**.
-3. Open Kalimah from its icon. It runs full-screen, like a native app.
+## Sources
+- Word-by-word meanings: Quranic Arabic Corpus / Quran.com (via `@kmaslesa/holy-quran-word-by-word-full-data`)
+- Arabic text and Saheeh International translation: `quran-json` by Risan Bagja Pradana (CC BY-SA 4.0)
+- Font: Amiri Quran (SIL Open Font License)
+- Audio: everyayah.com and Quran.com CDN
 
-Progress is stored on the device, inside the installed app.
-
-## Files
-
-| File | Purpose |
-|---|---|
-| `index.html` | The whole app: words, screens and logic |
-| `manifest.webmanifest` | App name, colours, icons, full-screen mode |
-| `sw.js` | Offline support |
-| `*.png` | Home-screen and browser icons |
-
-To add or edit words, change the `RAW` list (and the `AY` example ayahs) in `index.html`.
+`build/` holds the scripts that generate `data/` and `index.html`.

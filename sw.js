@@ -1,6 +1,7 @@
-// Kalimah offline support: keeps the app and its fonts available without a connection.
-const CACHE = 'kalimah-v2';
-const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'favicon.png'];
+// Kalimah offline support.
+// App page: network first, so updates arrive. Surah data, fonts and icons: cache first, so reading works offline.
+const CACHE = 'kalimah-v3';
+const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'apple-touch-icon.png?v=2', 'favicon.png?v=2', 'icon-192.png', 'data/1.json', 'fonts/amiri-quran.woff2', 'fonts/amiri.woff2'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -14,27 +15,23 @@ self.addEventListener('activate', e => {
   );
 });
 
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  const url = new URL(e.request.url);
+const put = (req, res) => { if (res && (res.ok || res.type === 'opaque')) { const c = res.clone(); caches.open(CACHE).then(x => x.put(req, c)); } return res; };
 
-  // App pages: try the network first so updates arrive, fall back to the cached copy offline.
-  if (url.origin === location.origin) {
-    e.respondWith(
-      fetch(e.request)
-        .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); return res; })
-        .catch(() => caches.match(e.request).then(r => r || caches.match('index.html')))
-    );
+self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  const sameOrigin = url.origin === location.origin;
+
+  // Audio streams straight from the reciter's server.
+  if (req.destination === 'audio' || url.pathname.endsWith('.mp3')) return;
+
+  if (sameOrigin && (req.mode === 'navigate' || url.pathname.endsWith('/') || url.pathname.endsWith('index.html'))) {
+    e.respondWith(fetch(req).then(r => put(req, r)).catch(() => caches.match(req).then(r => r || caches.match('index.html'))));
     return;
   }
 
-  // Google Fonts: serve from cache, refresh in the background.
-  if (url.hostname.endsWith('googleapis.com') || url.hostname.endsWith('gstatic.com')) {
-    e.respondWith(
-      caches.match(e.request).then(cached => {
-        const net = fetch(e.request).then(res => { caches.open(CACHE).then(c => c.put(e.request, res.clone())); return res; }).catch(() => cached);
-        return cached || net;
-      })
-    );
+  if (sameOrigin || url.hostname.endsWith('googleapis.com') || url.hostname.endsWith('gstatic.com')) {
+    e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => put(req, r))));
   }
 });

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kalimah">
+<meta name="theme-color" content="#0B0B0C">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="icon" type="image/png" href="favicon.png?v=2">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Kalimah Quran Reader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:"Kalimah Quran";src:url("fonts/amiri-quran.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Kalimah Naskh";src:url("fonts/amiri.woff2") format("woff2");font-display:swap}
+:root{
+  /* One calm column. Black page, gold for what you act on, pastels only as quiet labels. */
+  --bg:#0B0B0C; --surface:#131315; --raise:#1B1B1E; --line:#26262A;
+  --text:#ECE7DC; --muted:#8E897F; --faint:#5C5952;
+  --gold:#C8A862; --gold-dim:rgba(200,168,98,.13);
+  --sand:#E3D2A6; --sky:#A9C5D6; --lav:#BCB4D9; --sage:#AAC4A5; --rose:#E1B4AD;
+  --f-q:"Kalimah Quran","Geeza Pro",serif;
+  --f-ar:"Kalimah Naskh","Geeza Pro",serif;
+  --f-display:"Cormorant Garamond",Georgia,serif;
+  --f-body:"Figtree",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --ar-size:30px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:1.5px solid var(--gold);outline-offset:3px;border-radius:10px}
+.app{max-width:620px;margin:0 auto;padding:0 18px calc(env(safe-area-inset-bottom) + 100px)}
+h1,h2{font-family:var(--f-display);font-weight:500;text-wrap:balance;margin:0}
+h1{font-size:2.1rem;line-height:1.15}
+.muted{color:var(--muted)}
+.eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:22px}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:5;background:rgba(11,11,12,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);margin:0 -18px;padding:calc(env(safe-area-inset-top) + 10px) 18px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid transparent}
+.bar.line{border-bottom-color:var(--line)}
+.bar .title{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.bar .title b{font-family:var(--f-display);font-weight:600;font-size:1.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .title span{font-size:.75rem;color:var(--muted)}
+.ib{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;border:1px solid var(--line);color:var(--text)}
+.ib.on{color:var(--gold);border-color:rgba(200,168,98,.5)}
+.ib svg{width:18px;height:18px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-size:1.3rem;color:var(--gold);letter-spacing:.04em;flex:1}
+.brand .ar{font-family:var(--f-ar);font-size:1.5rem;margin-left:auto;opacity:.85}
+
+/* home */
+.cont{display:flex;align-items:center;gap:14px;border:1px solid rgba(200,168,98,.4);background:linear-gradient(180deg,rgba(200,168,98,.08),rgba(200,168,98,0) 80%);border-radius:18px;padding:16px 18px}
+.cont .t{flex:1}
+.cont b{display:block;font-weight:600}
+.cont .go{width:44px;height:44px;border-radius:50%;background:var(--gold);color:#16130B;display:grid;place-items:center;flex:none}
+.picks{display:flex;gap:8px;overflow-x:auto;margin:0 -18px;padding:2px 18px;scrollbar-width:none}
+.picks::-webkit-scrollbar{display:none}
+.pick{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;gap:0;min-width:118px}
+.pick b{font-weight:600;font-size:.92rem}
+.pick span{font-size:.75rem;color:var(--muted)}
+.pick .ar{font-family:var(--f-ar);font-size:1.15rem;color:var(--gold);line-height:1.6;text-align:right}
+.search{width:100%;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:0 16px;font:inherit}
+.search::placeholder{color:var(--faint)}
+.list{display:flex;flex-direction:column}
+.srow{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.srow .no{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums;text-align:center;width:30px;height:30px;line-height:30px;border:1px solid var(--line);border-radius:9px;transform:rotate(45deg)}
+.srow .no i{display:block;transform:rotate(-45deg);font-style:normal}
+.srow b{font-weight:600}
+.srow small{display:block;color:var(--muted);font-size:.8rem}
+.srow .ar{font-family:var(--f-ar);font-size:1.35rem;color:var(--text);opacity:.9}
+.tag{font-size:.68rem;letter-spacing:.06em;color:var(--c);}
+
+/* reader */
+.shead{text-align:center;padding:26px 0 8px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.shead .ar{font-family:var(--f-q);font-size:2.4rem;color:var(--gold);line-height:1.7}
+.shead p{margin:0;font-size:.85rem;color:var(--muted)}
+.bism{font-family:var(--f-q);font-size:1.7rem;text-align:center;color:var(--text);margin:14px 0 4px;line-height:2}
+.ayah{padding:22px 0 20px;border-bottom:1px solid var(--line);scroll-margin-top:90px}
+.ayah.playing{border-bottom-color:rgba(200,168,98,.45)}
+.ayah.playing .num{background:var(--gold);color:#16130B;border-color:var(--gold)}
+.ah{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.num{min-width:34px;height:26px;padding:0 8px;border-radius:999px;border:1px solid var(--line);font-size:.78rem;color:var(--muted);display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
+.ah .sp{flex:1}
+.mini{height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font-size:.8rem;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.mini svg{width:14px;height:14px}
+.words{direction:rtl;display:flex;flex-wrap:wrap;gap:10px 6px;align-items:flex-start}
+.w{display:flex;flex-direction:column;align-items:center;padding:4px 6px 6px;border-radius:12px;max-width:100%;transition:background .15s}
+.w:hover{background:var(--surface)}
+.w.sel{background:color-mix(in srgb,var(--lav) 14%,transparent)}
+.w.sv .wa{color:var(--sage)}
+.wa{font-family:var(--f-q);font-size:var(--ar-size);line-height:2.15;color:var(--text);white-space:nowrap}
+.we{direction:ltr;font-size:.78rem;line-height:1.3;color:var(--muted);text-align:center;max-width:9.5em;margin-top:3px}
+.nowbw .we{display:none}
+.nowbw .words{gap:4px 4px}
+.tx{margin:14px 0 0;color:var(--text);opacity:.88;font-size:1rem;line-height:1.6;max-width:65ch}
+.notx .tx{display:none}
+.more{display:flex;justify-content:center;padding:24px 0}
+.next{display:flex;justify-content:space-between;gap:10px;padding:26px 0}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--raise);border-top:1px solid var(--line);border-radius:22px 22px 0 0;padding:10px 20px calc(env(safe-area-inset-bottom) + 20px);transform:translateY(105%);transition:transform .25s ease;max-width:620px;margin:0 auto}
+.sheet.on{transform:none}
+.grab{width:38px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 14px}
+.sw{text-align:center;display:flex;flex-direction:column;gap:2px;align-items:center}
+.sw .ar{font-family:var(--f-q);font-size:3rem;line-height:1.7}
+.sw .tr{font-style:italic;color:var(--muted)}
+.sw .en{font-family:var(--f-display);font-size:1.7rem;color:var(--gold);line-height:1.2;text-wrap:balance}
+.sw .ref{font-size:.78rem;color:var(--faint);margin-top:6px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:14px;padding:0 18px;font-weight:600}
+.btn.gold{background:var(--gold);color:#16130B}
+.btn.ghost{border:1px solid var(--line)}
+.btn.saved{border:1px solid color-mix(in srgb,var(--sage) 50%,transparent);color:var(--sage)}
+.btn svg{width:18px;height:18px}
+.set{display:flex;flex-direction:column;gap:6px}
+.set .r{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.set .r:last-child{border-bottom:0}
+.tog{width:50px;height:30px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--text);transition:transform .2s}
+.tog.on{background:var(--gold)}
+.tog.on::after{transform:translateX(20px);background:#16130B}
+.steps{display:flex;gap:6px}
+.steps button{width:42px;height:36px;border-radius:10px;border:1px solid var(--line);font-family:var(--f-ar)}
+
+/* saved */
+.vrow{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.vrow .ar{font-family:var(--f-q);font-size:1.9rem;line-height:1.6;grid-row:1/3;grid-column:2;text-align:right}
+.vrow b{font-weight:600}
+.vrow small{color:var(--muted);font-size:.8rem}
+.vrow small a{color:var(--gold)}
+.empty{border:1px dashed var(--line);border-radius:18px;padding:26px 20px;text-align:center;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:24px;min-height:330px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
+.card .ar{font-family:var(--f-q);font-size:3.6rem;line-height:1.7}
+.card .en{font-family:var(--f-display);font-size:1.8rem;color:var(--gold);line-height:1.2}
+.card .hint{color:var(--faint);font-size:.85rem;margin-top:10px}
+
+/* tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(11,11,12,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 12px calc(env(safe-area-inset-bottom) + 6px)}
+.tabs nav{max-width:620px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr}
+.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;color:var(--faint);padding:6px 0}
+.tabs a.on{color:var(--gold)}
+.tabs svg{width:22px;height:22px}
+.foot{font-size:.75rem;color:var(--faint);padding-top:10px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main class="app" id="view"></main>
+<div class="tabs"><nav>
+  <a href="#" id="t-read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg>Read</a>
+  <a href="#saved" id="t-saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.5 4h11v16l-5.5-4-5.5 4z"/></svg>Saved words</a>
+</nav></div>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+
+<script>
+const INDEX=__INDEX__; // [n, arabic name, name, meaning, type, ayahs]
+const MOSQUE='__MOSQUE__';
+const ICON={
+ back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M15 5l-7 7 7 7"/></svg>',
+ play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>',
+ pause:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg>',
+ aa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 18l5-12 5 12M4.8 14h6.4M14.5 18l3.2-8 3.3 8M15.6 15.5h4.3"/></svg>',
+ bm:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 4h11v16l-5.5-4-5.5 4z"/></svg>',
+ bmf:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 4h11v16l-5.5-4-5.5 4z"/></svg>',
+ arrow:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+};
+const PICKS=[[1,'Al-Fātiḥah','The Opener',null],[2,'Āyat al-Kursī','2 : 255',255,'آية الكرسي'],[112,'Al-Ikhlāṣ','Sincerity',null],[113,'Al-Falaq','The Daybreak',null],[114,'An-Nās','Mankind',null],[67,'Al-Mulk','The Sovereignty',null],[36,'Yā-Sīn','Ya Sin',null],[18,'Al-Kahf','The Cave',null]];
+
+/* ---------- storage (safe) ---------- */
+const store={get(k,d){try{const v=localStorage.getItem('kalimah.'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('kalimah.'+k,JSON.stringify(v))}catch(e){}}};
+let PREF=Object.assign({wbw:true,tx:true,size:2},store.get('pref',{}));
+let SAVED=store.get('saved',[]);       // [{k:'s:v:i', a, w, t, s, v, p}]
+let LAST=store.get('last',null);        // {s, v}
+const SIZES=[24,28,32,38,44];
+const applyPref=()=>{document.documentElement.style.setProperty('--ar-size',SIZES[PREF.size]+'px');document.body.classList.toggle('nowbw',!PREF.wbw);document.body.classList.toggle('notx',!PREF.tx)};
+applyPref();
+
+const pad=n=>String(n).padStart(3,'0');
+const arNum=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const S=n=>INDEX[n-1];
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+
+/* ---------- data ---------- */
+const cache={};
+async function loadSurah(n){if(cache[n])return cache[n];const r=await fetch('data/'+n+'.json');if(!r.ok)throw new Error('load');return cache[n]=await r.json()}
+
+/* ---------- audio ---------- */
+const audio=new Audio(); let playing=null; // {mode:'ayah'|'all'|'word', s, v}
+function stopAudio(){try{audio.pause()}catch(e){}playing=null;markPlaying()}
+function playUrl(urls,onend){
+  let i=0;audio.onended=onend||(()=>{playing=null;markPlaying()});
+  audio.onerror=()=>{i++;if(i<urls.length){audio.src=urls[i];audio.play().catch(()=>{})}else{playing=null;markPlaying()}};
+  audio.src=urls[0];audio.play().catch(()=>{});
+}
+const ayahUrls=(s,v)=>['https://everyayah.com/data/Alafasy_128kbps/'+pad(s)+pad(v)+'.mp3','https://verses.quran.com/Alafasy/mp3/'+pad(s)+pad(v)+'.mp3'];
+function playAyah(s,v,all){
+  playing={mode:all?'all':'ayah',s,v};markPlaying();
+  playUrl(ayahUrls(s,v),()=>{
+    if(playing&&playing.mode==='all'&&v<S(s)[5]){ensureRendered(v+1);const el=document.getElementById('a-'+(v+1));if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});playAyah(s,v+1,true)}
+    else{playing=null;markPlaying()}
+  });
+}
+function playWord(s,v,p){playing={mode:'word',s,v};playUrl(['https://audio.qurancdn.com/wbw/'+pad(s)+'_'+pad(v)+'_'+pad(p)+'.mp3'])}
+function markPlaying(){
+  document.querySelectorAll('.ayah.playing').forEach(e=>e.classList.remove('playing'));
+  document.querySelectorAll('[data-act="ayah-play"]').forEach(b=>{b.innerHTML=ICON.play+'Listen'});
+  if(playing&&playing.mode!=='word'){const el=document.getElementById('a-'+playing.v);if(el){el.classList.add('playing');const b=el.querySelector('[data-act="ayah-play"]');if(b)b.innerHTML=ICON.pause+'Pause'}}
+  const pa=document.getElementById('playall');if(pa){pa.innerHTML=playing&&playing.mode==='all'?ICON.pause:ICON.play;pa.classList.toggle('on',!!(playing&&playing.mode==='all'))}
+}
+
+/* ---------- routing ---------- */
+const $v=document.getElementById('view');
+let R={view:'home',s:0,v:0}, shown=0, cur=null, obs=null, review=null, q='';
+function parse(){const h=location.hash.slice(1);let m;
+  if((m=h.match(/^surah-(\d+)(?:-(\d+))?$/))&&+m[1]>=1&&+m[1]<=114)return{view:'read',s:+m[1],v:m[2]?+m[2]:0};
+  if(h==='saved')return{view:'saved'};return{view:'home'}}
+async function route(){
+  const nr=parse();closeSheet();
+  if(!(nr.view==='read'&&R.view==='read'&&nr.s===R.s))stopAudio();
+  R=nr;review=null;
+  document.getElementById('t-read').classList.toggle('on',R.view!=='saved');
+  document.getElementById('t-saved').classList.toggle('on',R.view==='saved');
+  if(R.view==='home')renderHome();else if(R.view==='saved')renderSaved();else await renderRead();
+}
+window.addEventListener('hashchange',route);
+
+/* ---------- home ---------- */
+function renderHome(){
+  const list=INDEX.filter(x=>!q||(x[0]+' '+x[2]+' '+x[3]).toLowerCase().replace(/[-'’ʿ]/g,'').includes(q.toLowerCase().replace(/[-'’ʿ\s]/g,''))||x[1].includes(q));
+  const cont=LAST&&S(LAST.s)?`<a class="cont" href="#surah-${LAST.s}-${LAST.v}"><span class="t"><span class="eyebrow">Continue reading</span><b>${S(LAST.s)[2]} · ayah ${LAST.v}</b><span class="muted" style="font-size:.85rem">${S(LAST.s)[3]}</span></span><span class="go">${ICON.arrow}</span></a>`:'';
+  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}Kalimah<span class="ar">كَلِمَة</span></span></div>
+  <div class="stack" style="padding-top:14px">
+    <div><h1>Read the Qur’an and understand every word.</h1><p class="muted" style="margin:8px 0 0">Each Arabic word has its English meaning underneath. Tap a word to hear it and save it.</p></div>
+    ${cont}
+    <div class="stack" style="gap:10px"><div class="eyebrow">Start here</div><div class="picks">${PICKS.map(p=>`<a class="pick" href="#surah-${p[0]}${p[3]?'-'+p[3]:''}"><span class="ar">${p[4]||S(p[0])[1]}</span><b>${p[1]}</b><span>${p[2]}</span></a>`).join('')}</div></div>
+    <div class="stack" style="gap:12px"><div class="eyebrow">All 114 surahs</div>
+      <input class="search" id="q" type="search" placeholder="Search by name, meaning or number" value="${esc(q)}" autocomplete="off">
+      <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${x[2]}</b><small>${x[3]} · ${x[5]} ayahs · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${x[4]==='meccan'?'Makkah':'Madinah'}</span></small></span><span class="ar">${x[1]}</span></a>`).join('')||'<p class="muted">No surah matches that search.</p>'}</div>
+    </div>
+    <p class="foot">Word meanings from the Quranic Arabic Corpus (Quran.com). Translation: Saheeh International. Recitation: Mishary Alafasy.</p>
+  </div>`;
+}
+
+/* ---------- reader ---------- */
+function ayahHTML(s,d,v){
+  const a=d.v[v-1];
+  const words=a.a.map((ar,i)=>{const k=s+':'+v+':'+i;const sv=SAVED.some(x=>x.k===k);
+    return `<button class="w${sv?' sv':''}" data-act="word" data-v="${v}" data-i="${i}"><span class="wa">${ar}</span><span class="we">${esc(a.w[i])}</span></button>`}).join('');
+  return `<article class="ayah" id="a-${v}" data-v="${v}">
+    <div class="ah"><span class="num">${s}:${v}</span><span class="sp"></span><button class="mini" data-act="ayah-play" data-v="${v}">${ICON.play}Listen</button></div>
+    <div class="words">${words}</div>
+    <p class="tx">${esc(a.en)}</p></article>`;
+}
+function ensureRendered(upto){
+  if(!cur||upto<=shown)return;const box=document.getElementById('ayahs');if(!box)return;
+  let h='';const end=Math.min(cur.d.v.length,upto);for(let v=shown+1;v<=end;v++)h+=ayahHTML(cur.s,cur.d,v);
+  box.insertAdjacentHTML('beforeend',h);shown=end;observe();
+  const m=document.getElementById('more');if(m)m.style.display=shown<cur.d.v.length?'':'none';
+  const nx=document.getElementById('nextnav');if(nx)nx.style.display=shown<cur.d.v.length?'none':'';
+  markPlaying();
+}
+async function renderRead(){
+  const s=R.s,meta=S(s);
+  $v.innerHTML=`<div class="bar line"><a class="ib" href="#" aria-label="All surahs">${ICON.back}</a><span class="title"><b>${meta[2]}</b><span>${meta[3]} · ${meta[5]} ayahs</span></span>
+    <button class="ib" id="playall" data-act="playall" aria-label="Play whole surah">${ICON.play}</button><button class="ib" data-act="settings" aria-label="Reading settings">${ICON.aa}</button></div>
+    <div id="rbody"><p class="muted" style="padding:40px 0;text-align:center">Loading…</p></div>`;
+  let d;try{d=await loadSurah(s)}catch(e){document.getElementById('rbody').innerHTML='<div class="empty" style="margin-top:30px">This surah couldn’t load. Connect to the internet once and open it again; after that it works offline.</div>';return}
+  if(R.view!=='read'||R.s!==s)return;
+  cur={s,d};shown=0;
+  const prev=s>1?`<a class="btn ghost" href="#surah-${s-1}">${ICON.back} ${S(s-1)[2]}</a>`:'<span></span>';
+  const next=s<114?`<a class="btn gold" href="#surah-${s+1}">${S(s+1)[2]} ${ICON.arrow}</a>`:'<span></span>';
+  document.getElementById('rbody').innerHTML=`<div class="shead"><span class="ar">${meta[1]}</span><p>${meta[4]==='meccan'?'Revealed in Makkah':'Revealed in Madinah'}</p></div>
+    ${s!==1&&s!==9?'<p class="bism">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</p><p class="muted" style="text-align:center;margin:0 0 6px;font-size:.85rem">In the name of Allah, the Most Gracious, the Most Merciful</p>':''}
+    <div id="ayahs"></div><div class="more" id="more"><button class="btn ghost" data-act="more">Show more ayahs</button></div>
+    <div class="next" id="nextnav" style="display:none">${prev}${next}</div>`;
+  ensureRendered(Math.max(30,R.v+10));
+  if(R.v>1){const el=document.getElementById('a-'+R.v);if(el)requestAnimationFrame(()=>el.scrollIntoView({block:'start'}))}else scrollTo(0,0);
+  if(!R.v||R.v===1){LAST={s,v:1};store.set('last',LAST)}
+}
+function observe(){
+  if(obs)obs.disconnect();if(!('IntersectionObserver' in window))return;
+  let t=null;
+  obs=new IntersectionObserver(es=>{
+    for(const e of es){
+      if(e.target.id==='more'&&e.isIntersecting){ensureRendered(shown+30);continue}
+      if(e.isIntersecting&&e.target.dataset.v){clearTimeout(t);const v=+e.target.dataset.v;t=setTimeout(()=>{if(cur){LAST={s:cur.s,v};store.set('last',LAST)}},400)}
+    }
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('.ayah').forEach(a=>obs.observe(a));
+  const m=document.getElementById('more');if(m){const o2=new IntersectionObserver(es=>{if(es[0].isIntersecting)ensureRendered(shown+30)},{rootMargin:'600px'});o2.observe(m)}
+}
+
+/* ---------- sheet ---------- */
+const sheet=document.getElementById('sheet'),scrim=document.getElementById('scrim');
+function openSheet(html){sheet.innerHTML='<div class="grab"></div>'+html;sheet.classList.add('on');scrim.classList.add('on')}
+function closeSheet(){sheet.classList.remove('on');scrim.classList.remove('on');document.querySelectorAll('.w.sel').forEach(e=>e.classList.remove('sel'))}
+scrim.onclick=closeSheet;
+let selW=null;
+function wordSheet(s,v,i){
+  const a=cur.d.v[v-1],k=s+':'+v+':'+i,sv=SAVED.some(x=>x.k===k);
+  selW={k,s,v,i,a:a.a[i],w:a.w[i],t:a.t[i],p:a.p[i]};
+  openSheet(`<div class="sw"><span class="ar">${a.a[i]}</span><span class="tr">${esc(a.t[i])}</span><span class="en">${esc(a.w[i])}</span><span class="ref">${S(s)[2]} ${s}:${v} · word ${i+1}</span></div>
+    <div class="row2"><button class="btn ghost" data-act="wplay">${ICON.play}Hear it</button><button class="btn ${sv?'saved':'gold'}" data-act="wsave">${sv?ICON.bmf+'Saved':ICON.bm+'Save word'}</button></div>`);
+}
+function settingsSheet(){
+  openSheet(`<h2 style="margin-bottom:6px">Reading settings</h2><div class="set">
+    <div class="r"><span>Word meanings under Arabic</span><button class="tog ${PREF.wbw?'on':''}" data-act="pref" data-k="wbw" aria-label="Word meanings"></button></div>
+    <div class="r"><span>Full translation of each ayah</span><button class="tog ${PREF.tx?'on':''}" data-act="pref" data-k="tx" aria-label="Translation"></button></div>
+    <div class="r"><span>Arabic size</span><span class="steps"><button data-act="size" data-d="-1" aria-label="Smaller">ا−</button><button data-act="size" data-d="1" aria-label="Larger">ا+</button></span></div>
+    <div class="r"><span><span>Save whole Qur’an for offline</span><br><small class="muted" id="offl">About 5 MB. Surahs you open are saved automatically.</small></span><button class="btn ghost" style="height:38px" data-act="offline">Save</button></div>
+  </div>`);
+}
+
+/* ---------- saved ---------- */
+function renderSaved(){
+  if(review){
+    const it=SAVED[review.i];
+    $v.innerHTML=`<div class="bar"><button class="ib" data-act="rv-exit" aria-label="Stop review">${ICON.back}</button><span class="title"><b>Review</b><span>${review.i+1} of ${SAVED.length}</span></span></div>
+      <div class="stack" style="padding-top:14px"><button class="card" data-act="rv-flip"><span class="ar">${it.a}</span>${review.flip?`<span class="tr muted" style="font-style:italic">${esc(it.t)}</span><span class="en">${esc(it.w)}</span><span class="muted" style="font-size:.8rem">${S(it.s)[2]} ${it.s}:${it.v}</span>`:'<span class="hint">Tap to see the meaning</span>'}</button>
+      <div class="row2" style="margin:0"><button class="btn ghost" data-act="rv-hear">${ICON.play}Hear it</button><button class="btn gold" data-act="rv-next">${review.i+1<SAVED.length?'Next word':'Finish'}</button></div></div>`;
+    return;
+  }
+  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}Saved words</span></div>
+   <div class="stack" style="padding-top:14px">
+   ${SAVED.length?`<div><h1>${SAVED.length} word${SAVED.length>1?'s':''} saved</h1><p class="muted" style="margin:8px 0 0">Words you tapped while reading. Review them in a few minutes a day.</p></div>
+     <button class="btn gold" data-act="rv-start">Review my words</button>
+     <div class="list">${SAVED.slice().reverse().map(x=>`<div class="vrow"><span><b>${esc(x.w)}</b><br><small><i>${esc(x.t)}</i> · <a href="#surah-${x.s}-${x.v}">${S(x.s)[2]} ${x.s}:${x.v}</a> · <button class="link muted" data-act="unsave" data-k="${x.k}" style="text-decoration:underline">Remove</button></small></span><span class="ar">${x.a}</span></div>`).join('')}</div>`
+   :`<div class="empty"><p style="margin:0 0 6px;color:var(--text)">No saved words yet.</p>While reading, tap any Arabic word and choose <b style="color:var(--gold)">Save word</b>. It will appear here for review.</div><a class="btn ghost" href="#surah-1">Start with Al-Fātiḥah</a>`}
+   </div>`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',async e=>{
+  const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act;
+  switch(a){
+    case 'word':{document.querySelectorAll('.w.sel').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');wordSheet(cur.s,+el.dataset.v,+el.dataset.i);
+      const a2=cur.d.v[+el.dataset.v-1];playWord(cur.s,+el.dataset.v,a2.p[+el.dataset.i]);break}
+    case 'wplay':playWord(selW.s,selW.v,selW.p);break;
+    case 'wsave':{const i=SAVED.findIndex(x=>x.k===selW.k);if(i>=0)SAVED.splice(i,1);else SAVED.push({k:selW.k,a:selW.a,w:selW.w,t:selW.t,s:selW.s,v:selW.v,p:selW.p});store.set('saved',SAVED);
+      const sv=i<0;el.className='btn '+(sv?'saved':'gold');el.innerHTML=sv?ICON.bmf+'Saved':ICON.bm+'Save word';
+      const w=document.querySelector(`.w[data-v="${selW.v}"][data-i="${selW.i}"]`);if(w)w.classList.toggle('sv',sv);break}
+    case 'ayah-play':{const v=+el.dataset.v;if(playing&&playing.v===v&&playing.mode!=='word')stopAudio();else playAyah(cur.s,v,false);break}
+    case 'playall':{if(playing&&playing.mode==='all'){stopAudio();break}let v=1;if(LAST&&LAST.s===cur.s)v=LAST.v;playAyah(cur.s,v,true);const el2=document.getElementById('a-'+v);if(el2)el2.scrollIntoView({block:'start'});break}
+    case 'more':ensureRendered(shown+30);break;
+    case 'settings':settingsSheet();break;
+    case 'pref':PREF[el.dataset.k]=!PREF[el.dataset.k];store.set('pref',PREF);applyPref();el.classList.toggle('on',PREF[el.dataset.k]);break;
+    case 'size':PREF.size=Math.max(0,Math.min(SIZES.length-1,PREF.size+(+el.dataset.d)));store.set('pref',PREF);applyPref();break;
+    case 'offline':{const o=document.getElementById('offl');el.disabled=true;let n=0;
+      for(let s=1;s<=114;s++){try{await fetch('data/'+s+'.json')}catch(_){}n++;if(o)o.textContent='Saving… '+n+' of 114'}
+      if(o)o.textContent='Done. The whole Qur’an is available offline.';el.textContent='Saved';break}
+    case 'unsave':SAVED=SAVED.filter(x=>x.k!==el.dataset.k);store.set('saved',SAVED);renderSaved();break;
+    case 'rv-start':review={i:0,flip:false};renderSaved();scrollTo(0,0);break;
+    case 'rv-flip':review.flip=!review.flip;renderSaved();break;
+    case 'rv-hear':{const it=SAVED[review.i];playWord(it.s,it.v,it.p);break}
+    case 'rv-next':if(review.i+1<SAVED.length){review={i:review.i+1,flip:false}}else review=null;renderSaved();break;
+    case 'rv-exit':review=null;renderSaved();break;
+  }
+});
+document.addEventListener('input',e=>{if(e.target.id==='q'){q=e.target.value;const p=e.target.selectionStart;renderHome();const i=document.getElementById('q');i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+route();
+if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>
