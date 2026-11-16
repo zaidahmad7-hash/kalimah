@@ -3,6 +3,11 @@ src='/tmp/qdata'; out=sys.argv[1]; os.makedirs(out+'/data',exist_ok=True)
 wbw=json.load(open(f'{src}/kmaslesa-holy-quran-word-by-word-full-data-1.0.6/package/data.json'))
 en=json.load(open(f'{src}/quran-json-3.1.2/package/dist/quran_en.json'))
 tl={s['id']:s for s in json.load(open(f'{src}/quran-json-3.1.2/package/dist/quran_transliteration.json'))}
+# Urdu: Fateh Muhammad Jalandhry (Tanzil) -- the translation read in Shamshad Ali Khan's Urdu audio
+UR=json.load(open(f'{src}/x-ghoran-translation-0.0.10/package/json/ur/tanzil-jalandhry.json'))
+assert len(UR)==6236
+URFIX=str.maketrans({'\u0674':'\u0654'})
+g=0
 W=collections.defaultdict(list)
 for pg in wbw:
     for a in pg['ayahs']:
@@ -25,7 +30,7 @@ for s in en:
         assert len(toks)==len(ws),(k,len(toks),len(ws))
         total_w+=len(ws)
         verses.append({'a':toks,'w':[x[0] for x in ws],'t':[x[1] for x in ws],'p':[x[2] for x in ws],
-                       'en':v['translation']})
+                       'en':v['translation'],'ur':' '.join(UR[g].translate(URFIX).split())}); g+=1
     json.dump({'n':sid,'ar':s['name'],'name':s['transliteration'],'mean':s['translation'],'type':s['type'],'v':verses},
               open(f'{out}/data/{sid}.json','w'),ensure_ascii=False,separators=(',',':'))
     index.append([sid,s['name'],s['transliteration'],s['translation'],s['type'],s['total_verses']])
