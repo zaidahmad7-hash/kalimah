@@ -1,6 +1,6 @@
 // Kalimah offline support.
 // App page: network first, so updates arrive. Surah data, fonts and icons: cache first, so reading works offline.
-const CACHE = 'kalimah-v5';
+const CACHE = 'kalimah-v6';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'apple-touch-icon.png?v=2', 'favicon.png?v=2', 'icon-192.png', 'data/1.json', 'fonts/amiri-quran.woff2', 'fonts/amiri.woff2'];
 
 self.addEventListener('install', e => {
@@ -27,7 +27,7 @@ self.addEventListener('fetch', e => {
   if (req.destination === 'audio' || url.pathname.endsWith('.mp3')) return;
 
   if (sameOrigin && (req.mode === 'navigate' || url.pathname.endsWith('/') || url.pathname.endsWith('index.html'))) {
-    e.respondWith(fetch(req).then(r => put(req, r)).catch(() => caches.match(req).then(r => r || caches.match('index.html'))));
+    e.respondWith(fetch(req, { cache: 'no-cache' }).then(r => put(req, r)).catch(() => caches.match(req).then(r => r || caches.match('index.html'))));
     return;
   }
 

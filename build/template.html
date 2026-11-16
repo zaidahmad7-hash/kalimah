@@ -335,7 +335,7 @@ function renderHome(){
       <input class="search" id="q" type="search" placeholder="Search by name, meaning or number" value="${esc(q)}" autocomplete="off">
       <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${x[2]}</b><small>${x[3]} · ${x[5]} ayahs · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${x[4]==='meccan'?'Makkah':'Madinah'}</span></small></span><span class="ar">${x[1]}</span></a>`).join('')||'<p class="muted">No surah matches that search.</p>'}</div>
     </div>
-    <p class="foot">Word meanings from the Quranic Arabic Corpus (Quran.com). Translation: Saheeh International. Recitation: Mishary Alafasy.</p>
+    <p class="foot">Word meanings from the Quranic Arabic Corpus (Quran.com). Translation: Saheeh International. Recitation: Mishary Alafasy.<br>Version 2.2 · saved ayahs</p>
   </div>`;
 }
 
@@ -480,7 +480,15 @@ document.addEventListener('click',async e=>{
 document.addEventListener('input',e=>{if(e.target.id==='q'){q=e.target.value;const p=e.target.selectionStart;renderHome();const i=document.getElementById('q');i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 route();
-if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+/* Updates: check for a new version each time the app is opened, and reload once when one is installed. */
+if('serviceWorker' in navigator){
+  const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadSW&&!reloaded){reloaded=true;location.reload()}});
+  addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{
+    reg.update().catch(()=>{});
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')reg.update().catch(()=>{})});
+  }).catch(()=>{}));
+}
 </script>
 </body>
 </html>
