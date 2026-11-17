@@ -197,6 +197,37 @@ body.hasplayer .app{padding-bottom:calc(env(safe-area-inset-bottom) + 210px)}
 .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 80px);transform:translate(-50%,20px);background:var(--sage);color:#111;font-size:.88rem;font-weight:500;padding:10px 16px;border-radius:999px;z-index:30;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 body.hasplayer .toast{bottom:calc(env(safe-area-inset-bottom) + 190px)}
+.scard{border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.sc-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sc-row{display:flex;flex-direction:column;gap:6px}
+.sc-l{font-size:.85rem;color:var(--muted)}
+.scard .seg{margin-top:0;background:var(--bg)}
+.seg.lang button{font-size:.9rem}
+.sc-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 10px;text-align:start;padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line);width:100%}
+.sc-sum small{display:block;color:var(--faint);font-size:.7rem}
+.sc-sum b{display:block;font-weight:600;font-size:.84rem;color:var(--text)}
+.sc-go{grid-column:1/-1;text-align:center;font-size:.8rem;color:var(--gold);border-top:1px solid var(--line);padding-top:8px}
+.bar .brand+.ib{margin-inline-start:4px}
+[dir=rtl] .flip svg,[dir=rtl] .cont .go svg{transform:scaleX(-1)}
+[dir=rtl] .brand .ar{margin-left:0;margin-right:auto}
+.bt{text-align:center;margin:0 0 6px;font-size:.85rem}
+.txu.bt{text-align:center;font-size:1rem}
+/* Urdu interface: Nastaliq for all labels; taller lines so the script never clips */
+body.ui-ur{--f-body:"MQ Nastaliq","Kalimah Naskh",serif;--f-display:"MQ Nastaliq","Kalimah Naskh",serif;line-height:1.95}
+.ui-ur h1{font-size:1.65rem;line-height:2}
+.ui-ur h2{font-size:1.2rem;line-height:2}
+.ui-ur .eyebrow{letter-spacing:0;text-transform:none;font-size:.85rem}
+.ui-ur .seg button{height:auto;min-height:38px;padding:2px 2px 6px;font-size:.8rem;line-height:1.9}
+.ui-ur .mini{height:auto;min-height:34px;padding:0 12px 4px;line-height:1.9}
+.ui-ur .btn{height:auto;min-height:48px;padding-bottom:4px;line-height:1.9}
+.ui-ur .tabs a{font-size:.8rem;line-height:1.7}
+.ui-ur .srow b,.ui-ur .pick b{font-family:"Kalimah Naskh",serif;font-size:1.05rem}
+.ui-ur .bar .title b{font-family:"Kalimah Naskh",serif}
+.ui-ur .search{height:52px}
+.ui-ur .sc-sum small{font-size:.72rem}
+.ui-ur .tx,.ui-ur .we,.ui-ur .sw .tr,.ui-ur .sw .en{font-family:"Figtree",-apple-system,sans-serif;line-height:1.55}
+.ui-ur .sw .en{font-family:"Cormorant Garamond",Georgia,serif}
+.ui-ur .num{line-height:1.6}
 .foot{font-size:.75rem;color:var(--faint);padding-top:10px}
 
 /* opening animation: walls rise, dome grows in gold, crescent appears and glows, then the screen fades away */
@@ -222,8 +253,8 @@ body.hasplayer .toast{bottom:calc(env(safe-area-inset-bottom) + 190px)}
 <div class="splash" id="splash" aria-hidden="true"><div class="sp-in"><svg width="170" height="170" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="aqsa anim"><defs><linearGradient id="dg-s" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6CF8F"/><stop offset=".55" stop-color="#C8A862"/><stop offset="1" stop-color="#9E7E3E"/></linearGradient><clipPath id="dc-s"><path d="M33 47 C33 31 41 23.5 50 22 C59 23.5 67 31 67 47 Z"/></clipPath></defs><g transform="translate(50 50) scale(1.0) translate(-50 -44)"> <g class="walls">  <rect x="14" y="76.5" width="72" height="2.2" rx="1" fill="#C8A862"/>  <rect x="19" y="58" width="62" height="18.5" fill="#A9C5D6"/>  <rect x="17.5" y="55.6" width="65" height="2.6" rx=".6" fill="#7FA3B8"/>  <path class="" d="M21.33 73 V64.10 A2.10 2.10 0 0 1 25.53 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M30.19 73 V64.10 A2.10 2.10 0 0 1 34.39 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M39.04 73 V64.10 A2.10 2.10 0 0 1 43.24 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M47.90 73 V64.10 A2.10 2.10 0 0 1 52.10 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M56.76 73 V64.10 A2.10 2.10 0 0 1 60.96 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M65.61 73 V64.10 A2.10 2.10 0 0 1 69.81 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M74.47 73 V64.10 A2.10 2.10 0 0 1 78.67 64.10 V73 Z" fill="#0B0B0C"/>  <path d="M45.5 76.5 V64 A4.5 4.5 0 0 1 54.5 64 V76.5 Z" fill="#0B0B0C"/>  <rect x="34" y="47" width="32" height="8.6" fill="#A9C5D6"/>  <rect x="33" y="46" width="34" height="1.6" rx=".5" fill="#C8A862"/>  <path class="" d="M35.57 54 V49.70 A1.10 1.10 0 0 1 37.77 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M40.90 54 V49.70 A1.10 1.10 0 0 1 43.10 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M46.23 54 V49.70 A1.10 1.10 0 0 1 48.43 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M51.57 54 V49.70 A1.10 1.10 0 0 1 53.77 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M56.90 54 V49.70 A1.10 1.10 0 0 1 59.10 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M62.23 54 V49.70 A1.10 1.10 0 0 1 64.43 49.70 V54 Z" fill="#0B0B0C"/> </g> <g class="dome"><path d="M33 47 C33 31 41 23.5 50 22 C59 23.5 67 31 67 47 Z" fill="url(#dg-s)"/>  <path class="dome-line" d="M33 47 C33 31 41 23.5 50 22 C59 23.5 67 31 67 47 Z" fill="none" stroke="#E6CF8F" stroke-width=".6" opacity="0"/></g> <g class="crest"><rect x="49.4" y="11.6" width="1.2" height="11" fill="#C8A862"/><circle cx="50" cy="16" r="1.3" fill="#C8A862"/>  <path d="M46.2 9.4 A3.8 3.8 0 0 0 53.8 9.4 A5 5 0 0 1 46.2 9.4 Z" fill="#E6CF8F"/></g></g></svg><b class="sp-name">MyQuranApp</b><span class="sp-ar">قُرْآنِي</span></div></div>
 <main class="app" id="view"></main>
 <div class="tabs"><nav>
-  <a href="#" id="t-read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg>Read</a>
-  <a href="#saved" id="t-saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.5 4h11v16l-5.5-4-5.5 4z"/></svg>Saved</a>
+  <a href="#" id="t-read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg><span id="t-read-l">Read</span></a>
+  <a href="#saved" id="t-saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.5 4h11v16l-5.5-4-5.5 4z"/></svg><span id="t-saved-l">Saved</span></a>
 </nav></div>
 <div class="player" id="player" aria-label="Audio player"></div>
 <div class="toast" id="toast" role="status"></div>
@@ -231,7 +262,7 @@ body.hasplayer .toast{bottom:calc(env(safe-area-inset-bottom) + 190px)}
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
 
 <script>
-const INDEX=[[1,"الفاتحة","Al-Fatihah","The Opener","meccan",7],[2,"البقرة","Al-Baqarah","The Cow","medinan",286],[3,"آل عمران","Ali 'Imran","Family of Imran","medinan",200],[4,"النساء","An-Nisa","The Women","medinan",176],[5,"المائدة","Al-Ma'idah","The Table Spread","medinan",120],[6,"الأنعام","Al-An'am","The Cattle","meccan",165],[7,"الأعراف","Al-A'raf","The Heights","meccan",206],[8,"الأنفال","Al-Anfal","The Spoils of War","medinan",75],[9,"التوبة","At-Tawbah","The Repentance","medinan",129],[10,"يونس","Yunus","Jonah","meccan",109],[11,"هود","Hud","Hud","meccan",123],[12,"يوسف","Yusuf","Joseph","meccan",111],[13,"الرعد","Ar-Ra'd","The Thunder","medinan",43],[14,"ابراهيم","Ibrahim","Abraham","meccan",52],[15,"الحجر","Al-Hijr","The Rocky Tract","meccan",99],[16,"النحل","An-Nahl","The Bee","meccan",128],[17,"الإسراء","Al-Isra","The Night Journey","meccan",111],[18,"الكهف","Al-Kahf","The Cave","meccan",110],[19,"مريم","Maryam","Mary","meccan",98],[20,"طه","Taha","Ta-Ha","meccan",135],[21,"الأنبياء","Al-Anbya","The Prophets","meccan",112],[22,"الحج","Al-Hajj","The Pilgrimage","medinan",78],[23,"المؤمنون","Al-Mu'minun","The Believers","meccan",118],[24,"النور","An-Nur","The Light","medinan",64],[25,"الفرقان","Al-Furqan","The Criterion","meccan",77],[26,"الشعراء","Ash-Shu'ara","The Poets","meccan",227],[27,"النمل","An-Naml","The Ant","meccan",93],[28,"القصص","Al-Qasas","The Stories","meccan",88],[29,"العنكبوت","Al-'Ankabut","The Spider","meccan",69],[30,"الروم","Ar-Rum","The Romans","meccan",60],[31,"لقمان","Luqman","Luqman","meccan",34],[32,"السجدة","As-Sajdah","The Prostration","meccan",30],[33,"الأحزاب","Al-Ahzab","The Combined Forces","medinan",73],[34,"سبإ","Saba","Sheba","meccan",54],[35,"فاطر","Fatir","Originator","meccan",45],[36,"يس","Ya-Sin","Ya Sin","meccan",83],[37,"الصافات","As-Saffat","Those who set the Ranks","meccan",182],[38,"ص","Sad","The Letter \"Saad\"","meccan",88],[39,"الزمر","Az-Zumar","The Troops","meccan",75],[40,"غافر","Ghafir","The Forgiver","meccan",85],[41,"فصلت","Fussilat","Explained in Detail","meccan",54],[42,"الشورى","Ash-Shuraa","The Consultation","meccan",53],[43,"الزخرف","Az-Zukhruf","The Ornaments of Gold","meccan",89],[44,"الدخان","Ad-Dukhan","The Smoke","meccan",59],[45,"الجاثية","Al-Jathiyah","The Crouching","meccan",37],[46,"الأحقاف","Al-Ahqaf","The Wind-Curved Sandhills","meccan",35],[47,"محمد","Muhammad","Muhammad","medinan",38],[48,"الفتح","Al-Fath","The Victory","medinan",29],[49,"الحجرات","Al-Hujurat","The Rooms","medinan",18],[50,"ق","Qaf","The Letter \"Qaf\"","meccan",45],[51,"الذاريات","Adh-Dhariyat","The Winnowing Winds","meccan",60],[52,"الطور","At-Tur","The Mount","meccan",49],[53,"النجم","An-Najm","The Star","meccan",62],[54,"القمر","Al-Qamar","The Moon","meccan",55],[55,"الرحمن","Ar-Rahman","The Beneficent","medinan",78],[56,"الواقعة","Al-Waqi'ah","The Inevitable","meccan",96],[57,"الحديد","Al-Hadid","The Iron","medinan",29],[58,"المجادلة","Al-Mujadila","The Pleading Woman","medinan",22],[59,"الحشر","Al-Hashr","The Exile","medinan",24],[60,"الممتحنة","Al-Mumtahanah","She that is to be examined","medinan",13],[61,"الصف","As-Saf","The Ranks","medinan",14],[62,"الجمعة","Al-Jumu'ah","The Congregation, Friday","medinan",11],[63,"المنافقون","Al-Munafiqun","The Hypocrites","medinan",11],[64,"التغابن","At-Taghabun","The Mutual Disillusion","medinan",18],[65,"الطلاق","At-Talaq","The Divorce","medinan",12],[66,"التحريم","At-Tahrim","The Prohibition","medinan",12],[67,"الملك","Al-Mulk","The Sovereignty","meccan",30],[68,"القلم","Al-Qalam","The Pen","meccan",52],[69,"الحاقة","Al-Haqqah","The Reality","meccan",52],[70,"المعارج","Al-Ma'arij","The Ascending Stairways","meccan",44],[71,"نوح","Nuh","Noah","meccan",28],[72,"الجن","Al-Jinn","The Jinn","meccan",28],[73,"المزمل","Al-Muzzammil","The Enshrouded One","meccan",20],[74,"المدثر","Al-Muddaththir","The Cloaked One","meccan",56],[75,"القيامة","Al-Qiyamah","The Resurrection","meccan",40],[76,"الانسان","Al-Insan","The Man","medinan",31],[77,"المرسلات","Al-Mursalat","The Emissaries","meccan",50],[78,"النبإ","An-Naba","The Tidings","meccan",40],[79,"النازعات","An-Nazi'at","Those who drag forth","meccan",46],[80,"عبس","'Abasa","He Frowned","meccan",42],[81,"التكوير","At-Takwir","The Overthrowing","meccan",29],[82,"الإنفطار","Al-Infitar","The Cleaving","meccan",19],[83,"المطففين","Al-Mutaffifin","The Defrauding","meccan",36],[84,"الإنشقاق","Al-Inshiqaq","The Sundering","meccan",25],[85,"البروج","Al-Buruj","The Mansions of the Stars","meccan",22],[86,"الطارق","At-Tariq","The Nightcommer","meccan",17],[87,"الأعلى","Al-A'la","The Most High","meccan",19],[88,"الغاشية","Al-Ghashiyah","The Overwhelming","meccan",26],[89,"الفجر","Al-Fajr","The Dawn","meccan",30],[90,"البلد","Al-Balad","The City","meccan",20],[91,"الشمس","Ash-Shams","The Sun","meccan",15],[92,"الليل","Al-Layl","The Night","meccan",21],[93,"الضحى","Ad-Duhaa","The Morning Hours","meccan",11],[94,"الشرح","Ash-Sharh","The Relief","meccan",8],[95,"التين","At-Tin","The Fig","meccan",8],[96,"العلق","Al-'Alaq","The Clot","meccan",19],[97,"القدر","Al-Qadr","The Power","meccan",5],[98,"البينة","Al-Bayyinah","The Clear Proof","medinan",8],[99,"الزلزلة","Az-Zalzalah","The Earthquake","medinan",8],[100,"العاديات","Al-'Adiyat","The Courser","meccan",11],[101,"القارعة","Al-Qari'ah","The Calamity","meccan",11],[102,"التكاثر","At-Takathur","The Rivalry in world increase","meccan",8],[103,"العصر","Al-'Asr","The Declining Day","meccan",3],[104,"الهمزة","Al-Humazah","The Traducer","meccan",9],[105,"الفيل","Al-Fil","The Elephant","meccan",5],[106,"قريش","Quraysh","Quraysh","meccan",4],[107,"الماعون","Al-Ma'un","The Small kindnesses","meccan",7],[108,"الكوثر","Al-Kawthar","The Abundance","meccan",3],[109,"الكافرون","Al-Kafirun","The Disbelievers","meccan",6],[110,"النصر","An-Nasr","The Divine Support","medinan",3],[111,"المسد","Al-Masad","The Palm Fiber","meccan",5],[112,"الإخلاص","Al-Ikhlas","The Sincerity","meccan",4],[113,"الفلق","Al-Falaq","The Daybreak","meccan",5],[114,"الناس","An-Nas","Mankind","meccan",6]]; // [n, arabic name, name, meaning, type, ayahs]
+const INDEX=[[1,"الفاتحة","Al-Fatihah","The Opener","meccan",7,"کھولنے والی"],[2,"البقرة","Al-Baqarah","The Cow","medinan",286,"گائے"],[3,"آل عمران","Ali 'Imran","Family of Imran","medinan",200,"عمران کا خاندان"],[4,"النساء","An-Nisa","The Women","medinan",176,"عورت"],[5,"المائدة","Al-Ma'idah","The Table Spread","medinan",120,"دسترخوان"],[6,"الأنعام","Al-An'am","The Cattle","meccan",165,"مویشی"],[7,"الأعراف","Al-A'raf","The Heights","meccan",206,"اونچی جگہ"],[8,"الأنفال","Al-Anfal","The Spoils of War","medinan",75,"مال غنیمت"],[9,"التوبة","At-Tawbah","The Repentance","medinan",129,"توبہ"],[10,"يونس","Yunus","Jonah","meccan",109,"یونس"],[11,"هود","Hud","Hud","meccan",123,"حود"],[12,"يوسف","Yusuf","Joseph","meccan",111,"یوسف"],[13,"الرعد","Ar-Ra'd","The Thunder","medinan",43,"گرج"],[14,"ابراهيم","Ibrahim","Abraham","meccan",52,"ابراہیم"],[15,"الحجر","Al-Hijr","The Rocky Tract","meccan",99,"پتھر"],[16,"النحل","An-Nahl","The Bee","meccan",128,"شہد کی مکھی"],[17,"الإسراء","Al-Isra","The Night Journey","meccan",111,"رات کا صفر"],[18,"الكهف","Al-Kahf","The Cave","meccan",110,"غار"],[19,"مريم","Maryam","Mary","meccan",98,"مریم"],[20,"طه","Taha","Ta-Ha","meccan",135,"طٰہٰ"],[21,"الأنبياء","Al-Anbya","The Prophets","meccan",112,"پیغمبر"],[22,"الحج","Al-Hajj","The Pilgrimage","medinan",78,"حج"],[23,"المؤمنون","Al-Mu'minun","The Believers","meccan",118,"مومنین"],[24,"النور","An-Nur","The Light","medinan",64,"نور"],[25,"الفرقان","Al-Furqan","The Criterion","meccan",77,"صحیح اور غلط میں فرق کرنے والی کتاب"],[26,"الشعراء","Ash-Shu'ara","The Poets","meccan",227,"شعراٗ"],[27,"النمل","An-Naml","The Ant","meccan",93,"چیونٹی"],[28,"القصص","Al-Qasas","The Stories","meccan",88,"قصے"],[29,"العنكبوت","Al-'Ankabut","The Spider","meccan",69,"مکڑی"],[30,"الروم","Ar-Rum","The Romans","meccan",60,"روم"],[31,"لقمان","Luqman","Luqman","meccan",34,"لقمان"],[32,"السجدة","As-Sajdah","The Prostration","meccan",30,"سجدہ"],[33,"الأحزاب","Al-Ahzab","The Combined Forces","medinan",73,"متحد گروہ"],[34,"سبإ","Saba","Sheba","meccan",54,"سبا"],[35,"فاطر","Fatir","Originator","meccan",45,"پیدا کرنے والا"],[36,"يس","Ya-Sin","Ya Sin","meccan",83,"یٰسٓ"],[37,"الصافات","As-Saffat","Those who set the Ranks","meccan",182,"صف باندھنے والے"],[38,"ص","Sad","The Letter \"Saad\"","meccan",88,"صٓ"],[39,"الزمر","Az-Zumar","The Troops","meccan",75,"گروہ"],[40,"غافر","Ghafir","The Forgiver","meccan",85,"بخشنے والا"],[41,"فصلت","Fussilat","Explained in Detail","meccan",54,"مفصل"],[42,"الشورى","Ash-Shuraa","The Consultation","meccan",53,"شورٰی"],[43,"الزخرف","Az-Zukhruf","The Ornaments of Gold","meccan",89,"سونے کی چمک"],[44,"الدخان","Ad-Dukhan","The Smoke","meccan",59,"دھواں"],[45,"الجاثية","Al-Jathiyah","The Crouching","meccan",37,"زانوٗوں کے بل گری ہوئی"],[46,"الأحقاف","Al-Ahqaf","The Wind-Curved Sandhills","meccan",35,"ریگستان"],[47,"محمد","Muhammad","Muhammad","medinan",38,"محمدﷺ"],[48,"الفتح","Al-Fath","The Victory","medinan",29,"فتح"],[49,"الحجرات","Al-Hujurat","The Rooms","medinan",18,"حجرے"],[50,"ق","Qaf","The Letter \"Qaf\"","meccan",45,"قٓ"],[51,"الذاريات","Adh-Dhariyat","The Winnowing Winds","meccan",60,"بکھیرنے والیاں"],[52,"الطور","At-Tur","The Mount","meccan",49,"طور پہاڑ"],[53,"النجم","An-Najm","The Star","meccan",62,"ستارہ"],[54,"القمر","Al-Qamar","The Moon","meccan",55,"چاند"],[55,"الرحمن","Ar-Rahman","The Beneficent","medinan",78,"مہربان"],[56,"الواقعة","Al-Waqi'ah","The Inevitable","meccan",96,"واقعہ ہونے والی قیامت"],[57,"الحديد","Al-Hadid","The Iron","medinan",29,"فولاد"],[58,"المجادلة","Al-Mujadila","The Pleading Woman","medinan",22,"جھگڑنے والی"],[59,"الحشر","Al-Hashr","The Exile","medinan",24,"حشر"],[60,"الممتحنة","Al-Mumtahanah","She that is to be examined","medinan",13,"امتحان لی جانے والی"],[61,"الصف","As-Saf","The Ranks","medinan",14,"صف"],[62,"الجمعة","Al-Jumu'ah","The Congregation, Friday","medinan",11,"جمعہ"],[63,"المنافقون","Al-Munafiqun","The Hypocrites","medinan",11,"منافقین"],[64,"التغابن","At-Taghabun","The Mutual Disillusion","medinan",18,"ہار جیت"],[65,"الطلاق","At-Talaq","The Divorce","medinan",12,"طلاق"],[66,"التحريم","At-Tahrim","The Prohibition","medinan",12,"حرمت"],[67,"الملك","Al-Mulk","The Sovereignty","meccan",30,"ملک"],[68,"القلم","Al-Qalam","The Pen","meccan",52,"قلم"],[69,"الحاقة","Al-Haqqah","The Reality","meccan",52,"حق ہونے والی"],[70,"المعارج","Al-Ma'arij","The Ascending Stairways","meccan",44,"عروج"],[71,"نوح","Nuh","Noah","meccan",28,"نوح"],[72,"الجن","Al-Jinn","The Jinn","meccan",28,"جن"],[73,"المزمل","Al-Muzzammil","The Enshrouded One","meccan",20,"کپڑا لپیٹنے والا"],[74,"المدثر","Al-Muddaththir","The Cloaked One","meccan",56,"کپڑا اوڑھنے والا"],[75,"القيامة","Al-Qiyamah","The Resurrection","meccan",40,"قیامۃ"],[76,"الانسان","Al-Insan","The Man","medinan",31,"انسان"],[77,"المرسلات","Al-Mursalat","The Emissaries","meccan",50,"بھیجی جانے والی ہوائیں"],[78,"النبإ","An-Naba","The Tidings","meccan",40,"خبر"],[79,"النازعات","An-Nazi'at","Those who drag forth","meccan",46,"زور سے کھینچنے والے"],[80,"عبس","'Abasa","He Frowned","meccan",42,"تیوری چڑہائی"],[81,"التكوير","At-Takwir","The Overthrowing","meccan",29,"لپیٹنا"],[82,"الإنفطار","Al-Infitar","The Cleaving","meccan",19,"ٹکڑے ہونا"],[83,"المطففين","Al-Mutaffifin","The Defrauding","meccan",36,"ناپ تول میں کمی کرنے والے"],[84,"الإنشقاق","Al-Inshiqaq","The Sundering","meccan",25,"پھٹنا"],[85,"البروج","Al-Buruj","The Mansions of the Stars","meccan",22,"برج"],[86,"الطارق","At-Tariq","The Nightcommer","meccan",17,"رات کو آنے والا"],[87,"الأعلى","Al-A'la","The Most High","meccan",19,"اعلی"],[88,"الغاشية","Al-Ghashiyah","The Overwhelming","meccan",26,"چھا جانے والی"],[89,"الفجر","Al-Fajr","The Dawn","meccan",30,"فجر"],[90,"البلد","Al-Balad","The City","meccan",20,"شہر"],[91,"الشمس","Ash-Shams","The Sun","meccan",15,"آفتاب"],[92,"الليل","Al-Layl","The Night","meccan",21,"رات"],[93,"الضحى","Ad-Duhaa","The Morning Hours","meccan",11,"دن کا چڑھنا"],[94,"الشرح","Ash-Sharh","The Relief","meccan",8,"تسکین"],[95,"التين","At-Tin","The Fig","meccan",8,"انجیر"],[96,"العلق","Al-'Alaq","The Clot","meccan",19,"جما ہوا خون"],[97,"القدر","Al-Qadr","The Power","meccan",5,"شب قدر"],[98,"البينة","Al-Bayyinah","The Clear Proof","medinan",8,"ثبوت"],[99,"الزلزلة","Az-Zalzalah","The Earthquake","medinan",8,"زلزلہ"],[100,"العاديات","Al-'Adiyat","The Courser","meccan",11,"دوڑنے والے گھوڑے"],[101,"القارعة","Al-Qari'ah","The Calamity","meccan",11,"کھڑکھڑاہٹ"],[102,"التكاثر","At-Takathur","The Rivalry in world increase","meccan",8,"کثرت"],[103,"العصر","Al-'Asr","The Declining Day","meccan",3,"زمانہ"],[104,"الهمزة","Al-Humazah","The Traducer","meccan",9,"عیب لگانے والا"],[105,"الفيل","Al-Fil","The Elephant","meccan",5,"ہاتھی"],[106,"قريش","Quraysh","Quraysh","meccan",4,"قریش"],[107,"الماعون","Al-Ma'un","The Small kindnesses","meccan",7,"تھوڑی سی چیز"],[108,"الكوثر","Al-Kawthar","The Abundance","meccan",3,"جنت کی نہر"],[109,"الكافرون","Al-Kafirun","The Disbelievers","meccan",6,"کافرین"],[110,"النصر","An-Nasr","The Divine Support","medinan",3,"نصرت"],[111,"المسد","Al-Masad","The Palm Fiber","meccan",5,"خوب بٹی ہوئی"],[112,"الإخلاص","Al-Ikhlas","The Sincerity","meccan",4,"اخلاص"],[113,"الفلق","Al-Falaq","The Daybreak","meccan",5,"صبح"],[114,"الناس","An-Nas","Mankind","meccan",6,"انسان"]]; // [n, arabic name, name, meaning, type, ayahs]
 const MOSQUE='<svg width="30" height="30" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="aqsa"><defs><linearGradient id="dg-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6CF8F"/><stop offset=".55" stop-color="#C8A862"/><stop offset="1" stop-color="#9E7E3E"/></linearGradient><linearGradient id="sh-h" x1="-1" y1="0" x2="0" y2="0" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/><animate attributeName="x1" values="-1;2" dur="7s" repeatCount="indefinite"/><animate attributeName="x2" values="0;3" dur="7s" repeatCount="indefinite"/></linearGradient><clipPath id="dc-h"><path d="M33 47 C33 31 41 23.5 50 22 C59 23.5 67 31 67 47 Z"/></clipPath></defs><g transform="translate(50 50) scale(1.0) translate(-50 -44)"> <g class="walls">  <rect x="14" y="76.5" width="72" height="2.2" rx="1" fill="#C8A862"/>  <rect x="19" y="58" width="62" height="18.5" fill="#A9C5D6"/>  <rect x="17.5" y="55.6" width="65" height="2.6" rx=".6" fill="#7FA3B8"/>  <path class="" d="M21.33 73 V64.10 A2.10 2.10 0 0 1 25.53 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M30.19 73 V64.10 A2.10 2.10 0 0 1 34.39 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M39.04 73 V64.10 A2.10 2.10 0 0 1 43.24 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M47.90 73 V64.10 A2.10 2.10 0 0 1 52.10 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M56.76 73 V64.10 A2.10 2.10 0 0 1 60.96 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M65.61 73 V64.10 A2.10 2.10 0 0 1 69.81 64.10 V73 Z" fill="#0B0B0C"/><path class="" d="M74.47 73 V64.10 A2.10 2.10 0 0 1 78.67 64.10 V73 Z" fill="#0B0B0C"/>  <path d="M45.5 76.5 V64 A4.5 4.5 0 0 1 54.5 64 V76.5 Z" fill="#0B0B0C"/>  <rect x="34" y="47" width="32" height="8.6" fill="#A9C5D6"/>  <rect x="33" y="46" width="34" height="1.6" rx=".5" fill="#C8A862"/>  <path class="" d="M35.57 54 V49.70 A1.10 1.10 0 0 1 37.77 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M40.90 54 V49.70 A1.10 1.10 0 0 1 43.10 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M46.23 54 V49.70 A1.10 1.10 0 0 1 48.43 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M51.57 54 V49.70 A1.10 1.10 0 0 1 53.77 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M56.90 54 V49.70 A1.10 1.10 0 0 1 59.10 49.70 V54 Z" fill="#0B0B0C"/><path class="" d="M62.23 54 V49.70 A1.10 1.10 0 0 1 64.43 49.70 V54 Z" fill="#0B0B0C"/> </g> <g class="dome"><path d="M33 47 C33 31 41 23.5 50 22 C59 23.5 67 31 67 47 Z" fill="url(#dg-h)"/><rect x="30" y="20" width="40" height="28" fill="url(#sh-h)" clip-path="url(#dc-h)"/>  <path class="dome-line" d="M33 47 C33 31 41 23.5 50 22 C59 23.5 67 31 67 47 Z" fill="none" stroke="#E6CF8F" stroke-width=".6" opacity="0"/></g> <g class="crest"><rect x="49.4" y="11.6" width="1.2" height="11" fill="#C8A862"/><circle cx="50" cy="16" r="1.3" fill="#C8A862"/>  <path d="M46.2 9.4 A3.8 3.8 0 0 0 53.8 9.4 A5 5 0 0 1 46.2 9.4 Z" fill="#E6CF8F"/></g></g></svg>';
 const ICON={
  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M15 5l-7 7 7 7"/></svg>',
@@ -249,19 +280,86 @@ const PICKS=[[1,'Al-Fātiḥah','The Opener',null],[2,'Āyat al-Kursī','2 : 255
 
 /* ---------- storage (safe) ---------- */
 const store={get(k,d){try{const v=localStorage.getItem('kalimah.'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('kalimah.'+k,JSON.stringify(v))}catch(e){}}};
-let PREF=Object.assign({wbw:true,tx:true,size:2,listen:'ar',cont:false,trans:'en',script:'ip',reciter:'alafasy'},store.get('pref',{}));
+let PREF=Object.assign({wbw:true,tx:true,size:2,listen:'ar',cont:false,trans:'en',script:'ip',reciter:'alafasy',lang:'en'},store.get('pref',{}));
 let AYAHS=store.get('ayahs',[]);       // saved ayahs, newest first: [{s, v, ar, en, note, at}]
 const isSaved=(s,v)=>AYAHS.some(x=>x.s===s&&x.v===v);
 const saveAyahs=()=>store.set('ayahs',AYAHS);
 let LAST=store.get('last',null);        // {s, v}
 const SIZES=[24,28,32,38,44];
+/* ---------- app language: every word the app shows, in English and Urdu ---------- */
+const L={
+ en:{
+  tabRead:'Read',tabSaved:'Saved',
+  homeTitle:'Read the Qur’an and understand every word.',
+  homeSub:'Each Arabic word has its meaning underneath, with the full translation below each ayah. Tap a word to hear it, and save any ayah to come back to.',
+  continue:'Continue reading',ayahN:'ayah {0}',startHere:'Start here',allSurahs:'All 114 surahs',
+  search:'Search by name, meaning or number',ayahs:'{0} ayahs',makkah:'Makkah',madinah:'Madinah',noMatch:'No surah matches that search.',
+  yourSettings:'Your settings',allSettings:'All settings',appLang:'App language',listenTo:'Listen to',arabicStyle:'Arabic style',reciter:'Reciter',translationShown:'Translation shown',change:'Change',
+  revealedM:'Revealed in Makkah',revealedMd:'Revealed in Madinah',
+  save:'Save',saved:'Saved',listen:'Listen',pause:'Pause',more:'Show more ayahs',loading:'Loading…',
+  loadErr:'This surah couldn’t load. Connect to the internet once and open it again; after that it works offline.',
+  word:'word {0}',hearIt:'Hear it',saveAyah:'Save this ayah',ayahSaved:'Ayah saved',
+  settingsTitle:'Reading and listening',contNext:'Keep playing into the next surah',wbw:'Word meanings under Arabic (English)',fullTx:'Full translation of each ayah',arSize:'Arabic size',
+  offline:'Save whole Qur’an for offline',offlineSub:'About 8 MB. Surahs you open are saved automatically.',saveBtn:'Save',offSaving:'Saving… {0} of 114',offDone:'Done. The whole Qur’an is available offline.',offSaved:'Saved',
+  removeQ:'Remove {0}?',noteRemoved:'Your note will be removed too.',canSaveAgain:'You can save it again any time.',keepIt:'Keep it',remove:'Remove',
+  noteFor:'Note for {0}',noteHelp:'Why it matters to you, when to recite it, who to share it with.',notePh:'e.g. Recite before sleep',cancel:'Cancel',saveNote:'Save note',
+  savedTitle:'Saved ayahs',savedOne:'1 ayah saved',savedN:'{0} ayahs saved',savedSub:'Your own collection. Play them all on the go in Arabic, English, Urdu or together.',
+  playAllSaved:'Play all saved',openInSurah:'Open in surah',addNote:'Add note',editNote:'Edit note',
+  emptySaved1:'No saved ayahs yet.',emptySaved2:'While reading, tap <b style="color:var(--gold)">Save</b> on any ayah to keep it here with its meaning.',startKursi:'Start with Āyat al-Kursī',
+  toastSaved:'Saved. Find it in the Saved tab.',toastReciter:'{0} selected',toastLang:'App language: English',
+  playing:'Playing {0}',paused:'Paused',savedOf:'Saved {0} of {1} · ',phoneVoice:' (phone voice)',bismillah:'Bismillah',
+  credits:'Word meanings from the Quranic Arabic Corpus (Quran.com). Indo-Pak text and fonts: King Fahd Complex (KFGQPC). Translation: Saheeh International. Urdu: Fateh Muhammad Jalandhry (Tanzil). Recitation: Mishary Alafasy, Yasser Al-Dosari, Maher Al-Muaiqly, Nasser Al-Qatami, Abdul Basit (EveryAyah.com). Audio translations: Ibrahim Walk (English), Shamshad Ali Khan (Urdu).'
+ },
+ ur:{
+  tabRead:'پڑھیں',tabSaved:'محفوظ',
+  homeTitle:'قرآن پڑھیں اور ہر لفظ سمجھیں',
+  homeSub:'ہر آیت کے نیچے اس کا اردو ترجمہ ہے۔ کسی لفظ پر ٹیپ کریں تو اس کی آواز سنیں، اور کوئی بھی آیت بعد کے لیے محفوظ کریں۔',
+  continue:'جہاں چھوڑا تھا وہیں سے پڑھیں',ayahN:'آیت {0}',startHere:'یہاں سے شروع کریں',allSurahs:'تمام 114 سورتیں',
+  search:'نام، معنی یا نمبر سے تلاش کریں',ayahs:'{0} آیات',makkah:'مکی',madinah:'مدنی',noMatch:'اس نام کی کوئی سورۃ نہیں ملی۔',
+  yourSettings:'آپ کی سیٹنگز',allSettings:'تمام سیٹنگز',appLang:'ایپ کی زبان',listenTo:'کیا سنیں',arabicStyle:'عربی رسم الخط',reciter:'قاری',translationShown:'ترجمہ',change:'تبدیل کریں',
+  revealedM:'مکہ میں نازل ہوئی',revealedMd:'مدینہ میں نازل ہوئی',
+  save:'محفوظ کریں',saved:'محفوظ',listen:'سنیں',pause:'روکیں',more:'مزید آیات دکھائیں',loading:'لوڈ ہو رہا ہے…',
+  loadErr:'یہ سورۃ لوڈ نہیں ہو سکی۔ ایک بار انٹرنیٹ سے جڑ کر دوبارہ کھولیں، اس کے بعد یہ بغیر انٹرنیٹ کے بھی چلے گی۔',
+  word:'لفظ {0}',hearIt:'سنیں',saveAyah:'یہ آیت محفوظ کریں',ayahSaved:'آیت محفوظ ہے',
+  settingsTitle:'پڑھنے اور سننے کی سیٹنگز',contNext:'اگلی سورۃ بھی خود چلتی رہے',wbw:'عربی الفاظ کے نیچے معنی (انگریزی میں)',fullTx:'ہر آیت کا مکمل ترجمہ',arSize:'عربی کا سائز',
+  offline:'پورا قرآن آف لائن محفوظ کریں',offlineSub:'تقریباً 8 MB۔ جو سورتیں آپ کھولتے ہیں وہ خود محفوظ ہو جاتی ہیں۔',saveBtn:'محفوظ کریں',offSaving:'محفوظ ہو رہا ہے… 114 میں سے {0}',offDone:'مکمل۔ پورا قرآن اب بغیر انٹرنیٹ کے دستیاب ہے۔',offSaved:'محفوظ ہو گیا',
+  removeQ:'{0} ہٹا دیں؟',noteRemoved:'آپ کا نوٹ بھی ہٹ جائے گا۔',canSaveAgain:'آپ اسے کبھی بھی دوبارہ محفوظ کر سکتے ہیں۔',keepIt:'رہنے دیں',remove:'ہٹائیں',
+  noteFor:'{0} کے لیے نوٹ',noteHelp:'یہ آیت آپ کے لیے کیوں اہم ہے، کب پڑھنی ہے، کس کو بتانی ہے۔',notePh:'مثلاً سونے سے پہلے پڑھیں',cancel:'منسوخ',saveNote:'نوٹ محفوظ کریں',
+  savedTitle:'محفوظ آیات',savedOne:'1 آیت محفوظ',savedN:'{0} آیات محفوظ',savedSub:'آپ کا اپنا مجموعہ۔ انہیں عربی، اردو یا دونوں میں ایک ساتھ سنیں۔',
+  playAllSaved:'سب محفوظ آیات سنیں',openInSurah:'سورۃ میں کھولیں',addNote:'نوٹ لکھیں',editNote:'نوٹ بدلیں',
+  emptySaved1:'ابھی کوئی آیت محفوظ نہیں۔',emptySaved2:'پڑھتے ہوئے کسی بھی آیت پر <b style="color:var(--gold)">محفوظ کریں</b> دبائیں، وہ اپنے ترجمے کے ساتھ یہاں آ جائے گی۔',startKursi:'آیت الکرسی سے شروع کریں',
+  toastSaved:'محفوظ ہو گئی۔ یہ "محفوظ" ٹیب میں ملے گی۔',toastReciter:'{0} منتخب',toastLang:'ایپ کی زبان: اردو',
+  playing:'{0}',paused:'رکا ہوا',savedOf:'محفوظ: {1} میں سے {0} · ',phoneVoice:' (فون کی آواز)',bismillah:'بسم اللہ',
+  credits:'الفاظ کے معانی: قرآنی عربی کارپس (Quran.com)۔ انڈوپاک متن اور فونٹ: شاہ فہد قرآن کمپلیکس۔ انگریزی ترجمہ: صحیح انٹرنیشنل۔ اردو ترجمہ: مولانا فتح محمد جالندھری۔ تلاوت: مشاری العفاسی، یاسر الدوسری، ماہر المعیقلی، ناصر القطامی، عبد الباسط (EveryAyah.com)۔ ترجمے کی آواز: ابراہیم واک (انگریزی)، شمشاد علی خان (اردو)۔'
+ }
+};
+const isUR=()=>PREF.lang==='ur';
+const t=(k,...a)=>{let s=(L[PREF.lang]||L.en)[k];if(s===undefined)s=L.en[k]||k;return a.length?s.replace(/\{(\d)\}/g,(_,i)=>a[i]):s};
+const LANGS={en:'English',ur:'اردو'};
+const LISTEN=()=>isUR()?{ar:'عربی',en:'انگریزی',ur:'اردو',both:'عربی + انگریزی',arur:'عربی + اردو'}:{ar:'Arabic',en:'English',ur:'Urdu',both:'Ar + En',arur:'Ar + Ur'};
+const TRANS=()=>isUR()?{en:'انگریزی',ur:'اردو',both:'دونوں'}:{en:'English',ur:'اردو',both:'Both'};
+const PART_NAME=()=>isUR()?{ar:'عربی تلاوت',en:'انگریزی ترجمہ',ur:'اردو ترجمہ'}:{ar:'Arabic',en:'English',ur:'Urdu'};
+const SCRIPT_UR={ip:{name:'انڈوپاک',sub:'نستعلیق، جیسا ہند و پاک کے قرآن میں چھپتا ہے'},hafs:{name:'عثمانی',sub:'مدینہ کا مصحف (شاہ فہد کمپلیکس)'},amiri:{name:'نسخ',sub:'کلاسیکی امیری فونٹ'}};
+const REC_UR={alafasy:{name:'مشاری العفاسی',note:'صاف اور خوش الحان (کویت)'},dosari:{name:'یاسر الدوسری',note:'نرم اور پُراثر (سعودی عرب)'},muaiqly:{name:'ماہر المعیقلی',note:'امامِ مسجد الحرام، پُرسکون'},qatami:{name:'ناصر القطامی',note:'دھیمی اور دل کو چھو لینے والی (سعودی عرب)'},basit:{name:'عبد الباسط',note:'مرتّل، کلاسیکی آواز (مصر)'}};
+const tScript=k=>isUR()?SCRIPT_UR[k]:SCRIPTS[k];
+const tRec=k=>isUR()?REC_UR[k]:RECITERS[k];
+const sname=n=>isUR()?S(n)[1]:S(n)[2];
+const smean=n=>isUR()?(S(n)[6]||S(n)[3]):S(n)[3];
+const BISM_EN2='In the name of Allah, the Most Gracious, the Most Merciful';
+const BISM_UR='شروع اللہ کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے';
+function applyLang(){
+  document.documentElement.lang=isUR()?'ur':'en';document.documentElement.dir=isUR()?'rtl':'ltr';
+  document.body.classList.toggle('ui-ur',isUR());
+  const r=document.getElementById('t-read-l'),s=document.getElementById('t-saved-l');if(r)r.textContent=t('tabRead');if(s)s.textContent=t('tabSaved');
+}
+
 const SCRIPTS={
   ip:{name:'Indo-Pak',sub:'Nastaleeq, as printed in India & Pakistan',ff:'"MQ IndoPak","Kalimah Quran",serif',bism:'بِسۡمِ اللّٰهِ الرَّحۡمٰنِ الرَّحِيۡمِ'},
   hafs:{name:'Uthmani',sub:'Madinah muṣḥaf (King Fahd Complex)',ff:'"MQ Hafs","Kalimah Quran",serif',bism:'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ'},
   amiri:{name:'Naskh',sub:'Classic Amiri Quran',ff:'"Kalimah Quran",serif',bism:'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ'}};
 if(!SCRIPTS[PREF.script])PREF.script='ip';
 const isIP=()=>PREF.script==='ip';
-const applyPref=()=>{document.documentElement.style.setProperty('--f-q',SCRIPTS[PREF.script].ff);Object.keys(SCRIPTS).forEach(k=>document.body.classList.toggle('script-'+k,PREF.script===k));document.documentElement.style.setProperty('--ar-size',SIZES[PREF.size]+'px');document.body.classList.toggle('nowbw',!PREF.wbw);document.body.classList.toggle('notx',!PREF.tx);['en','ur','both'].forEach(k=>document.body.classList.toggle('tr-'+k,PREF.trans===k))};
+const applyPref=()=>{document.documentElement.style.setProperty('--f-q',SCRIPTS[PREF.script].ff);Object.keys(SCRIPTS).forEach(k=>document.body.classList.toggle('script-'+k,PREF.script===k));document.documentElement.style.setProperty('--ar-size',SIZES[PREF.size]+'px');document.body.classList.toggle('nowbw',!PREF.wbw);document.body.classList.toggle('notx',!PREF.tx);['en','ur','both'].forEach(k=>document.body.classList.toggle('tr-'+k,PREF.trans===k));applyLang()};
 applyPref();
 
 const pad=n=>String(n).padStart(3,'0');
@@ -277,8 +375,6 @@ async function loadSurah(n){if(cache[n])return cache[n];const r=await fetch('dat
    P = the recitation queue. parts = what to play for each ayah: Arabic, English, or both. */
 const audio=new Audio(), wAudio=new Audio(); audio.preload='auto';
 let P=null; // {s, v, seq, parts, pi, paused, tts}
-const LISTEN={ar:'Arabic',en:'English',ur:'Urdu',both:'Ar + En',arur:'Ar + Ur'};
-const TRANS={en:'English',ur:'اردو',both:'Both'};
 // Arabic reciters: all Hafs, ayah by ayah. Main source everyayah.com, with a backup where one exists.
 const RECITERS={
   alafasy:{name:'Mishary Alafasy',note:'Clear and melodious (Kuwait)',ea:['Alafasy_128kbps'],qc:'Alafasy',isn:'128/ar.alafasy'},
@@ -297,7 +393,6 @@ const gnum=(s,v)=>OFF[s-1]+v;
 const EN=(s,v)=>['https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/'+pad(s)+pad(v)+'.mp3','https://cdn.islamic.network/quran/audio/192/en.walk/'+gnum(s,v)+'.mp3'];
 // Urdu: Fateh Muhammad Jalandhry's translation, read by Shamshad Ali Khan
 const UR=(s,v)=>['https://cdn.islamic.network/quran/audio/64/ur.khan/'+gnum(s,v)+'.mp3','https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/'+pad(s)+pad(v)+'.mp3'];
-const PART_NAME={ar:'Arabic',en:'English',ur:'Urdu'};
 const partsFor=()=>({ar:['ar'],en:['en'],ur:['ur'],both:['ar','en'],arur:['ar','ur']})[PREF.listen]||['ar'];
 const ttsOK='speechSynthesis' in window;
 function halt(){try{audio.pause()}catch(e){}if(ttsOK)try{speechSynthesis.cancel()}catch(e){}}
@@ -356,23 +451,23 @@ if('mediaSession' in navigator){const ms=navigator.mediaSession,h=(a,f)=>{try{ms
 const playerEl=document.getElementById('player');
 function markPlaying(){
   document.querySelectorAll('.ayah.playing,.sa.playing').forEach(e=>e.classList.remove('playing'));
-  document.querySelectorAll('[data-act="sv-play"]').forEach(b=>{b.innerHTML=ICON.play+'Listen'});
-  if(P){const sc=document.getElementById('sv-'+P.s+'-'+P.v);if(sc&&P.list){sc.classList.add('playing');const b=sc.querySelector('[data-act="sv-play"]');if(b&&!P.paused)b.innerHTML=ICON.pause+'Pause'}}
-  document.querySelectorAll('[data-act="ayah-play"]').forEach(b=>{b.innerHTML=ICON.play+'Listen'});
+  document.querySelectorAll('[data-act="sv-play"]').forEach(b=>{b.innerHTML=ICON.play+t('listen')});
+  if(P){const sc=document.getElementById('sv-'+P.s+'-'+P.v);if(sc&&P.list){sc.classList.add('playing');const b=sc.querySelector('[data-act="sv-play"]');if(b&&!P.paused)b.innerHTML=ICON.pause+t('pause')}}
+  document.querySelectorAll('[data-act="ayah-play"]').forEach(b=>{b.innerHTML=ICON.play+t('listen')});
   const here=P&&cur&&cur.s===P.s&&R.view==='read';
   const bm=document.getElementById('bism');if(bm)bm.classList.toggle('playing',!!(here&&P.pre));
-  if(here&&!P.pre){const el=document.getElementById('a-'+P.v);if(el){el.classList.add('playing');const b=el.querySelector('[data-act="ayah-play"]');if(b&&!P.paused)b.innerHTML=ICON.pause+'Pause'}}
+  if(here&&!P.pre){const el=document.getElementById('a-'+P.v);if(el){el.classList.add('playing');const b=el.querySelector('[data-act="ayah-play"]');if(b&&!P.paused)b.innerHTML=ICON.pause+t('pause')}}
   const pa=document.getElementById('playall');if(pa){const on=here&&P.seq&&!P.paused;pa.innerHTML=on?ICON.pause:ICON.play;pa.classList.toggle('on',on)}
   document.body.classList.toggle('hasplayer',!!P);
   if(!P){playerEl.classList.remove('on');return}
   const part=P.parts[P.pi];
   playerEl.classList.add('on');
-  playerEl.innerHTML=`<div class="pr"><a class="pinfo" href="#surah-${P.s}-${P.v}"><b>${S(P.s)[2]} ${P.pre?'· Bismillah':P.s+':'+P.v}</b><span>${P.list?'Saved '+(P.li+1)+' of '+P.list.length+' · ':''}${P.paused?'Paused':'Playing '+PART_NAME[part]}${P.tts?' (phone voice)':''}</span></a>
+  playerEl.innerHTML=`<div class="pr"><a class="pinfo" href="#surah-${P.s}-${P.v}"><b>${sname(P.s)} ${P.pre?'· '+t('bismillah'):P.s+':'+P.v}</b><span>${P.list?t('savedOf',P.li+1,P.list.length):''}${P.paused?t('paused'):t('playing',PART_NAME()[part])}${P.tts?t('phoneVoice'):''}</span></a>
     <button class="pc" data-act="p-prev" aria-label="Previous ayah">${ICON.prev}</button>
     <button class="pc big" data-act="p-toggle" aria-label="${P.paused?'Play':'Pause'}">${P.paused?ICON.play:ICON.pause}</button>
     <button class="pc" data-act="p-next" aria-label="Next ayah">${ICON.next}</button>
     <button class="pc" data-act="p-stop" aria-label="Stop">${ICON.x}</button></div>
-    <div class="seg">${Object.entries(LISTEN).map(([k,l])=>`<button class="${PREF.listen===k?'on':''}" data-act="listen" data-m="${k}">${l}</button>`).join('')}</div>`;
+    <div class="seg">${listenButtons()}</div>`;
 }
 
 /* ---------- routing ---------- */
@@ -392,19 +487,34 @@ async function route(){
 window.addEventListener('hashchange',route);
 
 /* ---------- home ---------- */
+function settingsCard(){
+  return `<section class="scard" aria-label="${t('yourSettings')}">
+    <div class="sc-head"><span class="eyebrow">${t('yourSettings')}</span><button class="mini" data-act="settings">${ICON.aa}${t('allSettings')}</button></div>
+    <div class="sc-row"><span class="sc-l">${t('appLang')}</span><div class="seg lang">${Object.entries(LANGS).map(([k,l])=>`<button class="${PREF.lang===k?'on':''}" data-act="lang" data-m="${k}"${k==='ur'?' lang="ur"':''}>${l}</button>`).join('')}</div></div>
+    <div class="sc-row"><span class="sc-l">${t('listenTo')}</span><div class="seg">${listenButtons()}</div></div>
+    <button class="sc-sum" data-act="settings">
+      <span><small>${t('arabicStyle')}</small><b>${tScript(PREF.script).name}</b></span>
+      <span><small>${t('reciter')}</small><b>${tRec(PREF.reciter).name}</b></span>
+      <span><small>${t('translationShown')}</small><b>${TRANS()[PREF.trans]}</b></span>
+      <span class="sc-go">${t('change')}</span>
+    </button>
+  </section>`;
+}
 function renderHome(){
-  const list=INDEX.filter(x=>!q||(x[0]+' '+x[2]+' '+x[3]).toLowerCase().replace(/[-'’ʿ]/g,'').includes(q.toLowerCase().replace(/[-'’ʿ\s]/g,''))||x[1].includes(q));
-  const cont=LAST&&S(LAST.s)?`<a class="cont" href="#surah-${LAST.s}-${LAST.v}"><span class="t"><span class="eyebrow">Continue reading</span><b>${S(LAST.s)[2]} · ayah ${LAST.v}</b><span class="muted" style="font-size:.85rem">${S(LAST.s)[3]}</span></span><span class="go">${ICON.arrow}</span></a>`:'';
-  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}MyQuranApp<span class="ar">قُرْآنِي</span></span></div>
+  const qq=q.toLowerCase().replace(/[-'’ʿ\s]/g,'');
+  const list=INDEX.filter(x=>!q||(x[0]+' '+x[2]+' '+x[3]).toLowerCase().replace(/[-'’ʿ\s]/g,'').includes(qq)||x[1].includes(q)||(x[6]||'').includes(q));
+  const cont=LAST&&S(LAST.s)?`<a class="cont" href="#surah-${LAST.s}-${LAST.v}"><span class="t"><span class="eyebrow">${t('continue')}</span><b>${sname(LAST.s)} · ${t('ayahN',LAST.v)}</b><span class="muted" style="font-size:.85rem">${smean(LAST.s)}</span></span><span class="go">${ICON.arrow}</span></a>`:'';
+  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}MyQuranApp<span class="ar">قُرْآنِي</span></span><button class="ib" data-act="settings" aria-label="${t('allSettings')}">${ICON.aa}</button></div>
   <div class="stack" style="padding-top:14px">
-    <div><h1>Read the Qur’an and understand every word.</h1><p class="muted" style="margin:8px 0 0">Each Arabic word has its English meaning underneath. Tap a word to hear it, and save any ayah to come back to.</p></div>
+    <div><h1>${t('homeTitle')}</h1><p class="muted" style="margin:8px 0 0">${t('homeSub')}</p></div>
     ${cont}
-    <div class="stack" style="gap:10px"><div class="eyebrow">Start here</div><div class="picks">${PICKS.map(p=>`<a class="pick" href="#surah-${p[0]}${p[3]?'-'+p[3]:''}"><span class="ar">${p[4]||S(p[0])[1]}</span><b>${p[1]}</b><span>${p[2]}</span></a>`).join('')}</div></div>
-    <div class="stack" style="gap:12px"><div class="eyebrow">All 114 surahs</div>
-      <input class="search" id="q" type="search" placeholder="Search by name, meaning or number" value="${esc(q)}" autocomplete="off">
-      <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${x[2]}</b><small>${x[3]} · ${x[5]} ayahs · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${x[4]==='meccan'?'Makkah':'Madinah'}</span></small></span><span class="ar">${x[1]}</span></a>`).join('')||'<p class="muted">No surah matches that search.</p>'}</div>
+    ${settingsCard()}
+    <div class="stack" style="gap:10px"><div class="eyebrow">${t('startHere')}</div><div class="picks">${PICKS.map(p=>`<a class="pick" href="#surah-${p[0]}${p[3]?'-'+p[3]:''}"><span class="ar">${p[4]||S(p[0])[1]}</span><b>${isUR()?(p[5]||S(p[0])[1]):p[1]}</b><span>${p[3]?'2 : 255':smean(p[0])}</span></a>`).join('')}</div></div>
+    <div class="stack" style="gap:12px"><div class="eyebrow">${t('allSurahs')}</div>
+      <input class="search" id="q" type="search" placeholder="${t('search')}" value="${esc(q)}" autocomplete="off">
+      <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${sname(x[0])}</b><small>${smean(x[0])} · ${t('ayahs',x[5])} · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${t(x[4]==='meccan'?'makkah':'madinah')}</span></small></span><span class="ar">${isUR()?'':x[1]}</span></a>`).join('')||`<p class="muted">${t('noMatch')}</p>`}</div>
     </div>
-    <p class="foot">Word meanings from the Quranic Arabic Corpus (Quran.com). Indo-Pak text and fonts: King Fahd Complex (KFGQPC). Translation: Saheeh International. Urdu: Fateh Muhammad Jalandhry (Tanzil). Recitation: Mishary Alafasy, Yasser Al-Dosari, Maher Al-Muaiqly, Nasser Al-Qatami, Abdul Basit (EveryAyah.com). Audio translations: Ibrahim Walk (English), Shamshad Ali Khan (Urdu).<br>Version 2.8 · reciters</p>
+    <p class="foot">${t('credits')}<br>Version 2.9 · ${isUR()?'اردو':'English'}</p>
   </div>`;
 }
 
@@ -416,11 +526,11 @@ function ayahHTML(s,d,v){
   const words=T.map((ar,i)=>{
     if(ar==='')return '';   // Indo-Pak writes this word together with the next one
     const mean=i>0&&T[i-1]===''?a.w[i-1]+' '+a.w[i]:a.w[i];
-    return `<button class="w" data-act="word" data-v="${v}" data-i="${i}"><span class="wa">${ar}</span><span class="we">${esc(mean)}</span></button>`}).join('');
+    return `<button class="w" data-act="word" data-v="${v}" data-i="${i}"><span class="wa">${ar}</span><span class="we" dir="ltr">${esc(mean)}</span></button>`}).join('');
   return `<article class="ayah" id="a-${v}" data-v="${v}">
-    <div class="ah"><span class="num">${s}:${v}</span><span class="sp"></span><button class="mini${sv?' saved':''}" data-act="save-ayah" data-v="${v}">${sv?ICON.bmf+'Saved':ICON.bm+'Save'}</button><button class="mini" data-act="ayah-play" data-v="${v}">${ICON.play}Listen</button></div>
-    <div class="words">${words}</div>
-    <p class="tx">${esc(a.en)}</p>${a.ur?`<p class="txu" lang="ur">${esc(a.ur)}</p>`:''}</article>`;
+    <div class="ah"><span class="num">${s}:${v}</span><span class="sp"></span><button class="mini${sv?' saved':''}" data-act="save-ayah" data-v="${v}">${sv?ICON.bmf+t('saved'):ICON.bm+t('save')}</button><button class="mini" data-act="ayah-play" data-v="${v}">${ICON.play}${t('listen')}</button></div>
+    <div class="words" lang="ar">${words}</div>
+    <p class="tx" dir="ltr">${esc(a.en)}</p>${a.ur?`<p class="txu" lang="ur">${esc(a.ur)}</p>`:''}</article>`;
 }
 function ensureRendered(upto){
   if(!cur||upto<=shown)return;const box=document.getElementById('ayahs');if(!box)return;
@@ -432,17 +542,18 @@ function ensureRendered(upto){
 }
 async function renderRead(){
   const s=R.s,meta=S(s);
-  $v.innerHTML=`<div class="bar line"><a class="ib" href="#" aria-label="All surahs">${ICON.back}</a><span class="title"><b>${meta[2]}</b><span>${meta[3]} · ${meta[5]} ayahs</span></span>
-    <button class="ib" id="playall" data-act="playall" aria-label="Play whole surah">${ICON.play}</button><button class="ib" data-act="settings" aria-label="Reading settings">${ICON.aa}</button></div>
-    <div id="rbody"><p class="muted" style="padding:40px 0;text-align:center">Loading…</p></div>`;
-  let d;try{d=await loadSurah(s)}catch(e){document.getElementById('rbody').innerHTML='<div class="empty" style="margin-top:30px">This surah couldn’t load. Connect to the internet once and open it again; after that it works offline.</div>';return}
+  $v.innerHTML=`<div class="bar line"><a class="ib flip" href="#" aria-label="${t('allSurahs')}">${ICON.back}</a><span class="title"><b>${sname(s)}</b><span>${smean(s)} · ${t('ayahs',meta[5])}</span></span>
+    <button class="ib" id="playall" data-act="playall" aria-label="${t('listen')}">${ICON.play}</button><button class="ib" data-act="settings" aria-label="${t('allSettings')}">${ICON.aa}</button></div>
+    <div id="rbody"><p class="muted" style="padding:40px 0;text-align:center">${t('loading')}</p></div>`;
+  let d;try{d=await loadSurah(s)}catch(e){document.getElementById('rbody').innerHTML=`<div class="empty" style="margin-top:30px">${t('loadErr')}</div>`;return}
   if(R.view!=='read'||R.s!==s)return;
   cur={s,d};shown=0;
-  const prev=s>1?`<a class="btn ghost" href="#surah-${s-1}">${ICON.back} ${S(s-1)[2]}</a>`:'<span></span>';
-  const next=s<114?`<a class="btn gold" href="#surah-${s+1}">${S(s+1)[2]} ${ICON.arrow}</a>`:'<span></span>';
-  document.getElementById('rbody').innerHTML=`<div class="shead"><span class="ar">${meta[1]}</span><p>${meta[4]==='meccan'?'Revealed in Makkah':'Revealed in Madinah'}</p></div>
-    ${s!==1&&s!==9?'<p class="bism" id="bism">'+SCRIPTS[PREF.script].bism+'</p><p class="muted" style="text-align:center;margin:0 0 6px;font-size:.85rem">In the name of Allah, the Most Gracious, the Most Merciful</p>':''}
-    <div id="ayahs"></div><div class="more" id="more"><button class="btn ghost" data-act="more">Show more ayahs</button></div>
+  const prev=s>1?`<a class="btn ghost" href="#surah-${s-1}"><span class="flip">${ICON.back}</span> ${sname(s-1)}</a>`:'<span></span>';
+  const next=s<114?`<a class="btn gold" href="#surah-${s+1}">${sname(s+1)} <span class="flip">${ICON.arrow}</span></a>`:'<span></span>';
+  const bt=PREF.trans==='ur'?`<p class="txu bt" lang="ur">${BISM_UR}</p>`:PREF.trans==='both'?`<p class="muted bt" dir="ltr">${BISM_EN2}</p><p class="txu bt" lang="ur">${BISM_UR}</p>`:`<p class="muted bt" dir="ltr">${BISM_EN2}</p>`;
+  document.getElementById('rbody').innerHTML=`<div class="shead"><span class="ar" lang="ar">${meta[1]}</span><p>${t(meta[4]==='meccan'?'revealedM':'revealedMd')}</p></div>
+    ${s!==1&&s!==9?'<p class="bism" id="bism" lang="ar">'+SCRIPTS[PREF.script].bism+'</p>'+bt:''}
+    <div id="ayahs"></div><div class="more" id="more"><button class="btn ghost" data-act="more">${t('more')}</button></div>
     <div class="next" id="nextnav" style="display:none">${prev}${next}</div>`;
   ensureRendered(Math.max(30,R.v+10));
   if(R.v>1){const el=document.getElementById('a-'+R.v);if(el)requestAnimationFrame(()=>el.scrollIntoView({block:'start'}))}else scrollTo(0,0);
@@ -450,11 +561,11 @@ async function renderRead(){
 }
 function observe(){
   if(obs)obs.disconnect();if(!('IntersectionObserver' in window))return;
-  let t=null;
+  let tm=null;
   obs=new IntersectionObserver(es=>{
     for(const e of es){
       if(e.target.id==='more'&&e.isIntersecting){ensureRendered(shown+30);continue}
-      if(e.isIntersecting&&e.target.dataset.v){clearTimeout(t);const v=+e.target.dataset.v;t=setTimeout(()=>{if(cur){LAST={s:cur.s,v};store.set('last',LAST)}},400)}
+      if(e.isIntersecting&&e.target.dataset.v){clearTimeout(tm);const v=+e.target.dataset.v;tm=setTimeout(()=>{if(cur){LAST={s:cur.s,v};store.set('last',LAST)}},400)}
     }
   },{rootMargin:'-20% 0px -70% 0px'});
   document.querySelectorAll('.ayah').forEach(a=>obs.observe(a));
@@ -463,59 +574,68 @@ function observe(){
 
 /* ---------- sheet ---------- */
 const sheet=document.getElementById('sheet'),scrim=document.getElementById('scrim');
-function openSheet(html){sheet.innerHTML='<div class="grab"></div>'+html;sheet.classList.add('on');scrim.classList.add('on')}
-function closeSheet(){sheet.classList.remove('on');scrim.classList.remove('on');document.querySelectorAll('.w.sel').forEach(e=>e.classList.remove('sel'))}
+let sheetKind=null;
+function openSheet(html,kind){sheetKind=kind||null;sheet.innerHTML='<div class="grab"></div>'+html;sheet.classList.add('on');scrim.classList.add('on')}
+function closeSheet(){sheetKind=null;sheet.classList.remove('on');scrim.classList.remove('on');document.querySelectorAll('.w.sel').forEach(e=>e.classList.remove('sel'))}
 scrim.onclick=closeSheet;
 let selW=null;
 function wordSheet(s,v,i){
   const a=cur.d.v[v-1],k=s+':'+v+':'+i,sv=isSaved(s,v);
   const T=isIP()&&a.i?a.i:a.a,joined=i>0&&T[i-1]==='';
   selW={k,s,v,i,a:T[i],w:joined?a.w[i-1]+' '+a.w[i]:a.w[i],t:joined?a.t[i-1]+' '+a.t[i]:a.t[i],p:joined?a.p[i-1]:a.p[i]};
-  openSheet(`<div class="sw"><span class="ar">${selW.a}</span><span class="tr">${esc(selW.t)}</span><span class="en">${esc(selW.w)}</span><span class="ref">${S(s)[2]} ${s}:${v} · word ${i+1}</span></div>
-    <div class="row2"><button class="btn ghost" data-act="wplay">${ICON.play}Hear it</button><button class="btn ${sv?'saved':'gold'}" data-act="save-ayah" data-v="${v}">${sv?ICON.bmf+'Ayah saved':ICON.bm+'Save this ayah'}</button></div>`);
+  const n=T.slice(0,i+1).filter(Boolean).length;
+  openSheet(`<div class="sw"><span class="ar" lang="ar">${selW.a}</span><span class="tr" dir="ltr">${esc(selW.t)}</span><span class="en" dir="ltr">${esc(selW.w)}</span><span class="ref">${sname(s)} ${s}:${v} · ${t('word',n)}</span></div>
+    <div class="row2"><button class="btn ghost" data-act="wplay">${ICON.play}${t('hearIt')}</button><button class="btn ${sv?'saved':'gold'}" data-act="save-ayah" data-v="${v}">${sv?ICON.bmf+t('ayahSaved'):ICON.bm+t('saveAyah')}</button></div>`,'word');
 }
 function settingsSheet(){
-  openSheet(`<h2 style="margin-bottom:6px">Reading and listening</h2><div class="set">
-    <div class="r" style="flex-direction:column;align-items:stretch"><span>Arabic style</span><div class="styles">${Object.entries(SCRIPTS).map(([k,f])=>`<button class="style ${PREF.script===k?'on':''}" data-act="script" data-m="${k}"><span><b>${f.name}</b><small>${f.sub}</small></span><span class="smp" style="font-family:${f.ff.replace(/"/g,"'")}">${k==='ip'?'بِسۡمِ اللّٰهِ':'بِسۡمِ ٱللَّهِ'}</span></button>`).join('')}</div></div>
-    <div class="r" style="flex-direction:column;align-items:stretch"><span>Reciter</span><div class="styles">${Object.entries(RECITERS).map(([k,r])=>`<button class="style ${PREF.reciter===k?'on':''}" data-act="reciter" data-m="${k}"><span><b>${r.name}</b><small>${r.note}</small></span><span class="rplay" aria-hidden="true">${PREF.reciter===k?CHECK:''}</span></button>`).join('')}</div></div>
-    <div class="r" style="flex-direction:column;align-items:stretch"><span>Listen to</span><div class="seg">${Object.entries(LISTEN).map(([k,l])=>`<button class="${PREF.listen===k?'on':''}" data-act="listen" data-m="${k}">${l}</button>`).join('')}</div></div>
-    <div class="r"><span>Keep playing into the next surah</span><button class="tog ${PREF.cont?'on':''}" data-act="pref" data-k="cont" aria-label="Continue into next surah"></button></div>
-    <div class="r"><span>Word meanings under Arabic</span><button class="tog ${PREF.wbw?'on':''}" data-act="pref" data-k="wbw" aria-label="Word meanings"></button></div>
-    <div class="r" style="flex-direction:column;align-items:stretch"><span>Translation shown</span><div class="seg">${Object.entries(TRANS).map(([k,l])=>`<button class="${PREF.trans===k?'on':''}" data-act="trans" data-m="${k}"${k==='ur'?' style="font-family:\'MQ Nastaliq\',serif;font-size:.95rem"':''}>${l}</button>`).join('')}</div></div>
-    <div class="r"><span>Full translation of each ayah</span><button class="tog ${PREF.tx?'on':''}" data-act="pref" data-k="tx" aria-label="Translation"></button></div>
-    <div class="r"><span>Arabic size</span><span class="steps"><button data-act="size" data-d="-1" aria-label="Smaller">ا−</button><button data-act="size" data-d="1" aria-label="Larger">ا+</button></span></div>
-    <div class="r"><span><span>Save whole Qur’an for offline</span><br><small class="muted" id="offl">About 8 MB. Surahs you open are saved automatically.</small></span><button class="btn ghost" style="height:38px" data-act="offline">Save</button></div>
-  </div>`);
+  const keep=sheet.classList.contains('on')&&sheetKind==='settings'?sheet.scrollTop:0;
+  openSheet(`<h2 style="margin-bottom:6px">${t('settingsTitle')}</h2><div class="set">
+    <div class="r" style="flex-direction:column;align-items:stretch"><span>${t('appLang')}</span><div class="seg lang">${Object.entries(LANGS).map(([k,l])=>`<button class="${PREF.lang===k?'on':''}" data-act="lang" data-m="${k}"${k==='ur'?' lang="ur"':''}>${l}</button>`).join('')}</div></div>
+    <div class="r" style="flex-direction:column;align-items:stretch"><span>${t('arabicStyle')}</span><div class="styles">${Object.keys(SCRIPTS).map(k=>{const f=SCRIPTS[k],tf=tScript(k);return `<button class="style ${PREF.script===k?'on':''}" data-act="script" data-m="${k}"><span><b>${tf.name}</b><small>${tf.sub}</small></span><span class="smp" lang="ar" style="font-family:${f.ff.replace(/"/g,"'")}">${k==='ip'?'بِسۡمِ اللّٰهِ':'بِسۡمِ ٱللَّهِ'}</span></button>`}).join('')}</div></div>
+    <div class="r" style="flex-direction:column;align-items:stretch"><span>${t('reciter')}</span><div class="styles">${Object.keys(RECITERS).map(k=>{const r=tRec(k);return `<button class="style ${PREF.reciter===k?'on':''}" data-act="reciter" data-m="${k}"><span><b>${r.name}</b><small>${r.note}</small></span><span class="rplay" aria-hidden="true">${PREF.reciter===k?CHECK:''}</span></button>`}).join('')}</div></div>
+    <div class="r" style="flex-direction:column;align-items:stretch"><span>${t('listenTo')}</span><div class="seg">${listenButtons()}</div></div>
+    <div class="r"><span>${t('contNext')}</span><button class="tog ${PREF.cont?'on':''}" data-act="pref" data-k="cont" aria-label="${t('contNext')}"></button></div>
+    <div class="r" style="flex-direction:column;align-items:stretch"><span>${t('translationShown')}</span><div class="seg">${Object.entries(TRANS()).map(([k,l])=>`<button class="${PREF.trans===k?'on':''}" data-act="trans" data-m="${k}"${k==='ur'?' lang="ur"':''}>${l}</button>`).join('')}</div></div>
+    <div class="r"><span>${t('fullTx')}</span><button class="tog ${PREF.tx?'on':''}" data-act="pref" data-k="tx" aria-label="${t('fullTx')}"></button></div>
+    <div class="r"><span>${t('wbw')}</span><button class="tog ${PREF.wbw?'on':''}" data-act="pref" data-k="wbw" aria-label="${t('wbw')}"></button></div>
+    <div class="r"><span>${t('arSize')}</span><span class="steps"><button data-act="size" data-d="-1" aria-label="−">ا−</button><button data-act="size" data-d="1" aria-label="+">ا+</button></span></div>
+    <div class="r"><span><span>${t('offline')}</span><br><small class="muted" id="offl">${t('offlineSub')}</small></span><button class="btn ghost" style="height:38px" data-act="offline">${t('saveBtn')}</button></div>
+  </div>`,'settings');
+  sheet.scrollTop=keep;
 }
+function listenButtons(){return Object.entries(LISTEN()).map(([k,l])=>`<button class="${PREF.listen===k?'on':''}" data-act="listen" data-m="${k}">${l}</button>`).join('')}
 
 /* ---------- saved ---------- */
 function savedSheet(i,mode){
-  const x=AYAHS[i];if(!x)return;
-  if(mode==='remove'){openSheet(`<h2>Remove ${S(x.s)[2]} ${x.s}:${x.v}?</h2><p class="muted" style="margin:6px 0 0">${x.note?'Your note will be removed too.':'You can save it again any time.'}</p>
-    <div class="row2"><button class="btn ghost" data-act="close">Keep it</button><button class="btn gold" data-act="sv-remove-yes" data-i="${i}">Remove</button></div>`);return}
-  openSheet(`<h2>Note for ${S(x.s)[2]} ${x.s}:${x.v}</h2><p class="muted" style="margin:4px 0 12px;font-size:.88rem">Why it matters to you, when to recite it, who to share it with.</p>
-    <textarea id="note-text" class="note-in" rows="4" placeholder="e.g. Recite before sleep">${esc(x.note||'')}</textarea>
-    <div class="row2"><button class="btn ghost" data-act="close">Cancel</button><button class="btn gold" data-act="sv-note-save" data-i="${i}">Save note</button></div>`);
+  const x=AYAHS[i];if(!x)return;const ref=sname(x.s)+' '+x.s+':'+x.v;
+  if(mode==='remove'){openSheet(`<h2>${t('removeQ',ref)}</h2><p class="muted" style="margin:6px 0 0">${x.note?t('noteRemoved'):t('canSaveAgain')}</p>
+    <div class="row2"><button class="btn ghost" data-act="close">${t('keepIt')}</button><button class="btn gold" data-act="sv-remove-yes" data-i="${i}">${t('remove')}</button></div>`);return}
+  openSheet(`<h2>${t('noteFor',ref)}</h2><p class="muted" style="margin:4px 0 12px;font-size:.88rem">${t('noteHelp')}</p>
+    <textarea id="note-text" class="note-in" rows="4" placeholder="${t('notePh')}" dir="auto">${esc(x.note||'')}</textarea>
+    <div class="row2"><button class="btn ghost" data-act="close">${t('cancel')}</button><button class="btn gold" data-act="sv-note-save" data-i="${i}">${t('saveNote')}</button></div>`);
   setTimeout(()=>{const n=document.getElementById('note-text');if(n)n.focus()},280);
 }
 function renderSaved(){
   const n=AYAHS.length;
-  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}Saved ayahs</span></div>
+  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}${t('savedTitle')}</span><button class="ib" data-act="settings" aria-label="${t('allSettings')}">${ICON.aa}</button></div>
    <div class="stack" style="padding-top:14px">
-   ${n?`<div><h1>${n} ayah${n>1?'s':''} saved</h1><p class="muted" style="margin:8px 0 0">Your own collection. Play them all on the go in Arabic, English or both.</p></div>
-     <button class="btn gold" data-act="sv-playall">${ICON.play}Play all saved</button>
+   ${n?`<div><h1>${t(n===1?'savedOne':'savedN',n)}</h1><p class="muted" style="margin:8px 0 0">${t('savedSub')}</p></div>
+     <button class="btn gold" data-act="sv-playall">${ICON.play}${t('playAllSaved')}</button>
      <div class="list">${AYAHS.map((x,i)=>`<article class="sa" id="sv-${x.s}-${x.v}">
-        <div class="ah"><a class="num" href="#surah-${x.s}-${x.v}">${S(x.s)[2]} ${x.s}:${x.v}</a><span class="sp"></span><button class="mini" data-act="sv-play" data-i="${i}">${ICON.play}Listen</button></div>
-        <p class="sar">${isIP()&&x.ai?x.ai:x.ar}</p><p class="tx" style="display:block">${esc(x.en)}</p>${x.ur?`<p class="txu" lang="ur">${esc(x.ur)}</p>`:''}
-        ${x.note?`<p class="note">${esc(x.note)}</p>`:''}
-        <div class="sacts"><a class="mini" href="#surah-${x.s}-${x.v}">Open in surah</a><button class="mini" data-act="sv-note" data-i="${i}">${x.note?'Edit note':'Add note'}</button><button class="mini" data-act="sv-remove" data-i="${i}">Remove</button></div>
+        <div class="ah"><a class="num" href="#surah-${x.s}-${x.v}">${sname(x.s)} ${x.s}:${x.v}</a><span class="sp"></span><button class="mini" data-act="sv-play" data-i="${i}">${ICON.play}${t('listen')}</button></div>
+        <p class="sar" lang="ar">${isIP()&&x.ai?x.ai:x.ar}</p><p class="tx" dir="ltr" style="display:block">${esc(x.en)}</p>${x.ur?`<p class="txu" lang="ur">${esc(x.ur)}</p>`:''}
+        ${x.note?`<p class="note" dir="auto">${esc(x.note)}</p>`:''}
+        <div class="sacts"><a class="mini" href="#surah-${x.s}-${x.v}">${t('openInSurah')}</a><button class="mini" data-act="sv-note" data-i="${i}">${t(x.note?'editNote':'addNote')}</button><button class="mini" data-act="sv-remove" data-i="${i}">${t('remove')}</button></div>
       </article>`).join('')}</div>`
-   :`<div class="empty"><p style="margin:0 0 6px;color:var(--text)">No saved ayahs yet.</p>While reading, tap <b style="color:var(--gold)">Save</b> on any ayah to keep it here with its meaning.</div><a class="btn gold" href="#surah-2-255">Start with Āyat al-Kursī</a>`}
+   :`<div class="empty"><p style="margin:0 0 6px;color:var(--text)">${t('emptySaved1')}</p>${t('emptySaved2')}</div><a class="btn gold" href="#surah-2-255">${t('startKursi')}</a>`}
    </div>`;
   markPlaying();
 }
 
 let toastT=null;function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2200)}
+
+// redraw the current screen after a setting changes, keeping your place
+async function rerender(){if(R.view==='home')renderHome();else if(R.view==='saved')renderSaved();else if(R.view==='read'&&cur){R.v=LAST&&LAST.s===cur.s?LAST.v:0;await renderRead()}}
 
 /* ---------- events ---------- */
 document.addEventListener('click',async e=>{
@@ -530,36 +650,40 @@ document.addEventListener('click',async e=>{
     case 'p-next':step(1);break;
     case 'p-toggle':togglePause();break;
     case 'p-stop':stopAudio();break;
-    case 'listen':setListen(el.dataset.m);break;
+    case 'lang':{const m=el.dataset.m;if(PREF.lang===m)break;PREF.lang=m;
+      if(m==='ur'){PREF.trans='ur';if(PREF.listen==='en'||PREF.listen==='both')PREF.listen='arur';PREF.wbw=false}
+      else{if(PREF.trans==='ur')PREF.trans='en';PREF.wbw=true}
+      store.set('pref',PREF);applyPref();await rerender();if(sheetKind==='settings')settingsSheet();markPlaying();toast(t('toastLang'));break}
+    case 'listen':setListen(el.dataset.m);if(R.view==='home')renderHome();break;
     case 'reciter':{PREF.reciter=el.dataset.m;store.set('pref',PREF);
       document.querySelectorAll('[data-act="reciter"]').forEach(b=>{const on=b.dataset.m===PREF.reciter;b.classList.toggle('on',on);b.querySelector('.rplay').innerHTML=on?CHECK:''});
       // a short sample so you can hear the new voice: Bismillah
       if(P){halt();P.pi=0;P.paused=false;playPart()}else{const u=AR(1,1);let k=0;wAudio.onerror=()=>{k++;if(k<u.length){wAudio.src=u[k];wAudio.play().catch(()=>{})}};wAudio.src=u[0];wAudio.play().catch(()=>{})}
-      toast(rec().name+' selected');break}
+      toast(t('toastReciter',tRec(PREF.reciter).name));if(R.view==='home')renderHome();break}
     case 'script':{PREF.script=el.dataset.m;store.set('pref',PREF);applyPref();
       document.querySelectorAll('[data-act="script"]').forEach(b=>b.classList.toggle('on',b.dataset.m===PREF.script));
-      if(R.view==='read'&&cur){const keep=LAST&&LAST.s===cur.s?LAST.v:0;R.v=keep;await renderRead()}else if(R.view==='saved')renderSaved();break}
-    case 'trans':PREF.trans=el.dataset.m;store.set('pref',PREF);applyPref();document.querySelectorAll('[data-act="trans"]').forEach(b=>b.classList.toggle('on',b.dataset.m===PREF.trans));break;
+      await rerender();break}
+    case 'trans':PREF.trans=el.dataset.m;store.set('pref',PREF);applyPref();document.querySelectorAll('[data-act="trans"]').forEach(b=>b.classList.toggle('on',b.dataset.m===PREF.trans));if(R.view==='home')renderHome();else if(R.view==='read'&&cur)await rerender();break;
     case 'save-ayah':{const v=+el.dataset.v,s=cur.s,i=AYAHS.findIndex(x=>x.s===s&&x.v===v);
       if(i>=0){savedSheet(i,'remove');break}
       const a2=cur.d.v[v-1];AYAHS.unshift({s,v,ar:a2.a.join(' '),ai:a2.i?a2.i.filter(Boolean).join(' '):'',en:a2.en,ur:a2.ur||'',note:'',at:Date.now()});saveAyahs();
-      document.querySelectorAll(`[data-act="save-ayah"][data-v="${v}"]`).forEach(b=>{b.classList.add('saved');b.innerHTML=b.classList.contains('btn')?ICON.bmf+'Ayah saved':ICON.bmf+'Saved'});
-      toast('Saved. Find it in the Saved tab.');break}
+      document.querySelectorAll(`[data-act="save-ayah"][data-v="${v}"]`).forEach(b=>{b.classList.add('saved');b.innerHTML=b.classList.contains('btn')?ICON.bmf+t('ayahSaved'):ICON.bmf+t('saved')});
+      toast(t('toastSaved'));break}
     case 'close':closeSheet();break;
     case 'sv-remove':savedSheet(+el.dataset.i,'remove');break;
     case 'sv-remove-yes':{const x=AYAHS[+el.dataset.i];AYAHS.splice(+el.dataset.i,1);saveAyahs();closeSheet();
-      if(R.view==='saved')renderSaved();else document.querySelectorAll(`[data-act="save-ayah"][data-v="${x.v}"]`).forEach(b=>{b.classList.remove('saved');b.innerHTML=b.classList.contains('btn')?ICON.bm+'Save this ayah':ICON.bm+'Save'});break}
+      if(R.view==='saved')renderSaved();else document.querySelectorAll(`[data-act="save-ayah"][data-v="${x.v}"]`).forEach(b=>{b.classList.remove('saved');b.innerHTML=b.classList.contains('btn')?ICON.bm+t('saveAyah'):ICON.bm+t('save')});break}
     case 'sv-note':savedSheet(+el.dataset.i,'note');break;
     case 'sv-note-save':{AYAHS[+el.dataset.i].note=(document.getElementById('note-text').value||'').trim().slice(0,500);saveAyahs();closeSheet();renderSaved();break}
     case 'sv-play':{const i=+el.dataset.i,x=AYAHS[i];if(P&&P.list&&P.li===i){togglePause()}else startList(i);break}
     case 'sv-playall':startList(0);break;
     case 'more':ensureRendered(shown+30);break;
     case 'settings':settingsSheet();break;
-    case 'pref':PREF[el.dataset.k]=!PREF[el.dataset.k];store.set('pref',PREF);applyPref();el.classList.toggle('on',PREF[el.dataset.k]);break;
+    case 'pref':PREF[el.dataset.k]=!PREF[el.dataset.k];store.set('pref',PREF);applyPref();el.classList.toggle('on',PREF[el.dataset.k]);if(R.view==='home')renderHome();break;
     case 'size':PREF.size=Math.max(0,Math.min(SIZES.length-1,PREF.size+(+el.dataset.d)));store.set('pref',PREF);applyPref();break;
     case 'offline':{const o=document.getElementById('offl');el.disabled=true;let n=0;
-      for(let s=1;s<=114;s++){try{await fetch('data/'+s+'.json')}catch(_){}n++;if(o)o.textContent='Saving… '+n+' of 114'}
-      if(o)o.textContent='Done. The whole Qur’an is available offline.';el.textContent='Saved';break}
+      for(let s=1;s<=114;s++){try{await fetch('data/'+s+'.json')}catch(_){}n++;if(o)o.textContent=t('offSaving',n)}
+      if(o)o.textContent=t('offDone');el.textContent=t('offSaved');break}
   }
 });
 document.addEventListener('input',e=>{if(e.target.id==='q'){q=e.target.value;const p=e.target.selectionStart;renderHome();const i=document.getElementById('q');i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});

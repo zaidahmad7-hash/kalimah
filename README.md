@@ -10,6 +10,9 @@ A calm black-and-gold Quran reader for iPhone. Every Arabic word shows its Engli
 - Play bar with lock-screen and headphone controls; optional auto-continue into the next surah
 - Remembers where you stopped; works offline
 
+- App language: English or اردو (full Urdu interface, right-to-left)
+- Settings card on the home page: language, what to listen to, Arabic style, reciter, translation
+
 ## Install on iPhone
 Open https://zaidahmad7-hash.github.io/kalimah/ in Safari → Share → Add to Home Screen.
 
