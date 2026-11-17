@@ -250,7 +250,7 @@ body.ui-ur{--f-body:"MQ Nastaliq","Kalimah Naskh",serif;--f-display:"MQ Nastaliq
 </style>
 </head>
 <body>
-<div class="splash" id="splash" aria-hidden="true"><div class="sp-in">__SPLASH__<b class="sp-name">MyQuranApp</b><span class="sp-ar">قُرْآنِي</span></div></div>
+<div class="splash" id="splash" aria-hidden="true"><div class="sp-in">__SPLASH__<b class="sp-name">MyQuranApp</b></div></div>
 <main class="app" id="view"></main>
 <div class="tabs"><nav>
   <a href="#" id="t-read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg><span id="t-read-l">Read</span></a>
@@ -504,7 +504,7 @@ function renderHome(){
   const qq=q.toLowerCase().replace(/[-'’ʿ\s]/g,'');
   const list=INDEX.filter(x=>!q||(x[0]+' '+x[2]+' '+x[3]).toLowerCase().replace(/[-'’ʿ\s]/g,'').includes(qq)||x[1].includes(q)||(x[6]||'').includes(q));
   const cont=LAST&&S(LAST.s)?`<a class="cont" href="#surah-${LAST.s}-${LAST.v}"><span class="t"><span class="eyebrow">${t('continue')}</span><b>${sname(LAST.s)} · ${t('ayahN',LAST.v)}</b><span class="muted" style="font-size:.85rem">${smean(LAST.s)}</span></span><span class="go">${ICON.arrow}</span></a>`:'';
-  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}MyQuranApp<span class="ar">قُرْآنِي</span></span><button class="ib" data-act="settings" aria-label="${t('allSettings')}">${ICON.aa}</button></div>
+  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}MyQuranApp</span><button class="ib" data-act="settings" aria-label="${t('allSettings')}">${ICON.aa}</button></div>
   <div class="stack" style="padding-top:14px">
     <div><h1>${t('homeTitle')}</h1><p class="muted" style="margin:8px 0 0">${t('homeSub')}</p></div>
     ${cont}
@@ -514,7 +514,7 @@ function renderHome(){
       <input class="search" id="q" type="search" placeholder="${t('search')}" value="${esc(q)}" autocomplete="off">
       <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${sname(x[0])}</b><small>${smean(x[0])} · ${t('ayahs',x[5])} · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${t(x[4]==='meccan'?'makkah':'madinah')}</span></small></span><span class="ar">${isUR()?'':x[1]}</span></a>`).join('')||`<p class="muted">${t('noMatch')}</p>`}</div>
     </div>
-    <p class="foot">${t('credits')}<br>Version 2.9 · ${isUR()?'اردو':'English'}</p>
+    <p class="foot">${t('credits')}<br>Version 2.9.1 · ${isUR()?'اردو':'English'}</p>
   </div>`;
 }
 

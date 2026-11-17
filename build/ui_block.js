@@ -16,7 +16,7 @@ function renderHome(){
   const qq=q.toLowerCase().replace(/[-'’ʿ\s]/g,'');
   const list=INDEX.filter(x=>!q||(x[0]+' '+x[2]+' '+x[3]).toLowerCase().replace(/[-'’ʿ\s]/g,'').includes(qq)||x[1].includes(q)||(x[6]||'').includes(q));
   const cont=LAST&&S(LAST.s)?`<a class="cont" href="#surah-${LAST.s}-${LAST.v}"><span class="t"><span class="eyebrow">${t('continue')}</span><b>${sname(LAST.s)} · ${t('ayahN',LAST.v)}</b><span class="muted" style="font-size:.85rem">${smean(LAST.s)}</span></span><span class="go">${ICON.arrow}</span></a>`:'';
-  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}MyQuranApp<span class="ar">قُرْآنِي</span></span><button class="ib" data-act="settings" aria-label="${t('allSettings')}">${ICON.aa}</button></div>
+  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}MyQuranApp</span><button class="ib" data-act="settings" aria-label="${t('allSettings')}">${ICON.aa}</button></div>
   <div class="stack" style="padding-top:14px">
     <div><h1>${t('homeTitle')}</h1><p class="muted" style="margin:8px 0 0">${t('homeSub')}</p></div>
     ${cont}
