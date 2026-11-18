@@ -39,7 +39,7 @@ html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--f-bo
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 a{color:inherit;text-decoration:none}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:1.5px solid var(--gold);outline-offset:3px;border-radius:10px}
-.app{max-width:620px;margin:0 auto;padding:0 18px calc(env(safe-area-inset-bottom) + 100px)}
+.app{max-width:620px;margin:0 auto;padding:0 18px calc(env(safe-area-inset-bottom) + 40px)}
 h1,h2{font-family:var(--f-display);font-weight:500;text-wrap:balance;margin:0}
 h1{font-size:2.1rem;line-height:1.15}
 .muted{color:var(--muted)}
@@ -119,8 +119,6 @@ h1{font-size:2.1rem;line-height:1.15}
 .txu{margin:12px 0 0;direction:rtl;text-align:right;font-family:"MQ Nastaliq","Kalimah Naskh",serif;font-size:1.12rem;line-height:2.35;color:var(--text);opacity:.9}
 .tr-en .txu{display:none}
 .tr-ur .tx{display:none}
-.tr-ur .sa .tx{display:none!important}
-.tr-en .sa .txu{display:none}
 .more{display:flex;justify-content:center;padding:24px 0}
 .next{display:flex;justify-content:space-between;gap:10px;padding:26px 0}
 
@@ -139,7 +137,6 @@ h1{font-size:2.1rem;line-height:1.15}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:14px;padding:0 18px;font-weight:600}
 .btn.gold{background:var(--gold);color:#16130B}
 .btn.ghost{border:1px solid var(--line)}
-.btn.saved{border:1px solid color-mix(in srgb,var(--sage) 50%,transparent);color:var(--sage)}
 .btn svg{width:18px;height:18px}
 .set{display:flex;flex-direction:column;gap:6px}
 .set .r{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
@@ -151,7 +148,6 @@ h1{font-size:2.1rem;line-height:1.15}
 .steps{display:flex;gap:6px}
 .steps button{width:42px;height:36px;border-radius:10px;border:1px solid var(--line);font-family:var(--f-ar)}
 
-/* saved */
 .vrow{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
 .vrow .ar{font-family:var(--f-q);font-size:1.9rem;line-height:1.6;grid-row:1/3;grid-column:2;text-align:right}
 .vrow b{font-weight:600}
@@ -163,13 +159,7 @@ h1{font-size:2.1rem;line-height:1.15}
 .card .en{font-family:var(--f-display);font-size:1.8rem;color:var(--gold);line-height:1.2}
 .card .hint{color:var(--faint);font-size:.85rem;margin-top:10px}
 
-/* tabs */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(11,11,12,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 12px calc(env(safe-area-inset-bottom) + 6px)}
-.tabs nav{max-width:620px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr}
-.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;color:var(--faint);padding:6px 0}
-.tabs a.on{color:var(--gold)}
-.tabs svg{width:22px;height:22px}
-.player{position:fixed;left:0;right:0;z-index:9;bottom:calc(env(safe-area-inset-bottom) + 62px);max-width:620px;margin:0 auto;padding:0 10px;display:none}
+.player{position:fixed;left:0;right:0;z-index:9;bottom:calc(env(safe-area-inset-bottom) + 10px);max-width:620px;margin:0 auto;padding:0 10px;display:none}
 .player.on{display:block}
 .player>div{background:var(--raise)}
 .pr{display:flex;align-items:center;gap:6px;border:1px solid rgba(200,168,98,.35);border-bottom:0;border-radius:18px 18px 0 0;padding:10px 10px 8px 14px}
@@ -185,18 +175,10 @@ h1{font-size:2.1rem;line-height:1.15}
 .seg button{flex:1;height:34px;border-radius:9px;font-size:.82rem;color:var(--muted);white-space:nowrap;padding:0 2px}
 .player .seg button{font-size:.76rem}
 .seg button.on{background:var(--bg);color:var(--gold);box-shadow:inset 0 0 0 1px rgba(200,168,98,.4)}
-body.hasplayer .app{padding-bottom:calc(env(safe-area-inset-bottom) + 210px)}
-.mini.saved{color:var(--sage);border-color:color-mix(in srgb,var(--sage) 45%,transparent)}
-.sa{padding:20px 0;border-bottom:1px solid var(--line)}
-.sa.playing .num{background:var(--gold);color:#16130B;border-color:var(--gold)}
-.sa .num{color:var(--gold);padding:0 12px}
-.sar{font-family:var(--f-q);direction:rtl;font-size:calc(var(--ar-size)*.9);line-height:2.1;margin:6px 0 0;text-align:right}
-.note{margin:12px 0 0;padding:10px 14px;border-left:2px solid var(--lav);background:color-mix(in srgb,var(--lav) 8%,transparent);border-radius:0 10px 10px 0;font-size:.92rem;color:var(--text)}
-.sacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.note-in{width:100%;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:12px 14px;font:inherit;resize:vertical}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 80px);transform:translate(-50%,20px);background:var(--sage);color:#111;font-size:.88rem;font-weight:500;padding:10px 16px;border-radius:999px;z-index:30;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}
+body.hasplayer .app{padding-bottom:calc(env(safe-area-inset-bottom) + 160px)}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 28px);transform:translate(-50%,20px);background:var(--sage);color:#111;font-size:.88rem;font-weight:500;padding:10px 16px;border-radius:999px;z-index:30;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap}
 .toast.on{opacity:1;transform:translate(-50%,0)}
-body.hasplayer .toast{bottom:calc(env(safe-area-inset-bottom) + 190px)}
+body.hasplayer .toast{bottom:calc(env(safe-area-inset-bottom) + 140px)}
 .scard{border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:12px}
 .sc-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .sc-row{display:flex;flex-direction:column;gap:6px}
@@ -220,7 +202,6 @@ body.ui-ur{--f-body:"MQ Nastaliq","Kalimah Naskh",serif;--f-display:"MQ Nastaliq
 .ui-ur .seg button{height:auto;min-height:38px;padding:2px 2px 6px;font-size:.8rem;line-height:1.9}
 .ui-ur .mini{height:auto;min-height:34px;padding:0 12px 4px;line-height:1.9}
 .ui-ur .btn{height:auto;min-height:48px;padding-bottom:4px;line-height:1.9}
-.ui-ur .tabs a{font-size:.8rem;line-height:1.7}
 .ui-ur .srow b,.ui-ur .pick b{font-family:"Kalimah Naskh",serif;font-size:1.05rem}
 .ui-ur .bar .title b{font-family:"Kalimah Naskh",serif}
 .ui-ur .search{height:52px}
@@ -252,10 +233,6 @@ body.ui-ur{--f-body:"MQ Nastaliq","Kalimah Naskh",serif;--f-display:"MQ Nastaliq
 <body>
 <div class="splash" id="splash" aria-hidden="true"><div class="sp-in">__SPLASH__<b class="sp-name">MyQuranApp</b></div></div>
 <main class="app" id="view"></main>
-<div class="tabs"><nav>
-  <a href="#" id="t-read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5v13"/></svg><span id="t-read-l">Read</span></a>
-  <a href="#saved" id="t-saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.5 4h11v16l-5.5-4-5.5 4z"/></svg><span id="t-saved-l">Saved</span></a>
-</nav></div>
 <div class="player" id="player" aria-label="Audio player"></div>
 <div class="toast" id="toast" role="status"></div>
 <div class="scrim" id="scrim"></div>
@@ -281,55 +258,53 @@ const PICKS=[[1,'Al-Fātiḥah','The Opener',null],[2,'Āyat al-Kursī','2 : 255
 /* ---------- storage (safe) ---------- */
 const store={get(k,d){try{const v=localStorage.getItem('kalimah.'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('kalimah.'+k,JSON.stringify(v))}catch(e){}}};
 let PREF=Object.assign({wbw:true,tx:true,size:2,listen:'ar',cont:false,trans:'en',script:'ip',reciter:'alafasy',lang:'en'},store.get('pref',{}));
-let AYAHS=store.get('ayahs',[]);       // saved ayahs, newest first: [{s, v, ar, en, note, at}]
-const isSaved=(s,v)=>AYAHS.some(x=>x.s===s&&x.v===v);
-const saveAyahs=()=>store.set('ayahs',AYAHS);
-let LAST=store.get('last',null);        // {s, v}
+let LAST=store.get('last',null);        // where you were reading: {s, v}
+try{localStorage.removeItem('kalimah.ayahs')}catch(e){}   // the old Saved list is gone
 const SIZES=[24,28,32,38,44];
 /* ---------- app language: every word the app shows, in English and Urdu ---------- */
 const L={
  en:{
-  tabRead:'Read',tabSaved:'Saved',
+  
   homeTitle:'Read the Qur’an and understand every word.',
-  homeSub:'Each Arabic word has its meaning underneath, with the full translation below each ayah. Tap a word to hear it, and save any ayah to come back to.',
-  continue:'Continue reading',ayahN:'ayah {0}',startHere:'Start here',allSurahs:'All 114 surahs',
+  homeSub:'Each Arabic word has its meaning underneath, with the full translation below each ayah. Tap a word to hear it. The app remembers where you stopped and opens there next time.',
+  continue:'Pick up where you left off',resumed:'Back where you left off',ayahN:'ayah {0}',startHere:'Start here',allSurahs:'All 114 surahs',
   search:'Search by name, meaning or number',ayahs:'{0} ayahs',makkah:'Makkah',madinah:'Madinah',noMatch:'No surah matches that search.',
   yourSettings:'Your settings',allSettings:'All settings',appLang:'App language',listenTo:'Listen to',arabicStyle:'Arabic style',reciter:'Reciter',translationShown:'Translation shown',change:'Change',
   revealedM:'Revealed in Makkah',revealedMd:'Revealed in Madinah',
-  save:'Save',saved:'Saved',listen:'Listen',pause:'Pause',more:'Show more ayahs',loading:'Loading…',
+  listen:'Listen',pause:'Pause',more:'Show more ayahs',loading:'Loading…',
   loadErr:'This surah couldn’t load. Connect to the internet once and open it again; after that it works offline.',
-  word:'word {0}',hearIt:'Hear it',saveAyah:'Save this ayah',ayahSaved:'Ayah saved',
+  word:'word {0}',hearIt:'Hear it',
   settingsTitle:'Reading and listening',contNext:'Keep playing into the next surah',wbw:'Word meanings under Arabic (English)',fullTx:'Full translation of each ayah',arSize:'Arabic size',
   offline:'Save whole Qur’an for offline',offlineSub:'About 8 MB. Surahs you open are saved automatically.',saveBtn:'Save',offSaving:'Saving… {0} of 114',offDone:'Done. The whole Qur’an is available offline.',offSaved:'Saved',
-  removeQ:'Remove {0}?',noteRemoved:'Your note will be removed too.',canSaveAgain:'You can save it again any time.',keepIt:'Keep it',remove:'Remove',
-  noteFor:'Note for {0}',noteHelp:'Why it matters to you, when to recite it, who to share it with.',notePh:'e.g. Recite before sleep',cancel:'Cancel',saveNote:'Save note',
-  savedTitle:'Saved ayahs',savedOne:'1 ayah saved',savedN:'{0} ayahs saved',savedSub:'Your own collection. Play them all on the go in Arabic, English, Urdu or together.',
-  playAllSaved:'Play all saved',openInSurah:'Open in surah',addNote:'Add note',editNote:'Edit note',
-  emptySaved1:'No saved ayahs yet.',emptySaved2:'While reading, tap <b style="color:var(--gold)">Save</b> on any ayah to keep it here with its meaning.',startKursi:'Start with Āyat al-Kursī',
-  toastSaved:'Saved. Find it in the Saved tab.',toastReciter:'{0} selected',toastLang:'App language: English',
-  playing:'Playing {0}',paused:'Paused',savedOf:'Saved {0} of {1} · ',phoneVoice:' (phone voice)',bismillah:'Bismillah',
+  
+  
+  
+  
+  
+  toastReciter:'{0} selected',toastLang:'App language: English',
+  playing:'Playing {0}',paused:'Paused',phoneVoice:' (phone voice)',bismillah:'Bismillah',
   credits:'Word meanings from the Quranic Arabic Corpus (Quran.com). Indo-Pak text and fonts: King Fahd Complex (KFGQPC). Translation: Saheeh International. Urdu: Fateh Muhammad Jalandhry (Tanzil). Recitation: Mishary Alafasy, Yasser Al-Dosari, Maher Al-Muaiqly, Nasser Al-Qatami, Abdul Basit (EveryAyah.com). Audio translations: Ibrahim Walk (English), Shamshad Ali Khan (Urdu).'
  },
  ur:{
-  tabRead:'پڑھیں',tabSaved:'محفوظ',
+  
   homeTitle:'قرآن پڑھیں اور ہر لفظ سمجھیں',
-  homeSub:'ہر آیت کے نیچے اس کا اردو ترجمہ ہے۔ کسی لفظ پر ٹیپ کریں تو اس کی آواز سنیں، اور کوئی بھی آیت بعد کے لیے محفوظ کریں۔',
-  continue:'جہاں چھوڑا تھا وہیں سے پڑھیں',ayahN:'آیت {0}',startHere:'یہاں سے شروع کریں',allSurahs:'تمام 114 سورتیں',
+  homeSub:'ہر آیت کے نیچے اس کا اردو ترجمہ ہے۔ کسی لفظ پر ٹیپ کریں تو اس کی آواز سنیں۔ ایپ یاد رکھتی ہے کہ آپ نے کہاں چھوڑا تھا، اور اگلی بار وہیں سے کھلتی ہے۔',
+  continue:'جہاں چھوڑا تھا وہیں سے پڑھیں',resumed:'جہاں آپ نے چھوڑا تھا، وہیں سے',ayahN:'آیت {0}',startHere:'یہاں سے شروع کریں',allSurahs:'تمام 114 سورتیں',
   search:'نام، معنی یا نمبر سے تلاش کریں',ayahs:'{0} آیات',makkah:'مکی',madinah:'مدنی',noMatch:'اس نام کی کوئی سورۃ نہیں ملی۔',
   yourSettings:'آپ کی سیٹنگز',allSettings:'تمام سیٹنگز',appLang:'ایپ کی زبان',listenTo:'کیا سنیں',arabicStyle:'عربی رسم الخط',reciter:'قاری',translationShown:'ترجمہ',change:'تبدیل کریں',
   revealedM:'مکہ میں نازل ہوئی',revealedMd:'مدینہ میں نازل ہوئی',
-  save:'محفوظ کریں',saved:'محفوظ',listen:'سنیں',pause:'روکیں',more:'مزید آیات دکھائیں',loading:'لوڈ ہو رہا ہے…',
+  listen:'سنیں',pause:'روکیں',more:'مزید آیات دکھائیں',loading:'لوڈ ہو رہا ہے…',
   loadErr:'یہ سورۃ لوڈ نہیں ہو سکی۔ ایک بار انٹرنیٹ سے جڑ کر دوبارہ کھولیں، اس کے بعد یہ بغیر انٹرنیٹ کے بھی چلے گی۔',
-  word:'لفظ {0}',hearIt:'سنیں',saveAyah:'یہ آیت محفوظ کریں',ayahSaved:'آیت محفوظ ہے',
+  word:'لفظ {0}',hearIt:'سنیں',
   settingsTitle:'پڑھنے اور سننے کی سیٹنگز',contNext:'اگلی سورۃ بھی خود چلتی رہے',wbw:'عربی الفاظ کے نیچے معنی (انگریزی میں)',fullTx:'ہر آیت کا مکمل ترجمہ',arSize:'عربی کا سائز',
   offline:'پورا قرآن آف لائن محفوظ کریں',offlineSub:'تقریباً 8 MB۔ جو سورتیں آپ کھولتے ہیں وہ خود محفوظ ہو جاتی ہیں۔',saveBtn:'محفوظ کریں',offSaving:'محفوظ ہو رہا ہے… 114 میں سے {0}',offDone:'مکمل۔ پورا قرآن اب بغیر انٹرنیٹ کے دستیاب ہے۔',offSaved:'محفوظ ہو گیا',
-  removeQ:'{0} ہٹا دیں؟',noteRemoved:'آپ کا نوٹ بھی ہٹ جائے گا۔',canSaveAgain:'آپ اسے کبھی بھی دوبارہ محفوظ کر سکتے ہیں۔',keepIt:'رہنے دیں',remove:'ہٹائیں',
-  noteFor:'{0} کے لیے نوٹ',noteHelp:'یہ آیت آپ کے لیے کیوں اہم ہے، کب پڑھنی ہے، کس کو بتانی ہے۔',notePh:'مثلاً سونے سے پہلے پڑھیں',cancel:'منسوخ',saveNote:'نوٹ محفوظ کریں',
-  savedTitle:'محفوظ آیات',savedOne:'1 آیت محفوظ',savedN:'{0} آیات محفوظ',savedSub:'آپ کا اپنا مجموعہ۔ انہیں عربی، اردو یا دونوں میں ایک ساتھ سنیں۔',
-  playAllSaved:'سب محفوظ آیات سنیں',openInSurah:'سورۃ میں کھولیں',addNote:'نوٹ لکھیں',editNote:'نوٹ بدلیں',
-  emptySaved1:'ابھی کوئی آیت محفوظ نہیں۔',emptySaved2:'پڑھتے ہوئے کسی بھی آیت پر <b style="color:var(--gold)">محفوظ کریں</b> دبائیں، وہ اپنے ترجمے کے ساتھ یہاں آ جائے گی۔',startKursi:'آیت الکرسی سے شروع کریں',
-  toastSaved:'محفوظ ہو گئی۔ یہ "محفوظ" ٹیب میں ملے گی۔',toastReciter:'{0} منتخب',toastLang:'ایپ کی زبان: اردو',
-  playing:'{0}',paused:'رکا ہوا',savedOf:'محفوظ: {1} میں سے {0} · ',phoneVoice:' (فون کی آواز)',bismillah:'بسم اللہ',
+  
+  
+  
+  
+  
+  toastReciter:'{0} منتخب',toastLang:'ایپ کی زبان: اردو',
+  playing:'{0}',paused:'رکا ہوا',phoneVoice:' (فون کی آواز)',bismillah:'بسم اللہ',
   credits:'الفاظ کے معانی: قرآنی عربی کارپس (Quran.com)۔ انڈوپاک متن اور فونٹ: شاہ فہد قرآن کمپلیکس۔ انگریزی ترجمہ: صحیح انٹرنیشنل۔ اردو ترجمہ: مولانا فتح محمد جالندھری۔ تلاوت: مشاری العفاسی، یاسر الدوسری، ماہر المعیقلی، ناصر القطامی، عبد الباسط (EveryAyah.com)۔ ترجمے کی آواز: ابراہیم واک (انگریزی)، شمشاد علی خان (اردو)۔'
  }
 };
@@ -350,7 +325,6 @@ const BISM_UR='شروع اللہ کا نام لے کر جو بڑا مہربان 
 function applyLang(){
   document.documentElement.lang=isUR()?'ur':'en';document.documentElement.dir=isUR()?'rtl':'ltr';
   document.body.classList.toggle('ui-ur',isUR());
-  const r=document.getElementById('t-read-l'),s=document.getElementById('t-saved-l');if(r)r.textContent=t('tabRead');if(s)s.textContent=t('tabSaved');
 }
 
 const SCRIPTS={
@@ -419,13 +393,11 @@ function advance(){
   if(!P||P.paused)return;
   if(P.pi+1<P.parts.length){P.pi++;playPart();return}
   if(P.pre){P.pre=false;P.pi=0;P.parts=partsFor();playPart();return}
-  if(P.list){if(P.li+1<P.list.length){P.li++;P.s=P.list[P.li].s;P.v=P.list[P.li].v;P.pi=0;P.pre=needsBism(P.s,P.v);P.parts=partsFor();playPart()}else{P=null;markPlaying()}return}
   if(P.seq&&P.v<S(P.s)[5]){P.v++;P.pi=0;P.parts=partsFor();follow();playPart();return}
   if(P.seq&&PREF.cont&&P.s<114){P.s++;P.v=1;P.pi=0;P.pre=needsBism(P.s,1);P.parts=partsFor();loadSurah(P.s).catch(()=>{});if(R.view==='read')location.hash='surah-'+P.s;playPart();return}
   P=null;markPlaying();
 }
-function startList(i){halt();try{wAudio.pause()}catch(e){}const list=AYAHS.map(x=>({s:x.s,v:x.v}));if(!list.length)return;P={list,li:i,s:list[i].s,v:list[i].v,seq:true,parts:partsFor(),pi:0,paused:false,tts:false,pre:needsBism(list[i].s,list[i].v)};playPart()}
-function step(d){if(!P)return;if(P.list){const n=P.li+d;if(n<0||n>=P.list.length)return;halt();P.li=n;P.s=P.list[n].s;P.v=P.list[n].v;P.pi=0;P.pre=needsBism(P.s,P.v);P.paused=false;P.parts=partsFor();playPart();return}const nv=P.v+d;if(nv<1||nv>S(P.s)[5])return;halt();P.v=nv;P.pi=0;P.pre=needsBism(P.s,nv);P.paused=false;P.parts=partsFor();follow();playPart()}
+function step(d){if(!P)return;const nv=P.v+d;if(nv<1||nv>S(P.s)[5])return;halt();P.v=nv;P.pi=0;P.pre=needsBism(P.s,nv);P.paused=false;P.parts=partsFor();follow();playPart()}
 function togglePause(){
   if(!P)return;
   if(P.paused){P.paused=false;if(P.tts){speakEnglish()}else audio.play().catch(()=>{})}
@@ -450,9 +422,7 @@ if('mediaSession' in navigator){const ms=navigator.mediaSession,h=(a,f)=>{try{ms
   h('nexttrack',()=>step(1));h('previoustrack',()=>step(-1));}
 const playerEl=document.getElementById('player');
 function markPlaying(){
-  document.querySelectorAll('.ayah.playing,.sa.playing').forEach(e=>e.classList.remove('playing'));
-  document.querySelectorAll('[data-act="sv-play"]').forEach(b=>{b.innerHTML=ICON.play+t('listen')});
-  if(P){const sc=document.getElementById('sv-'+P.s+'-'+P.v);if(sc&&P.list){sc.classList.add('playing');const b=sc.querySelector('[data-act="sv-play"]');if(b&&!P.paused)b.innerHTML=ICON.pause+t('pause')}}
+  document.querySelectorAll('.ayah.playing').forEach(e=>e.classList.remove('playing'));
   document.querySelectorAll('[data-act="ayah-play"]').forEach(b=>{b.innerHTML=ICON.play+t('listen')});
   const here=P&&cur&&cur.s===P.s&&R.view==='read';
   const bm=document.getElementById('bism');if(bm)bm.classList.toggle('playing',!!(here&&P.pre));
@@ -462,7 +432,7 @@ function markPlaying(){
   if(!P){playerEl.classList.remove('on');return}
   const part=P.parts[P.pi];
   playerEl.classList.add('on');
-  playerEl.innerHTML=`<div class="pr"><a class="pinfo" href="#surah-${P.s}-${P.v}"><b>${sname(P.s)} ${P.pre?'· '+t('bismillah'):P.s+':'+P.v}</b><span>${P.list?t('savedOf',P.li+1,P.list.length):''}${P.paused?t('paused'):t('playing',PART_NAME()[part])}${P.tts?t('phoneVoice'):''}</span></a>
+  playerEl.innerHTML=`<div class="pr"><a class="pinfo" href="#surah-${P.s}-${P.v}"><b>${sname(P.s)} ${P.pre?'· '+t('bismillah'):P.s+':'+P.v}</b><span>${P.paused?t('paused'):t('playing',PART_NAME()[part])}${P.tts?t('phoneVoice'):''}</span></a>
     <button class="pc" data-act="p-prev" aria-label="Previous ayah">${ICON.prev}</button>
     <button class="pc big" data-act="p-toggle" aria-label="${P.paused?'Play':'Pause'}">${P.paused?ICON.play:ICON.pause}</button>
     <button class="pc" data-act="p-next" aria-label="Next ayah">${ICON.next}</button>
@@ -475,14 +445,13 @@ const $v=document.getElementById('view');
 let R={view:'home',s:0,v:0}, shown=0, cur=null, obs=null, review=null, q='';
 function parse(){const h=location.hash.slice(1);let m;
   if((m=h.match(/^surah-(\d+)(?:-(\d+))?$/))&&+m[1]>=1&&+m[1]<=114)return{view:'read',s:+m[1],v:m[2]?+m[2]:0};
-  if(h==='saved')return{view:'saved'};return{view:'home'}}
+  return{view:'home'}}
 async function route(){
   const nr=parse();closeSheet();
-  if(P&&!P.list&&nr.view==='read'&&nr.s!==P.s)stopAudio();
+  if(P&&nr.view==='read'&&nr.s!==P.s)stopAudio();
   R=nr;review=null;
-  document.getElementById('t-read').classList.toggle('on',R.view!=='saved');
-  document.getElementById('t-saved').classList.toggle('on',R.view==='saved');
-  if(R.view==='home')renderHome();else if(R.view==='saved')renderSaved();else await renderRead();
+  store.set('where',R.view);          // so the app can reopen on the same screen
+  if(R.view==='home')renderHome();else await renderRead();
 }
 window.addEventListener('hashchange',route);
 
@@ -514,21 +483,20 @@ function renderHome(){
       <input class="search" id="q" type="search" placeholder="${t('search')}" value="${esc(q)}" autocomplete="off">
       <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${sname(x[0])}</b><small>${smean(x[0])} · ${t('ayahs',x[5])} · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${t(x[4]==='meccan'?'makkah':'madinah')}</span></small></span><span class="ar">${isUR()?'':x[1]}</span></a>`).join('')||`<p class="muted">${t('noMatch')}</p>`}</div>
     </div>
-    <p class="foot">${t('credits')}<br>Version 2.9.1 · ${isUR()?'اردو':'English'}</p>
+    <p class="foot">${t('credits')}<br>Version 3.0 · ${isUR()?'اردو':'English'}</p>
   </div>`;
 }
 
 /* ---------- reader ---------- */
 function ayahHTML(s,d,v){
   const a=d.v[v-1];
-  const sv=isSaved(s,v);
   const T=isIP()&&a.i?a.i:a.a;
   const words=T.map((ar,i)=>{
     if(ar==='')return '';   // Indo-Pak writes this word together with the next one
     const mean=i>0&&T[i-1]===''?a.w[i-1]+' '+a.w[i]:a.w[i];
     return `<button class="w" data-act="word" data-v="${v}" data-i="${i}"><span class="wa">${ar}</span><span class="we" dir="ltr">${esc(mean)}</span></button>`}).join('');
   return `<article class="ayah" id="a-${v}" data-v="${v}">
-    <div class="ah"><span class="num">${s}:${v}</span><span class="sp"></span><button class="mini${sv?' saved':''}" data-act="save-ayah" data-v="${v}">${sv?ICON.bmf+t('saved'):ICON.bm+t('save')}</button><button class="mini" data-act="ayah-play" data-v="${v}">${ICON.play}${t('listen')}</button></div>
+    <div class="ah"><span class="num">${s}:${v}</span><span class="sp"></span><button class="mini" data-act="ayah-play" data-v="${v}">${ICON.play}${t('listen')}</button></div>
     <div class="words" lang="ar">${words}</div>
     <p class="tx" dir="ltr">${esc(a.en)}</p>${a.ur?`<p class="txu" lang="ur">${esc(a.ur)}</p>`:''}</article>`;
 }
@@ -559,13 +527,17 @@ async function renderRead(){
   if(R.v>1){const el=document.getElementById('a-'+R.v);if(el)requestAnimationFrame(()=>el.scrollIntoView({block:'start'}))}else scrollTo(0,0);
   if(!R.v||R.v===1){LAST={s,v:1};store.set('last',LAST)}
 }
+let pendingLast=null;
+function flushLast(){if(pendingLast&&R.view==='read'&&cur&&pendingLast.s===cur.s){LAST=pendingLast;store.set('last',LAST)}pendingLast=null}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushLast()});
+addEventListener('pagehide',flushLast);
 function observe(){
   if(obs)obs.disconnect();if(!('IntersectionObserver' in window))return;
   let tm=null;
   obs=new IntersectionObserver(es=>{
     for(const e of es){
       if(e.target.id==='more'&&e.isIntersecting){ensureRendered(shown+30);continue}
-      if(e.isIntersecting&&e.target.dataset.v){clearTimeout(tm);const v=+e.target.dataset.v;tm=setTimeout(()=>{if(cur){LAST={s:cur.s,v};store.set('last',LAST)}},400)}
+      if(e.isIntersecting&&e.target.dataset.v&&cur){clearTimeout(tm);pendingLast={s:cur.s,v:+e.target.dataset.v};tm=setTimeout(flushLast,400)}
     }
   },{rootMargin:'-20% 0px -70% 0px'});
   document.querySelectorAll('.ayah').forEach(a=>obs.observe(a));
@@ -580,12 +552,12 @@ function closeSheet(){sheetKind=null;sheet.classList.remove('on');scrim.classLis
 scrim.onclick=closeSheet;
 let selW=null;
 function wordSheet(s,v,i){
-  const a=cur.d.v[v-1],k=s+':'+v+':'+i,sv=isSaved(s,v);
+  const a=cur.d.v[v-1],k=s+':'+v+':'+i;
   const T=isIP()&&a.i?a.i:a.a,joined=i>0&&T[i-1]==='';
   selW={k,s,v,i,a:T[i],w:joined?a.w[i-1]+' '+a.w[i]:a.w[i],t:joined?a.t[i-1]+' '+a.t[i]:a.t[i],p:joined?a.p[i-1]:a.p[i]};
   const n=T.slice(0,i+1).filter(Boolean).length;
   openSheet(`<div class="sw"><span class="ar" lang="ar">${selW.a}</span><span class="tr" dir="ltr">${esc(selW.t)}</span><span class="en" dir="ltr">${esc(selW.w)}</span><span class="ref">${sname(s)} ${s}:${v} · ${t('word',n)}</span></div>
-    <div class="row2"><button class="btn ghost" data-act="wplay">${ICON.play}${t('hearIt')}</button><button class="btn ${sv?'saved':'gold'}" data-act="save-ayah" data-v="${v}">${sv?ICON.bmf+t('ayahSaved'):ICON.bm+t('saveAyah')}</button></div>`,'word');
+    <button class="btn gold" style="width:100%;margin-top:16px" data-act="wplay">${ICON.play}${t('hearIt')}</button>`,'word');
 }
 function settingsSheet(){
   const keep=sheet.classList.contains('on')&&sheetKind==='settings'?sheet.scrollTop:0;
@@ -605,37 +577,11 @@ function settingsSheet(){
 }
 function listenButtons(){return Object.entries(LISTEN()).map(([k,l])=>`<button class="${PREF.listen===k?'on':''}" data-act="listen" data-m="${k}">${l}</button>`).join('')}
 
-/* ---------- saved ---------- */
-function savedSheet(i,mode){
-  const x=AYAHS[i];if(!x)return;const ref=sname(x.s)+' '+x.s+':'+x.v;
-  if(mode==='remove'){openSheet(`<h2>${t('removeQ',ref)}</h2><p class="muted" style="margin:6px 0 0">${x.note?t('noteRemoved'):t('canSaveAgain')}</p>
-    <div class="row2"><button class="btn ghost" data-act="close">${t('keepIt')}</button><button class="btn gold" data-act="sv-remove-yes" data-i="${i}">${t('remove')}</button></div>`);return}
-  openSheet(`<h2>${t('noteFor',ref)}</h2><p class="muted" style="margin:4px 0 12px;font-size:.88rem">${t('noteHelp')}</p>
-    <textarea id="note-text" class="note-in" rows="4" placeholder="${t('notePh')}" dir="auto">${esc(x.note||'')}</textarea>
-    <div class="row2"><button class="btn ghost" data-act="close">${t('cancel')}</button><button class="btn gold" data-act="sv-note-save" data-i="${i}">${t('saveNote')}</button></div>`);
-  setTimeout(()=>{const n=document.getElementById('note-text');if(n)n.focus()},280);
-}
-function renderSaved(){
-  const n=AYAHS.length;
-  $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}${t('savedTitle')}</span><button class="ib" data-act="settings" aria-label="${t('allSettings')}">${ICON.aa}</button></div>
-   <div class="stack" style="padding-top:14px">
-   ${n?`<div><h1>${t(n===1?'savedOne':'savedN',n)}</h1><p class="muted" style="margin:8px 0 0">${t('savedSub')}</p></div>
-     <button class="btn gold" data-act="sv-playall">${ICON.play}${t('playAllSaved')}</button>
-     <div class="list">${AYAHS.map((x,i)=>`<article class="sa" id="sv-${x.s}-${x.v}">
-        <div class="ah"><a class="num" href="#surah-${x.s}-${x.v}">${sname(x.s)} ${x.s}:${x.v}</a><span class="sp"></span><button class="mini" data-act="sv-play" data-i="${i}">${ICON.play}${t('listen')}</button></div>
-        <p class="sar" lang="ar">${isIP()&&x.ai?x.ai:x.ar}</p><p class="tx" dir="ltr" style="display:block">${esc(x.en)}</p>${x.ur?`<p class="txu" lang="ur">${esc(x.ur)}</p>`:''}
-        ${x.note?`<p class="note" dir="auto">${esc(x.note)}</p>`:''}
-        <div class="sacts"><a class="mini" href="#surah-${x.s}-${x.v}">${t('openInSurah')}</a><button class="mini" data-act="sv-note" data-i="${i}">${t(x.note?'editNote':'addNote')}</button><button class="mini" data-act="sv-remove" data-i="${i}">${t('remove')}</button></div>
-      </article>`).join('')}</div>`
-   :`<div class="empty"><p style="margin:0 0 6px;color:var(--text)">${t('emptySaved1')}</p>${t('emptySaved2')}</div><a class="btn gold" href="#surah-2-255">${t('startKursi')}</a>`}
-   </div>`;
-  markPlaying();
-}
 
 let toastT=null;function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2200)}
 
 // redraw the current screen after a setting changes, keeping your place
-async function rerender(){if(R.view==='home')renderHome();else if(R.view==='saved')renderSaved();else if(R.view==='read'&&cur){R.v=LAST&&LAST.s===cur.s?LAST.v:0;await renderRead()}}
+async function rerender(){if(R.view==='home')renderHome();else if(R.view==='read'&&cur){R.v=LAST&&LAST.s===cur.s?LAST.v:0;await renderRead()}}
 
 /* ---------- events ---------- */
 document.addEventListener('click',async e=>{
@@ -664,19 +610,7 @@ document.addEventListener('click',async e=>{
       document.querySelectorAll('[data-act="script"]').forEach(b=>b.classList.toggle('on',b.dataset.m===PREF.script));
       await rerender();break}
     case 'trans':PREF.trans=el.dataset.m;store.set('pref',PREF);applyPref();document.querySelectorAll('[data-act="trans"]').forEach(b=>b.classList.toggle('on',b.dataset.m===PREF.trans));if(R.view==='home')renderHome();else if(R.view==='read'&&cur)await rerender();break;
-    case 'save-ayah':{const v=+el.dataset.v,s=cur.s,i=AYAHS.findIndex(x=>x.s===s&&x.v===v);
-      if(i>=0){savedSheet(i,'remove');break}
-      const a2=cur.d.v[v-1];AYAHS.unshift({s,v,ar:a2.a.join(' '),ai:a2.i?a2.i.filter(Boolean).join(' '):'',en:a2.en,ur:a2.ur||'',note:'',at:Date.now()});saveAyahs();
-      document.querySelectorAll(`[data-act="save-ayah"][data-v="${v}"]`).forEach(b=>{b.classList.add('saved');b.innerHTML=b.classList.contains('btn')?ICON.bmf+t('ayahSaved'):ICON.bmf+t('saved')});
-      toast(t('toastSaved'));break}
     case 'close':closeSheet();break;
-    case 'sv-remove':savedSheet(+el.dataset.i,'remove');break;
-    case 'sv-remove-yes':{const x=AYAHS[+el.dataset.i];AYAHS.splice(+el.dataset.i,1);saveAyahs();closeSheet();
-      if(R.view==='saved')renderSaved();else document.querySelectorAll(`[data-act="save-ayah"][data-v="${x.v}"]`).forEach(b=>{b.classList.remove('saved');b.innerHTML=b.classList.contains('btn')?ICON.bm+t('saveAyah'):ICON.bm+t('save')});break}
-    case 'sv-note':savedSheet(+el.dataset.i,'note');break;
-    case 'sv-note-save':{AYAHS[+el.dataset.i].note=(document.getElementById('note-text').value||'').trim().slice(0,500);saveAyahs();closeSheet();renderSaved();break}
-    case 'sv-play':{const i=+el.dataset.i,x=AYAHS[i];if(P&&P.list&&P.li===i){togglePause()}else startList(i);break}
-    case 'sv-playall':startList(0);break;
     case 'more':ensureRendered(shown+30);break;
     case 'settings':settingsSheet();break;
     case 'pref':PREF[el.dataset.k]=!PREF[el.dataset.k];store.set('pref',PREF);applyPref();el.classList.toggle('on',PREF[el.dataset.k]);if(R.view==='home')renderHome();break;
@@ -688,7 +622,10 @@ document.addEventListener('click',async e=>{
 });
 document.addEventListener('input',e=>{if(e.target.id==='q'){q=e.target.value;const p=e.target.selectionStart;renderHome();const i=document.getElementById('q');i.focus();try{i.setSelectionRange(p,p)}catch(_){}}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
-route();
+// Opening the app with no link: go straight back to the ayah you were reading last time.
+let resumed=false;
+if(!location.hash&&store.get('where','home')==='read'&&LAST&&S(LAST.s)){history.replaceState(null,'','#surah-'+LAST.s+'-'+LAST.v);resumed=true}
+route().then(()=>{if(resumed&&LAST)setTimeout(()=>toast(t('resumed')+' · '+sname(LAST.s)+' '+LAST.s+':'+LAST.v),400)});
 (function(){const sp=document.getElementById('splash');let seen=false;try{seen=sessionStorage.getItem('mq.splash')==='1';sessionStorage.setItem('mq.splash','1')}catch(e){}
   if(seen||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   sp.classList.add('on');const done=()=>{sp.classList.add('out');setTimeout(()=>sp.remove(),650)};
