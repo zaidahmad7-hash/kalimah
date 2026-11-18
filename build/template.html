@@ -117,6 +117,11 @@ h1{font-size:2.1rem;line-height:1.15}
 .style .smp{direction:rtl;font-size:1.45rem;line-height:2;white-space:nowrap;color:var(--text)}
 .style.on .smp{color:var(--gold)}
 .txu{margin:12px 0 0;direction:rtl;text-align:right;font-family:"MQ Nastaliq","Kalimah Naskh",serif;font-size:1.12rem;line-height:2.35;color:var(--text);opacity:.9}
+.txh{display:none;margin:14px 0 0;color:var(--text);opacity:.9;font-size:1rem;line-height:1.65;max-width:65ch}
+.txh .gl{color:var(--muted)}
+.tr-hi .txh{display:block}
+.tr-hi .tx,.tr-hi .txu{display:none}
+.notx .txh{display:none}
 .tr-en .txu{display:none}
 .tr-ur .tx{display:none}
 .more{display:flex;justify-content:center;padding:24px 0}
@@ -206,7 +211,7 @@ body.ui-ur{--f-body:"MQ Nastaliq","Kalimah Naskh",serif;--f-display:"MQ Nastaliq
 .ui-ur .bar .title b{font-family:"Kalimah Naskh",serif}
 .ui-ur .search{height:52px}
 .ui-ur .sc-sum small{font-size:.72rem}
-.ui-ur .tx,.ui-ur .we,.ui-ur .sw .tr,.ui-ur .sw .en{font-family:"Figtree",-apple-system,sans-serif;line-height:1.55}
+.ui-ur .bt[dir=ltr],.ui-ur .tx,.ui-ur .txh,.ui-ur .we,.ui-ur .sw .tr,.ui-ur .sw .en{font-family:"Figtree",-apple-system,sans-serif;line-height:1.55}
 .ui-ur .sw .en{font-family:"Cormorant Garamond",Georgia,serif}
 .ui-ur .num{line-height:1.6}
 .foot{font-size:.75rem;color:var(--faint);padding-top:10px}
@@ -275,7 +280,7 @@ const L={
   loadErr:'This surah couldn’t load. Connect to the internet once and open it again; after that it works offline.',
   word:'word {0}',hearIt:'Hear it',
   settingsTitle:'Reading and listening',contNext:'Keep playing into the next surah',wbw:'Word meanings under Arabic (English)',fullTx:'Full translation of each ayah',arSize:'Arabic size',
-  offline:'Save whole Qur’an for offline',offlineSub:'About 8 MB. Surahs you open are saved automatically.',saveBtn:'Save',offSaving:'Saving… {0} of 114',offDone:'Done. The whole Qur’an is available offline.',offSaved:'Saved',
+  offline:'Save whole Qur’an for offline',offlineSub:'About 9 MB. Surahs you open are saved automatically.',saveBtn:'Save',offSaving:'Saving… {0} of 114',offDone:'Done. The whole Qur’an is available offline.',offSaved:'Saved',
   
   
   
@@ -283,7 +288,7 @@ const L={
   
   toastReciter:'{0} selected',toastLang:'App language: English',
   playing:'Playing {0}',paused:'Paused',phoneVoice:' (phone voice)',bismillah:'Bismillah',
-  credits:'Word meanings from the Quranic Arabic Corpus (Quran.com). Indo-Pak text and fonts: King Fahd Complex (KFGQPC). Translation: Saheeh International. Urdu: Fateh Muhammad Jalandhry (Tanzil). Recitation: Mishary Alafasy, Yasser Al-Dosari, Maher Al-Muaiqly, Nasser Al-Qatami, Abdul Basit (EveryAyah.com). Audio translations: Ibrahim Walk (English), Shamshad Ali Khan (Urdu).'
+  credits:'Word meanings from the Quranic Arabic Corpus (Quran.com). Indo-Pak text and fonts: King Fahd Complex (KFGQPC). Translation: Saheeh International. Urdu: Fateh Muhammad Jalandhry (Tanzil). Hinglish: Abul A’la Maududi (Roman Urdu). Recitation: Mishary Alafasy, Yasser Al-Dosari, Maher Al-Muaiqly, Nasser Al-Qatami, Abdul Basit (EveryAyah.com). Audio translations: Ibrahim Walk (English), Shamshad Ali Khan (Urdu).'
  },
  ur:{
   
@@ -297,7 +302,7 @@ const L={
   loadErr:'یہ سورۃ لوڈ نہیں ہو سکی۔ ایک بار انٹرنیٹ سے جڑ کر دوبارہ کھولیں، اس کے بعد یہ بغیر انٹرنیٹ کے بھی چلے گی۔',
   word:'لفظ {0}',hearIt:'سنیں',
   settingsTitle:'پڑھنے اور سننے کی سیٹنگز',contNext:'اگلی سورۃ بھی خود چلتی رہے',wbw:'عربی الفاظ کے نیچے معنی (انگریزی میں)',fullTx:'ہر آیت کا مکمل ترجمہ',arSize:'عربی کا سائز',
-  offline:'پورا قرآن آف لائن محفوظ کریں',offlineSub:'تقریباً 8 MB۔ جو سورتیں آپ کھولتے ہیں وہ خود محفوظ ہو جاتی ہیں۔',saveBtn:'محفوظ کریں',offSaving:'محفوظ ہو رہا ہے… 114 میں سے {0}',offDone:'مکمل۔ پورا قرآن اب بغیر انٹرنیٹ کے دستیاب ہے۔',offSaved:'محفوظ ہو گیا',
+  offline:'پورا قرآن آف لائن محفوظ کریں',offlineSub:'تقریباً 9 MB۔ جو سورتیں آپ کھولتے ہیں وہ خود محفوظ ہو جاتی ہیں۔',saveBtn:'محفوظ کریں',offSaving:'محفوظ ہو رہا ہے… 114 میں سے {0}',offDone:'مکمل۔ پورا قرآن اب بغیر انٹرنیٹ کے دستیاب ہے۔',offSaved:'محفوظ ہو گیا',
   
   
   
@@ -305,14 +310,14 @@ const L={
   
   toastReciter:'{0} منتخب',toastLang:'ایپ کی زبان: اردو',
   playing:'{0}',paused:'رکا ہوا',phoneVoice:' (فون کی آواز)',bismillah:'بسم اللہ',
-  credits:'الفاظ کے معانی: قرآنی عربی کارپس (Quran.com)۔ انڈوپاک متن اور فونٹ: شاہ فہد قرآن کمپلیکس۔ انگریزی ترجمہ: صحیح انٹرنیشنل۔ اردو ترجمہ: مولانا فتح محمد جالندھری۔ تلاوت: مشاری العفاسی، یاسر الدوسری، ماہر المعیقلی، ناصر القطامی، عبد الباسط (EveryAyah.com)۔ ترجمے کی آواز: ابراہیم واک (انگریزی)، شمشاد علی خان (اردو)۔'
+  credits:'الفاظ کے معانی: قرآنی عربی کارپس (Quran.com)۔ انڈوپاک متن اور فونٹ: شاہ فہد قرآن کمپلیکس۔ انگریزی ترجمہ: صحیح انٹرنیشنل۔ اردو ترجمہ: مولانا فتح محمد جالندھری۔ ہنگلش (رومن اردو): مولانا ابوالاعلیٰ مودودی۔ تلاوت: مشاری العفاسی، یاسر الدوسری، ماہر المعیقلی، ناصر القطامی، عبد الباسط (EveryAyah.com)۔ ترجمے کی آواز: ابراہیم واک (انگریزی)، شمشاد علی خان (اردو)۔'
  }
 };
 const isUR=()=>PREF.lang==='ur';
 const t=(k,...a)=>{let s=(L[PREF.lang]||L.en)[k];if(s===undefined)s=L.en[k]||k;return a.length?s.replace(/\{(\d)\}/g,(_,i)=>a[i]):s};
 const LANGS={en:'English',ur:'اردو'};
 const LISTEN=()=>isUR()?{ar:'عربی',en:'انگریزی',ur:'اردو',both:'عربی + انگریزی',arur:'عربی + اردو'}:{ar:'Arabic',en:'English',ur:'Urdu',both:'Ar + En',arur:'Ar + Ur'};
-const TRANS=()=>isUR()?{en:'انگریزی',ur:'اردو',both:'دونوں'}:{en:'English',ur:'اردو',both:'Both'};
+const TRANS=()=>isUR()?{en:'انگریزی',ur:'اردو',both:'دونوں',hi:'Hinglish'}:{en:'English',ur:'اردو',both:'Both',hi:'Hinglish'};
 const PART_NAME=()=>isUR()?{ar:'عربی تلاوت',en:'انگریزی ترجمہ',ur:'اردو ترجمہ'}:{ar:'Arabic',en:'English',ur:'Urdu'};
 const SCRIPT_UR={ip:{name:'انڈوپاک',sub:'نستعلیق، جیسا ہند و پاک کے قرآن میں چھپتا ہے'},hafs:{name:'عثمانی',sub:'مدینہ کا مصحف (شاہ فہد کمپلیکس)'},amiri:{name:'نسخ',sub:'کلاسیکی امیری فونٹ'}};
 const REC_UR={alafasy:{name:'مشاری العفاسی',note:'صاف اور خوش الحان (کویت)'},dosari:{name:'یاسر الدوسری',note:'نرم اور پُراثر (سعودی عرب)'},muaiqly:{name:'ماہر المعیقلی',note:'امامِ مسجد الحرام، پُرسکون'},qatami:{name:'ناصر القطامی',note:'دھیمی اور دل کو چھو لینے والی (سعودی عرب)'},basit:{name:'عبد الباسط',note:'مرتّل، کلاسیکی آواز (مصر)'}};
@@ -322,6 +327,9 @@ const sname=n=>isUR()?S(n)[1]:S(n)[2];
 const smean=n=>isUR()?(S(n)[6]||S(n)[3]):S(n)[3];
 const BISM_EN2='In the name of Allah, the Most Gracious, the Most Merciful';
 const BISM_UR='شروع اللہ کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے';
+const BISM_HI='Allah ke naam se jo Rehman o Raheem hai';
+// Hinglish: brackets hold the translator's short explanations; shown softer so the sentence reads first
+const hinglish=x=>esc(x).replace(/\(([^()]*)\)/g,'<span class="gl">($1)</span>');
 function applyLang(){
   document.documentElement.lang=isUR()?'ur':'en';document.documentElement.dir=isUR()?'rtl':'ltr';
   document.body.classList.toggle('ui-ur',isUR());
@@ -333,7 +341,7 @@ const SCRIPTS={
   amiri:{name:'Naskh',sub:'Classic Amiri Quran',ff:'"Kalimah Quran",serif',bism:'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ'}};
 if(!SCRIPTS[PREF.script])PREF.script='ip';
 const isIP=()=>PREF.script==='ip';
-const applyPref=()=>{document.documentElement.style.setProperty('--f-q',SCRIPTS[PREF.script].ff);Object.keys(SCRIPTS).forEach(k=>document.body.classList.toggle('script-'+k,PREF.script===k));document.documentElement.style.setProperty('--ar-size',SIZES[PREF.size]+'px');document.body.classList.toggle('nowbw',!PREF.wbw);document.body.classList.toggle('notx',!PREF.tx);['en','ur','both'].forEach(k=>document.body.classList.toggle('tr-'+k,PREF.trans===k));applyLang()};
+const applyPref=()=>{document.documentElement.style.setProperty('--f-q',SCRIPTS[PREF.script].ff);Object.keys(SCRIPTS).forEach(k=>document.body.classList.toggle('script-'+k,PREF.script===k));document.documentElement.style.setProperty('--ar-size',SIZES[PREF.size]+'px');document.body.classList.toggle('nowbw',!PREF.wbw);document.body.classList.toggle('notx',!PREF.tx);['en','ur','both','hi'].forEach(k=>document.body.classList.toggle('tr-'+k,PREF.trans===k));applyLang()};
 applyPref();
 
 const pad=n=>String(n).padStart(3,'0');
@@ -483,7 +491,7 @@ function renderHome(){
       <input class="search" id="q" type="search" placeholder="${t('search')}" value="${esc(q)}" autocomplete="off">
       <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${sname(x[0])}</b><small>${smean(x[0])} · ${t('ayahs',x[5])} · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${t(x[4]==='meccan'?'makkah':'madinah')}</span></small></span><span class="ar">${isUR()?'':x[1]}</span></a>`).join('')||`<p class="muted">${t('noMatch')}</p>`}</div>
     </div>
-    <p class="foot">${t('credits')}<br>Version 3.0 · ${isUR()?'اردو':'English'}</p>
+    <p class="foot">${t('credits')}<br>Version 3.1 · ${isUR()?'اردو':'English'}</p>
   </div>`;
 }
 
@@ -498,7 +506,7 @@ function ayahHTML(s,d,v){
   return `<article class="ayah" id="a-${v}" data-v="${v}">
     <div class="ah"><span class="num">${s}:${v}</span><span class="sp"></span><button class="mini" data-act="ayah-play" data-v="${v}">${ICON.play}${t('listen')}</button></div>
     <div class="words" lang="ar">${words}</div>
-    <p class="tx" dir="ltr">${esc(a.en)}</p>${a.ur?`<p class="txu" lang="ur">${esc(a.ur)}</p>`:''}</article>`;
+    <p class="tx" dir="ltr">${esc(a.en)}</p>${a.ur?`<p class="txu" lang="ur">${esc(a.ur)}</p>`:''}${a.h?`<p class="txh" dir="ltr" lang="ur-Latn">${hinglish(a.h)}</p>`:''}</article>`;
 }
 function ensureRendered(upto){
   if(!cur||upto<=shown)return;const box=document.getElementById('ayahs');if(!box)return;
@@ -518,7 +526,7 @@ async function renderRead(){
   cur={s,d};shown=0;
   const prev=s>1?`<a class="btn ghost" href="#surah-${s-1}"><span class="flip">${ICON.back}</span> ${sname(s-1)}</a>`:'<span></span>';
   const next=s<114?`<a class="btn gold" href="#surah-${s+1}">${sname(s+1)} <span class="flip">${ICON.arrow}</span></a>`:'<span></span>';
-  const bt=PREF.trans==='ur'?`<p class="txu bt" lang="ur">${BISM_UR}</p>`:PREF.trans==='both'?`<p class="muted bt" dir="ltr">${BISM_EN2}</p><p class="txu bt" lang="ur">${BISM_UR}</p>`:`<p class="muted bt" dir="ltr">${BISM_EN2}</p>`;
+  const bt=PREF.trans==='hi'?`<p class="muted bt" dir="ltr">${BISM_HI}</p>`:PREF.trans==='ur'?`<p class="txu bt" lang="ur">${BISM_UR}</p>`:PREF.trans==='both'?`<p class="muted bt" dir="ltr">${BISM_EN2}</p><p class="txu bt" lang="ur">${BISM_UR}</p>`:`<p class="muted bt" dir="ltr">${BISM_EN2}</p>`;
   document.getElementById('rbody').innerHTML=`<div class="shead"><span class="ar" lang="ar">${meta[1]}</span><p>${t(meta[4]==='meccan'?'revealedM':'revealedMd')}</p></div>
     ${s!==1&&s!==9?'<p class="bism" id="bism" lang="ar">'+SCRIPTS[PREF.script].bism+'</p>'+bt:''}
     <div id="ayahs"></div><div class="more" id="more"><button class="btn ghost" data-act="more">${t('more')}</button></div>

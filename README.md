@@ -4,6 +4,7 @@ A calm black-and-gold Quran reader for iPhone. Every Arabic word shows its Engli
 
 - All 114 surahs, ayah by ayah, with word-by-word meanings and a full translation
 - Tap any word to hear it
+- Translation under each ayah: English, Urdu, both, or Hinglish (Roman Urdu)
 - Reopens at the ayah you were last reading (remembered on each phone)
 - Translation shown in English, Urdu (Nastaliq) or both
 - Listen in Arabic (Mishary Alafasy), English (Saheeh International, read by Ibrahim Walk), Urdu (Jalandhry, read by Shamshad Ali Khan), or Arabic followed by English or Urdu
