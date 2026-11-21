@@ -355,7 +355,7 @@ async function loadSurah(n){if(cache[n])return cache[n];const r=await fetch('dat
 
 /* ---------- audio ----------
    P = the recitation queue. parts = what to play for each ayah: Arabic, English, or both. */
-const audio=new Audio(), wAudio=new Audio(); audio.preload='auto';
+const wAudio=new Audio();
 let P=null; // {s, v, seq, parts, pi, paused, tts}
 // Arabic reciters: all Hafs, ayah by ayah. Main source everyayah.com, with a backup where one exists.
 const RECITERS={
@@ -376,40 +376,108 @@ const EN=(s,v)=>['https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_19
 // Urdu: Fateh Muhammad Jalandhry's translation, read by Shamshad Ali Khan
 const UR=(s,v)=>['https://cdn.islamic.network/quran/audio/64/ur.khan/'+gnum(s,v)+'.mp3','https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/'+pad(s)+pad(v)+'.mp3'];
 const partsFor=()=>({ar:['ar'],en:['en'],ur:['ur'],both:['ar','en'],arur:['ar','ur']})[PREF.listen]||['ar'];
+// Silence used once to unlock the second player on iPhone (it must be started by a tap before it can play on its own).
+const SILENT='data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAbAAqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV////////////////////////////////////////////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQC8AAAAAAAAAGw9wruFgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/+MYxAAAAANIAAAAAExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV/+MYxDsAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV/+MYxHYAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
+/* Two players take turns: while one plays, the other quietly loads the next clip
+   (Arabic, then the translation, then the next ayah), so there is no pause between them.
+   Each clip has backup sources. A clip that doesn't start within a few seconds moves to the next source,
+   a clip that stalls part-way picks up again from the same spot, and a brief network drop is retried. */
+const decks=[new Audio(),new Audio()];let D=0;
+const A=()=>decks[D],IDLE=()=>decks[D^1];
+let wd=null,waitT=null;
+// A recording source that stalls or drops is used last for the next 10 minutes, so later clips come straight from the backup.
+const BAD={},srcOf=u=>u.slice(0,u.lastIndexOf('/')),isBad=u=>BAD[srcOf(u)]>Date.now(),markBad=u=>{if(u)BAD[srcOf(u)]=Date.now()+600000};
+function arm(ms){clearTimeout(wd);wd=setTimeout(stuck,ms)}
+function disarm(){clearTimeout(wd);wd=null;clearTimeout(waitT)}
+const nextOf=q=>{if(!q)return null;
+  if(q.pi+1<q.parts.length)return {...q,pi:q.pi+1};
+  const parts=partsFor();
+  if(q.pre)return {...q,pre:false,pi:0,parts};
+  if(q.seq&&q.v<S(q.s)[5])return {...q,v:q.v+1,pi:0,parts,pre:false};
+  if(q.seq&&PREF.cont&&q.s<114)return {...q,s:q.s+1,v:1,pi:0,parts,pre:needsBism(q.s+1,1)};
+  return null};
+const trackOf=q=>{const part=q.parts[q.pi],s=q.pre?1:q.s,v=q.pre?1:q.v;
+  const u=part==='ar'?AR(s,v):part==='ur'?UR(s,v):EN(s,v);
+  return {part,urls:u.filter(x=>!isBad(x)).concat(u.filter(isBad)),key:part+'|'+s+':'+v+'|'+(part==='ar'?PREF.reciter:'')}};
+function loadDeck(d,tr){d._key=tr.key;d._urls=tr.urls;d._i=0;d._failed=false;d._retry=false;d._resume=0;d.src=tr.urls[0];d._t0=Date.now();d.load();watchLoad(d)}
+// the waiting player: if its clip hasn't loaded within 5 seconds, switch it to the backup before it is needed
+function watchLoad(d){clearTimeout(d._pt);const k=d._key,i=d._i;
+  d._pt=setTimeout(()=>{if(d._key===k&&d._i===i&&d!==A()&&d.readyState<3&&d._i+1<d._urls.length){markBad(d._urls[d._i]);nextSource(d)}},4000)}
+function preloadNext(){const n=nextOf(P);if(!n)return;const tr=trackOf(n),d=IDLE();
+  if(d._key===tr.key&&!d._failed)return;loadDeck(d,tr)}
+function go(d){disarm();if(!P||P.paused)return;d.muted=false;
+  arm(d.readyState>=3?6000:Math.max(1500,5000-(Date.now()-(d._t0||Date.now()))));
+  waitT=setTimeout(()=>{if(P&&!P.paused&&d===A()&&d.readyState<3){P.wait=true;markPlaying()}},800);
+  const pr=d.play();if(pr)pr.catch(e=>{if(e&&e.name==='NotAllowedError'&&d===A())useOther(d)})}
+// iPhone refused to start the second player on its own: play this clip on the player the person started.
+function useOther(d){if(!P)return;P.fb=(P.fb||0)+1;if(P.fb>2){P.paused=true;disarm();markPlaying();return}
+  const o=decks[D^1];o._key=d._key;o._urls=d._urls;o._i=d._i;o._failed=false;o._retry=false;o._resume=0;o.src=d._urls[d._i];o.load();
+  d._key=null;D^=1;go(o)}
+function nextSource(d){d._i++;d._retry=false;
+  if(d._i>=d._urls.length){d._failed=true;if(d===A())trackFailed();return}
+  d.src=d._urls[d._i];d._t0=Date.now();d.load();if(d===A()){if(P&&!P.paused)go(d)}else watchLoad(d)}
+function stuck(){const a=A();if(!P||P.paused||P.tts)return;
+  if(a._i+1<a._urls.length){a._resume=a.currentTime||0;markBad(a._urls[a._i]);nextSource(a)}          // try the backup source
+  else if(a.currentTime>0){a._resume=a.currentTime;a._t0=Date.now();a.load();go(a)}            // reconnect and continue from the same spot
+  else arm(8000)}                                                             // keep waiting rather than skip the ayah
+function trackFailed(){disarm();if(!P)return;if(P.parts[P.pi]==='en')speakEnglish();else advance()}
+decks.forEach(d=>{d.preload='auto';
+  d.addEventListener('playing',()=>{if(d!==A())return;disarm();if(!P)return;P.fb=0;if(P.wait){P.wait=false;markPlaying()}preloadNext()});
+  d.addEventListener('waiting',()=>{if(d===A()&&P&&!P.paused&&!wd)arm(8000)});
+  d.addEventListener('ended',()=>{if(d!==A())return;disarm();advance()});
+  d.addEventListener('loadedmetadata',()=>{if(d._resume){try{d.currentTime=d._resume}catch(e){}d._resume=0}});
+  d.addEventListener('error',()=>{if(!d._key||(d.src||'').startsWith('data:'))return;
+    const e=d.error,k=d._key;
+    if(e&&e.code===2&&!d._retry){d._retry=true;d._resume=d.currentTime||0;    // network dropped: one quick retry
+      setTimeout(()=>{if(d._key!==k)return;d.load();if(d===A()&&P&&!P.paused)go(d)},1200);return}
+    if(e&&e.code===2)markBad(d._urls[d._i]);
+    nextSource(d)});
+  d.addEventListener('canplaythrough',()=>clearTimeout(d._pt));
+  // paused by the phone itself (a call, headphones unplugged): show it as paused
+  d.addEventListener('pause',()=>{if(d._self){d._self=false;return}
+    if(d!==A()||!P||P.paused||P.tts||d.ended||!(d.currentTime>0))return;P.paused=true;disarm();markPlaying()});
+});
+function quiet(d){if(!d.paused){d._self=true;d.pause()}}
+// Called from a tap: lets the second player start later without another tap (needed on iPhone).
+function unlockIdle(){const d=IDLE();if(d._unl)return;d._unl=true;if(!d.src)d.src=SILENT;d.muted=true;
+  const pr=d.play();if(pr)pr.then(()=>{if(d!==A()){quiet(d);try{d.currentTime=0}catch(e){}}d.muted=false}).catch(()=>{d.muted=false})}
 const ttsOK='speechSynthesis' in window;
-function halt(){try{audio.pause()}catch(e){}if(ttsOK)try{speechSynthesis.cancel()}catch(e){}}
+function halt(){disarm();decks.forEach(quiet);if(ttsOK)try{speechSynthesis.cancel()}catch(e){}}
 function stopAudio(){halt();P=null;markPlaying()}
 // Bismillah before a surah starts: not for Al-Fatihah (it is ayah 1) or At-Tawbah (it has none)
 const needsBism=(s,v)=>v===1&&s!==1&&s!==9;
 const BISM_EN='In the name of Allah, the Entirely Merciful, the Especially Merciful';
-function startAyah(s,v,seq){halt();try{wAudio.pause()}catch(e){}P={s,v,seq,parts:partsFor(),pi:0,paused:false,tts:false,pre:needsBism(s,v)};follow();playPart()}
+function startAyah(s,v,seq){halt();try{wAudio.pause()}catch(e){}P={s,v,seq,parts:partsFor(),pi:0,paused:false,tts:false,pre:needsBism(s,v)};follow();playPart();unlockIdle()}
 function playPart(){
-  if(!P)return;const part=P.parts[P.pi],s=P.pre?1:P.s,v=P.pre?1:P.v;P.tts=false;markPlaying();meta();
-  const urls=part==='ar'?AR(s,v):part==='ur'?UR(s,v):EN(s,v);let i=0;
-  audio.onended=advance;
-  audio.onerror=()=>{if(!P)return;i++;if(i<urls.length){audio.src=urls[i];audio.play().catch(()=>{})}else if(part==='en')speakEnglish();else advance()};
-  audio.src=urls[0];audio.play().catch(()=>{});
+  if(!P)return;const tr=trackOf(P);P.tts=false;P.wait=false;markPlaying();meta();
+  const cur=A(),idle=IDLE();let d;
+  if(idle._key===tr.key&&!idle._failed){quiet(cur);D^=1;d=idle;try{d.currentTime=0}catch(e){}}   // already loaded in the other player
+  else if(cur._key===tr.key&&!cur._failed&&cur.readyState>0){d=cur;try{d.currentTime=0}catch(e){}}
+  else{d=cur;loadDeck(d,tr)}
+  go(d);
 }
 async function speakEnglish(){ // backup when the recorded English isn't reachable: the phone reads the translation
   let d=cache[P.s];if(!d)try{d=await loadSurah(P.s)}catch(e){}
+  if(!P)return;
   const text=P.pre?BISM_EN:(d&&d.v[P.v-1]?d.v[P.v-1].en:'');
-  if(!text||!ttsOK||!P||P.paused){advance();return}
-  P.tts=true;const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=.95;u.onend=()=>{if(P&&P.tts&&!P.paused)advance()};
-  speechSynthesis.cancel();speechSynthesis.speak(u);
+  if(!text||!ttsOK||P.paused){advance();return}
+  P.tts=true;markPlaying();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=.95;u.onend=()=>{if(P&&P.tts&&!P.paused)advance()};
+  speechSynthesis.cancel();speechSynthesis.speak(u);preloadNext();
 }
 function advance(){
-  if(!P||P.paused)return;
-  if(P.pi+1<P.parts.length){P.pi++;playPart();return}
-  if(P.pre){P.pre=false;P.pi=0;P.parts=partsFor();playPart();return}
-  if(P.seq&&P.v<S(P.s)[5]){P.v++;P.pi=0;P.parts=partsFor();follow();playPart();return}
-  if(P.seq&&PREF.cont&&P.s<114){P.s++;P.v=1;P.pi=0;P.pre=needsBism(P.s,1);P.parts=partsFor();loadSurah(P.s).catch(()=>{});if(R.view==='read')location.hash='surah-'+P.s;playPart();return}
-  P=null;markPlaying();
+  if(!P||P.paused)return;const n=nextOf(P);
+  if(!n){P=null;disarm();markPlaying();return}
+  const newSurah=n.s!==P.s,newAyah=newSurah||n.v!==P.v;
+  Object.assign(P,n);
+  if(newSurah){loadSurah(P.s).catch(()=>{});if(R.view==='read')location.hash='surah-'+P.s}
+  else if(newAyah)follow();
+  playPart();
 }
-function step(d){if(!P)return;const nv=P.v+d;if(nv<1||nv>S(P.s)[5])return;halt();P.v=nv;P.pi=0;P.pre=needsBism(P.s,nv);P.paused=false;P.parts=partsFor();follow();playPart()}
+function step(d){if(!P)return;const nv=P.v+d;if(nv<1||nv>S(P.s)[5])return;halt();P.v=nv;P.pi=0;P.pre=needsBism(P.s,nv);P.paused=false;P.parts=partsFor();follow();playPart();unlockIdle()}
 function togglePause(){
   if(!P)return;
-  if(P.paused){P.paused=false;if(P.tts){speakEnglish()}else audio.play().catch(()=>{})}
-  else{P.paused=true;audio.pause();if(ttsOK)speechSynthesis.cancel()}
+  if(P.paused){P.paused=false;if(P.tts){speakEnglish()}else go(A());unlockIdle()}
+  else{P.paused=true;P.wait=false;disarm();quiet(A());if(ttsOK)speechSynthesis.cancel()}
   markPlaying();
 }
 function setListen(m){PREF.listen=m;store.set('pref',PREF);if(P){halt();P.parts=partsFor();P.pi=0;P.paused=false;playPart()}markPlaying();
@@ -437,10 +505,11 @@ function markPlaying(){
   if(here&&!P.pre){const el=document.getElementById('a-'+P.v);if(el){el.classList.add('playing');const b=el.querySelector('[data-act="ayah-play"]');if(b&&!P.paused)b.innerHTML=ICON.pause+t('pause')}}
   const pa=document.getElementById('playall');if(pa){const on=here&&P.seq&&!P.paused;pa.innerHTML=on?ICON.pause:ICON.play;pa.classList.toggle('on',on)}
   document.body.classList.toggle('hasplayer',!!P);
+  if('mediaSession' in navigator)try{navigator.mediaSession.playbackState=!P?'none':P.paused?'paused':'playing'}catch(e){}
   if(!P){playerEl.classList.remove('on');return}
   const part=P.parts[P.pi];
   playerEl.classList.add('on');
-  playerEl.innerHTML=`<div class="pr"><a class="pinfo" href="#surah-${P.s}-${P.v}"><b>${sname(P.s)} ${P.pre?'· '+t('bismillah'):P.s+':'+P.v}</b><span>${P.paused?t('paused'):t('playing',PART_NAME()[part])}${P.tts?t('phoneVoice'):''}</span></a>
+  playerEl.innerHTML=`<div class="pr"><a class="pinfo" href="#surah-${P.s}-${P.v}"><b>${sname(P.s)} ${P.pre?'· '+t('bismillah'):P.s+':'+P.v}</b><span>${P.wait?t('loading'):P.paused?t('paused'):t('playing',PART_NAME()[part])}${P.tts?t('phoneVoice'):''}</span></a>
     <button class="pc" data-act="p-prev" aria-label="Previous ayah">${ICON.prev}</button>
     <button class="pc big" data-act="p-toggle" aria-label="${P.paused?'Play':'Pause'}">${P.paused?ICON.play:ICON.pause}</button>
     <button class="pc" data-act="p-next" aria-label="Next ayah">${ICON.next}</button>
@@ -491,7 +560,7 @@ function renderHome(){
       <input class="search" id="q" type="search" placeholder="${t('search')}" value="${esc(q)}" autocomplete="off">
       <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${sname(x[0])}</b><small>${smean(x[0])} · ${t('ayahs',x[5])} · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${t(x[4]==='meccan'?'makkah':'madinah')}</span></small></span><span class="ar">${isUR()?'':x[1]}</span></a>`).join('')||`<p class="muted">${t('noMatch')}</p>`}</div>
     </div>
-    <p class="foot">${t('credits')}<br>Version 3.1 · ${isUR()?'اردو':'English'}</p>
+    <p class="foot">${t('credits')}<br>Version 3.2 · ${isUR()?'اردو':'English'}</p>
   </div>`;
 }
 
@@ -532,9 +601,15 @@ async function renderRead(){
     <div id="ayahs"></div><div class="more" id="more"><button class="btn ghost" data-act="more">${t('more')}</button></div>
     <div class="next" id="nextnav" style="display:none">${prev}${next}</div>`;
   ensureRendered(Math.max(30,R.v+10));
+  anchorV=R.v>1?R.v:0;
   if(R.v>1){const el=document.getElementById('a-'+R.v);if(el)requestAnimationFrame(()=>el.scrollIntoView({block:'start'}))}else scrollTo(0,0);
   if(!R.v||R.v===1){LAST={s,v:1};store.set('last',LAST)}
 }
+// the ayah at the top of the screen right now (where listening should start)
+function topAyah(){const bar=document.querySelector('.bar');const y=(bar?bar.getBoundingClientRect().bottom:60)+8;
+  for(const e of document.querySelectorAll('.ayah')){if(e.getBoundingClientRect().bottom>y)return +e.dataset.v}return 1}
+// the ayah a link or "pick up where you left off" opened at, until the person scrolls themselves
+let anchorV=0;['wheel','touchmove','keydown'].forEach(ev=>addEventListener(ev,()=>{anchorV=0},{passive:true}));
 let pendingLast=null;
 function flushLast(){if(pendingLast&&R.view==='read'&&cur&&pendingLast.s===cur.s){LAST=pendingLast;store.set('last',LAST)}pendingLast=null}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushLast()});
@@ -599,7 +674,7 @@ document.addEventListener('click',async e=>{
       const a2=cur.d.v[+el.dataset.v-1];playWord(cur.s,+el.dataset.v,a2.p[+el.dataset.i]);break}
     case 'wplay':playWord(selW.s,selW.v,selW.p);break;
     case 'ayah-play':{const v=+el.dataset.v;if(P&&P.s===cur.s&&P.v===v){togglePause()}else startAyah(cur.s,v,false);break}
-    case 'playall':{if(P&&P.s===cur.s&&P.seq){togglePause();break}let v=1;if(LAST&&LAST.s===cur.s)v=LAST.v;startAyah(cur.s,v,true);break}
+    case 'playall':{if(P&&P.s===cur.s&&P.seq){togglePause();break}startAyah(cur.s,anchorV&&anchorV<=shown?anchorV:topAyah(),true);break}
     case 'p-prev':step(-1);break;
     case 'p-next':step(1);break;
     case 'p-toggle':togglePause();break;
