@@ -39,7 +39,7 @@ html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--f-bo
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 a{color:inherit;text-decoration:none}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:1.5px solid var(--gold);outline-offset:3px;border-radius:10px}
-.app{max-width:620px;margin:0 auto;padding:0 18px calc(env(safe-area-inset-bottom) + 40px)}
+.app{max-width:620px;margin:0 auto;overflow-x:clip;padding:0 18px calc(env(safe-area-inset-bottom) + 40px)}
 h1,h2{font-family:var(--f-display);font-weight:500;text-wrap:balance;margin:0}
 h1{font-size:2.1rem;line-height:1.15}
 .muted{color:var(--muted)}
@@ -287,7 +287,7 @@ const L={
   
   
   toastReciter:'{0} selected',toastLang:'App language: English',
-  playing:'Playing {0}',paused:'Paused',phoneVoice:' (phone voice)',bismillah:'Bismillah',
+  aPrev:'Previous ayah',aNext:'Next ayah',aStop:'Stop',aPlay:'Play',aPause:'Pause',playing:'Playing {0}',paused:'Paused',phoneVoice:' (phone voice)',bismillah:'Bismillah',
   credits:'Word meanings from the Quranic Arabic Corpus (Quran.com). Indo-Pak text and fonts: King Fahd Complex (KFGQPC). Translation: Saheeh International. Urdu: Fateh Muhammad Jalandhry (Tanzil). Hinglish: Abul A’la Maududi (Roman Urdu). Recitation: Mishary Alafasy, Yasser Al-Dosari, Maher Al-Muaiqly, Nasser Al-Qatami, Abdul Basit (EveryAyah.com). Audio translations: Ibrahim Walk (English), Shamshad Ali Khan (Urdu).'
  },
  ur:{
@@ -309,7 +309,7 @@ const L={
   
   
   toastReciter:'{0} منتخب',toastLang:'ایپ کی زبان: اردو',
-  playing:'{0}',paused:'رکا ہوا',phoneVoice:' (فون کی آواز)',bismillah:'بسم اللہ',
+  aPrev:'پچھلی آیت',aNext:'اگلی آیت',aStop:'بند کریں',aPlay:'چلائیں',aPause:'روکیں',playing:'{0}',paused:'رکا ہوا',phoneVoice:' (فون کی آواز)',bismillah:'بسم اللہ',
   credits:'الفاظ کے معانی: قرآنی عربی کارپس (Quran.com)۔ انڈوپاک متن اور فونٹ: شاہ فہد قرآن کمپلیکس۔ انگریزی ترجمہ: صحیح انٹرنیشنل۔ اردو ترجمہ: مولانا فتح محمد جالندھری۔ ہنگلش (رومن اردو): مولانا ابوالاعلیٰ مودودی۔ تلاوت: مشاری العفاسی، یاسر الدوسری، ماہر المعیقلی، ناصر القطامی، عبد الباسط (EveryAyah.com)۔ ترجمے کی آواز: ابراہیم واک (انگریزی)، شمشاد علی خان (اردو)۔'
  }
 };
@@ -488,7 +488,15 @@ function follow(){
   if(el&&document.visibilityState==='visible')el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
   LAST={s:P.s,v:P.v};store.set('last',LAST);
 }
-function playWord(s,v,p){if(P&&!P.paused)togglePause();wAudio.src='https://audio.qurancdn.com/wbw/'+pad(s)+'_'+pad(v)+'_'+pad(p)+'.mp3';wAudio.play().catch(()=>{})}
+// a word can be written as two in the word-by-word data (e.g. لَّوۡمَا = law + mā): play every part in turn
+function playWord(s,v,ps){if(P&&!P.paused)togglePause();ps=[].concat(ps);let k=0;
+  const url=p=>'https://audio.qurancdn.com/wbw/'+pad(s)+'_'+pad(v)+'_'+pad(p)+'.mp3';
+  wAudio.onended=()=>{k++;if(k<ps.length){wAudio.src=url(ps[k]);wAudio.play().catch(()=>{})}};
+  wAudio.onerror=wAudio.onended;wAudio.src=url(ps[0]);wAudio.play().catch(()=>{})}
+// two meanings for a word written as one; shown once when the source repeats it
+const join2=(x,y)=>x===y?x:x+' '+y;
+// word positions covered by word i (several when the script joins words)
+function wordParts(a,i,joined){const from=joined?a.p[i-1]:a.p[i],to=i+1<a.p.length?a.p[i+1]-1:a.p[i];const o=[];for(let q=from;q<=to;q++)o.push(q);return o}
 function meta(){
   if(!('mediaSession' in navigator)||!P)return;const m=S(P.s),en=P.parts[P.pi]==='en';
   try{navigator.mediaSession.metadata=new MediaMetadata({title:m[2]+(P.pre?' · Bismillah':' '+P.s+':'+P.v),artist:({ar:'Arabic · '+rec().name,en:'English · Saheeh International',ur:'اردو · Jalandhry, read by Shamshad Ali Khan'})[P.parts[P.pi]],album:'MyQuranApp',artwork:[{src:'icon-512.png',sizes:'512x512',type:'image/png'}]})}catch(e){}
@@ -510,10 +518,10 @@ function markPlaying(){
   const part=P.parts[P.pi];
   playerEl.classList.add('on');
   playerEl.innerHTML=`<div class="pr"><a class="pinfo" href="#surah-${P.s}-${P.v}"><b>${sname(P.s)} ${P.pre?'· '+t('bismillah'):P.s+':'+P.v}</b><span>${P.wait?t('loading'):P.paused?t('paused'):t('playing',PART_NAME()[part])}${P.tts?t('phoneVoice'):''}</span></a>
-    <button class="pc" data-act="p-prev" aria-label="Previous ayah">${ICON.prev}</button>
-    <button class="pc big" data-act="p-toggle" aria-label="${P.paused?'Play':'Pause'}">${P.paused?ICON.play:ICON.pause}</button>
-    <button class="pc" data-act="p-next" aria-label="Next ayah">${ICON.next}</button>
-    <button class="pc" data-act="p-stop" aria-label="Stop">${ICON.x}</button></div>
+    <button class="pc" data-act="p-prev" aria-label="${t('aPrev')}">${ICON.prev}</button>
+    <button class="pc big" data-act="p-toggle" aria-label="${t(P.paused?'aPlay':'aPause')}">${P.paused?ICON.play:ICON.pause}</button>
+    <button class="pc" data-act="p-next" aria-label="${t('aNext')}">${ICON.next}</button>
+    <button class="pc" data-act="p-stop" aria-label="${t('aStop')}">${ICON.x}</button></div>
     <div class="seg">${listenButtons()}</div>`;
 }
 
@@ -547,8 +555,12 @@ function settingsCard(){
   </section>`;
 }
 function renderHome(){
-  const qq=q.toLowerCase().replace(/[-'’ʿ\s]/g,'');
-  const list=INDEX.filter(x=>!q||(x[0]+' '+x[2]+' '+x[3]).toLowerCase().replace(/[-'’ʿ\s]/g,'').includes(qq)||x[1].includes(q)||(x[6]||'').includes(q));
+  const N=t=>t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-'’ʿʾ\s]/g,'');
+  const bare=t=>N(t).replace(/^(al|an|ar|as|at|ad|adh|az|ash|aš)(?=[a-z]{3})/,'');
+  let list=INDEX.filter(x=>!q||N(x[0]+' '+x[2]+' '+x[3]).includes(N(q))||x[1].includes(q)||(x[6]||'').includes(q));
+  // best match first: the surah number, then a name that is exactly what was typed, then names that start with it
+  if(q){const k=N(q),rank=x=>String(x[0])===q.trim()?0:(N(x[2])===k||bare(x[2])===bare(q))?1:(bare(x[2]).startsWith(bare(q))||N(x[2]).startsWith(k))?2:3;
+    list=list.map((x,i)=>[rank(x),i,x]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]).map(r=>r[2])}
   const cont=LAST&&S(LAST.s)?`<a class="cont" href="#surah-${LAST.s}-${LAST.v}"><span class="t"><span class="eyebrow">${t('continue')}</span><b>${sname(LAST.s)} · ${t('ayahN',LAST.v)}</b><span class="muted" style="font-size:.85rem">${smean(LAST.s)}</span></span><span class="go">${ICON.arrow}</span></a>`:'';
   $v.innerHTML=`<div class="bar"><span class="brand">${MOSQUE}MyQuranApp</span><button class="ib" data-act="settings" aria-label="${t('allSettings')}">${ICON.aa}</button></div>
   <div class="stack" style="padding-top:14px">
@@ -560,7 +572,7 @@ function renderHome(){
       <input class="search" id="q" type="search" placeholder="${t('search')}" value="${esc(q)}" autocomplete="off">
       <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${sname(x[0])}</b><small>${smean(x[0])} · ${t('ayahs',x[5])} · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${t(x[4]==='meccan'?'makkah':'madinah')}</span></small></span><span class="ar">${isUR()?'':x[1]}</span></a>`).join('')||`<p class="muted">${t('noMatch')}</p>`}</div>
     </div>
-    <p class="foot">${t('credits')}<br>Version 3.2 · ${isUR()?'اردو':'English'}</p>
+    <p class="foot">${t('credits')}<br>Version 3.3 · ${isUR()?'اردو':'English'}</p>
   </div>`;
 }
 
@@ -570,7 +582,7 @@ function ayahHTML(s,d,v){
   const T=isIP()&&a.i?a.i:a.a;
   const words=T.map((ar,i)=>{
     if(ar==='')return '';   // Indo-Pak writes this word together with the next one
-    const mean=i>0&&T[i-1]===''?a.w[i-1]+' '+a.w[i]:a.w[i];
+    const mean=i>0&&T[i-1]===''?join2(a.w[i-1],a.w[i]):a.w[i];
     return `<button class="w" data-act="word" data-v="${v}" data-i="${i}"><span class="wa">${ar}</span><span class="we" dir="ltr">${esc(mean)}</span></button>`}).join('');
   return `<article class="ayah" id="a-${v}" data-v="${v}">
     <div class="ah"><span class="num">${s}:${v}</span><span class="sp"></span><button class="mini" data-act="ayah-play" data-v="${v}">${ICON.play}${t('listen')}</button></div>
@@ -637,7 +649,7 @@ let selW=null;
 function wordSheet(s,v,i){
   const a=cur.d.v[v-1],k=s+':'+v+':'+i;
   const T=isIP()&&a.i?a.i:a.a,joined=i>0&&T[i-1]==='';
-  selW={k,s,v,i,a:T[i],w:joined?a.w[i-1]+' '+a.w[i]:a.w[i],t:joined?a.t[i-1]+' '+a.t[i]:a.t[i],p:joined?a.p[i-1]:a.p[i]};
+  selW={k,s,v,i,a:T[i],w:joined?join2(a.w[i-1],a.w[i]):a.w[i],t:joined?a.t[i-1]+' '+a.t[i]:a.t[i],p:wordParts(a,i,joined)};
   const n=T.slice(0,i+1).filter(Boolean).length;
   openSheet(`<div class="sw"><span class="ar" lang="ar">${selW.a}</span><span class="tr" dir="ltr">${esc(selW.t)}</span><span class="en" dir="ltr">${esc(selW.w)}</span><span class="ref">${sname(s)} ${s}:${v} · ${t('word',n)}</span></div>
     <button class="btn gold" style="width:100%;margin-top:16px" data-act="wplay">${ICON.play}${t('hearIt')}</button>`,'word');
@@ -671,7 +683,7 @@ document.addEventListener('click',async e=>{
   const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act;
   switch(a){
     case 'word':{document.querySelectorAll('.w.sel').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');wordSheet(cur.s,+el.dataset.v,+el.dataset.i);
-      const a2=cur.d.v[+el.dataset.v-1];playWord(cur.s,+el.dataset.v,a2.p[+el.dataset.i]);break}
+      playWord(cur.s,+el.dataset.v,selW.p);break}
     case 'wplay':playWord(selW.s,selW.v,selW.p);break;
     case 'ayah-play':{const v=+el.dataset.v;if(P&&P.s===cur.s&&P.v===v){togglePause()}else startAyah(cur.s,v,false);break}
     case 'playall':{if(P&&P.s===cur.s&&P.seq){togglePause();break}startAyah(cur.s,anchorV&&anchorV<=shown?anchorV:topAyah(),true);break}
@@ -687,7 +699,7 @@ document.addEventListener('click',async e=>{
     case 'reciter':{PREF.reciter=el.dataset.m;store.set('pref',PREF);
       document.querySelectorAll('[data-act="reciter"]').forEach(b=>{const on=b.dataset.m===PREF.reciter;b.classList.toggle('on',on);b.querySelector('.rplay').innerHTML=on?CHECK:''});
       // a short sample so you can hear the new voice: Bismillah
-      if(P){halt();P.pi=0;P.paused=false;playPart()}else{const u=AR(1,1);let k=0;wAudio.onerror=()=>{k++;if(k<u.length){wAudio.src=u[k];wAudio.play().catch(()=>{})}};wAudio.src=u[0];wAudio.play().catch(()=>{})}
+      if(P){halt();P.pi=0;P.paused=false;playPart()}else{const u=AR(1,1);let k=0;wAudio.onended=null;wAudio.onerror=()=>{k++;if(k<u.length){wAudio.src=u[k];wAudio.play().catch(()=>{})}};wAudio.src=u[0];wAudio.play().catch(()=>{})}
       toast(t('toastReciter',tRec(PREF.reciter).name));if(R.view==='home')renderHome();break}
     case 'script':{PREF.script=el.dataset.m;store.set('pref',PREF);applyPref();
       document.querySelectorAll('[data-act="script"]').forEach(b=>b.classList.toggle('on',b.dataset.m===PREF.script));
