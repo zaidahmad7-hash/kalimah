@@ -118,7 +118,7 @@ h1{font-size:2.1rem;line-height:1.15}
 .style.on .smp{color:var(--gold)}
 .txu{margin:12px 0 0;direction:rtl;text-align:right;font-family:"MQ Nastaliq","Kalimah Naskh",serif;font-size:1.12rem;line-height:2.35;color:var(--text);opacity:.9}
 .txh{display:none;margin:14px 0 0;color:var(--text);opacity:.9;font-size:1rem;line-height:1.65;max-width:65ch}
-.txh .gl{color:var(--muted)}
+.txh .gl,.tx .gl{color:var(--muted)}
 .tr-hi .txh{display:block}
 .tr-hi .tx,.tr-hi .txu{display:none}
 .notx .txh{display:none}
@@ -262,7 +262,7 @@ const PICKS=[[1,'Al-Fātiḥah','The Opener',null],[2,'Āyat al-Kursī','2 : 255
 
 /* ---------- storage (safe) ---------- */
 const store={get(k,d){try{const v=localStorage.getItem('kalimah.'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('kalimah.'+k,JSON.stringify(v))}catch(e){}}};
-let PREF=Object.assign({wbw:true,tx:true,size:2,listen:'ar',cont:false,trans:'en',script:'ip',reciter:'alafasy',lang:'en'},store.get('pref',{}));
+let PREF=Object.assign({wbw:true,tx:true,size:2,listen:'ar',cont:false,trans:'en',etr:'saheeh',script:'ip',reciter:'alafasy',lang:'en'},store.get('pref',{}));
 let LAST=store.get('last',null);        // where you were reading: {s, v}
 try{localStorage.removeItem('kalimah.ayahs')}catch(e){}   // the old Saved list is gone
 const SIZES=[24,28,32,38,44];
@@ -274,7 +274,7 @@ const L={
   homeSub:'Each Arabic word has its meaning underneath, with the full translation below each ayah. Tap a word to hear it. The app remembers where you stopped and opens there next time.',
   continue:'Pick up where you left off',resumed:'Back where you left off',ayahN:'ayah {0}',startHere:'Start here',allSurahs:'All 114 surahs',
   search:'Search by name, meaning or number',ayahs:'{0} ayahs',makkah:'Makkah',madinah:'Madinah',noMatch:'No surah matches that search.',
-  yourSettings:'Your settings',allSettings:'All settings',appLang:'App language',listenTo:'Listen to',arabicStyle:'Arabic style',reciter:'Reciter',translationShown:'Translation shown',change:'Change',
+  yourSettings:'Your settings',allSettings:'All settings',appLang:'App language',listenTo:'Listen to',arabicStyle:'Arabic style',reciter:'Reciter',translationShown:'Translation shown',engTr:'English translation',engTrSub:'English audio is read from Saheeh International',change:'Change',
   revealedM:'Revealed in Makkah',revealedMd:'Revealed in Madinah',
   listen:'Listen',pause:'Pause',more:'Show more ayahs',loading:'Loading…',
   loadErr:'This surah couldn’t load. Connect to the internet once and open it again; after that it works offline.',
@@ -288,7 +288,7 @@ const L={
   
   toastReciter:'{0} selected',toastLang:'App language: English',
   aPrev:'Previous ayah',aNext:'Next ayah',aStop:'Stop',aPlay:'Play',aPause:'Pause',playing:'Playing {0}',paused:'Paused',phoneVoice:' (phone voice)',bismillah:'Bismillah',
-  credits:'Word meanings from the Quranic Arabic Corpus (Quran.com). Indo-Pak text and fonts: King Fahd Complex (KFGQPC). Translation: Saheeh International. Urdu: Fateh Muhammad Jalandhry (Tanzil). Hinglish: Abul A’la Maududi (Roman Urdu). Recitation: Mishary Alafasy, Yasser Al-Dosari, Maher Al-Muaiqly, Nasser Al-Qatami, Abdul Basit (EveryAyah.com). Audio translations: Ibrahim Walk (English), Shamshad Ali Khan (Urdu).'
+  credits:'Word meanings from the Quranic Arabic Corpus (Quran.com). Indo-Pak text and fonts: King Fahd Complex (KFGQPC). Translation: Saheeh International; also Mufti Taqi Usmani and Dr Mustafa Khattab (The Clear Quran). Urdu: Fateh Muhammad Jalandhry (Tanzil). Hinglish: Abul A’la Maududi (Roman Urdu). Recitation: Mishary Alafasy, Yasser Al-Dosari, Maher Al-Muaiqly, Nasser Al-Qatami, Abdul Basit (EveryAyah.com). Audio translations: Ibrahim Walk (English), Shamshad Ali Khan (Urdu).'
  },
  ur:{
   
@@ -296,7 +296,7 @@ const L={
   homeSub:'ہر آیت کے نیچے اس کا اردو ترجمہ ہے۔ کسی لفظ پر ٹیپ کریں تو اس کی آواز سنیں۔ ایپ یاد رکھتی ہے کہ آپ نے کہاں چھوڑا تھا، اور اگلی بار وہیں سے کھلتی ہے۔',
   continue:'جہاں چھوڑا تھا وہیں سے پڑھیں',resumed:'جہاں آپ نے چھوڑا تھا، وہیں سے',ayahN:'آیت {0}',startHere:'یہاں سے شروع کریں',allSurahs:'تمام 114 سورتیں',
   search:'نام، معنی یا نمبر سے تلاش کریں',ayahs:'{0} آیات',makkah:'مکی',madinah:'مدنی',noMatch:'اس نام کی کوئی سورۃ نہیں ملی۔',
-  yourSettings:'آپ کی سیٹنگز',allSettings:'تمام سیٹنگز',appLang:'ایپ کی زبان',listenTo:'کیا سنیں',arabicStyle:'عربی رسم الخط',reciter:'قاری',translationShown:'ترجمہ',change:'تبدیل کریں',
+  yourSettings:'آپ کی سیٹنگز',allSettings:'تمام سیٹنگز',appLang:'ایپ کی زبان',listenTo:'کیا سنیں',arabicStyle:'عربی رسم الخط',reciter:'قاری',engTr:'انگریزی ترجمہ',engTrSub:'انگریزی آواز صحیح انٹرنیشنل کے ترجمے کی ہے',translationShown:'ترجمہ',change:'تبدیل کریں',
   revealedM:'مکہ میں نازل ہوئی',revealedMd:'مدینہ میں نازل ہوئی',
   listen:'سنیں',pause:'روکیں',more:'مزید آیات دکھائیں',loading:'لوڈ ہو رہا ہے…',
   loadErr:'یہ سورۃ لوڈ نہیں ہو سکی۔ ایک بار انٹرنیٹ سے جڑ کر دوبارہ کھولیں، اس کے بعد یہ بغیر انٹرنیٹ کے بھی چلے گی۔',
@@ -310,7 +310,7 @@ const L={
   
   toastReciter:'{0} منتخب',toastLang:'ایپ کی زبان: اردو',
   aPrev:'پچھلی آیت',aNext:'اگلی آیت',aStop:'بند کریں',aPlay:'چلائیں',aPause:'روکیں',playing:'{0}',paused:'رکا ہوا',phoneVoice:' (فون کی آواز)',bismillah:'بسم اللہ',
-  credits:'الفاظ کے معانی: قرآنی عربی کارپس (Quran.com)۔ انڈوپاک متن اور فونٹ: شاہ فہد قرآن کمپلیکس۔ انگریزی ترجمہ: صحیح انٹرنیشنل۔ اردو ترجمہ: مولانا فتح محمد جالندھری۔ ہنگلش (رومن اردو): مولانا ابوالاعلیٰ مودودی۔ تلاوت: مشاری العفاسی، یاسر الدوسری، ماہر المعیقلی، ناصر القطامی، عبد الباسط (EveryAyah.com)۔ ترجمے کی آواز: ابراہیم واک (انگریزی)، شمشاد علی خان (اردو)۔'
+  credits:'الفاظ کے معانی: قرآنی عربی کارپس (Quran.com)۔ انڈوپاک متن اور فونٹ: شاہ فہد قرآن کمپلیکس۔ انگریزی ترجمہ: صحیح انٹرنیشنل، مفتی تقی عثمانی، ڈاکٹر مصطفیٰ خطاب (The Clear Quran)۔ اردو ترجمہ: مولانا فتح محمد جالندھری۔ ہنگلش (رومن اردو): مولانا ابوالاعلیٰ مودودی۔ تلاوت: مشاری العفاسی، یاسر الدوسری، ماہر المعیقلی، ناصر القطامی، عبد الباسط (EveryAyah.com)۔ ترجمے کی آواز: ابراہیم واک (انگریزی)، شمشاد علی خان (اردو)۔'
  }
 };
 const isUR=()=>PREF.lang==='ur';
@@ -323,9 +323,20 @@ const SCRIPT_UR={ip:{name:'انڈوپاک',sub:'نستعلیق، جیسا ہند
 const REC_UR={alafasy:{name:'مشاری العفاسی',note:'صاف اور خوش الحان (کویت)'},dosari:{name:'یاسر الدوسری',note:'نرم اور پُراثر (سعودی عرب)'},muaiqly:{name:'ماہر المعیقلی',note:'امامِ مسجد الحرام، پُرسکون'},qatami:{name:'ناصر القطامی',note:'دھیمی اور دل کو چھو لینے والی (سعودی عرب)'},basit:{name:'عبد الباسط',note:'مرتّل، کلاسیکی آواز (مصر)'}};
 const tScript=k=>isUR()?SCRIPT_UR[k]:SCRIPTS[k];
 const tRec=k=>isUR()?REC_UR[k]:RECITERS[k];
+// English translations: Saheeh International is built in; the others are downloaded surah by surah only when chosen
+const ETR={saheeh:{name:'Saheeh International',short:'Saheeh',note:'Close to the Arabic wording'},
+  usmani:{name:'Mufti Taqi Usmani',short:'Usmani',note:'The Meanings of the Noble Qur’an',bism:'With the name of Allah, the All-Merciful, the Very-Merciful'},
+  khattab:{name:'Dr Mustafa Khattab',short:'Khattab',note:'The Clear Quran · simple, modern English',bism:'In the Name of Allah—the Most Compassionate, Most Merciful'}};
+const ETR_UR={saheeh:{name:'صحیح انٹرنیشنل',short:'صحیح',note:'عربی الفاظ کے قریب'},usmani:{name:'مفتی تقی عثمانی',short:'عثمانی',note:'مستند اور رواں انگریزی ترجمہ'},khattab:{name:'ڈاکٹر مصطفیٰ خطاب',short:'خطاب',note:'دی کلیئر قرآن · آسان جدید انگریزی'}};
+const tEtr=k=>(isUR()?ETR_UR:ETR)[k]||ETR.saheeh;
+const etr=()=>ETR[PREF.etr]?PREF.etr:'saheeh';
+const enOf=a=>etr()!=='saheeh'&&a['e_'+etr()]||a.en;
+// Dr Khattab marks the words he adds for clarity with ˹ ˺; shown softer, like the brackets in Hinglish
+const engHTML=a=>{const x=esc(enOf(a));return etr()==='khattab'?x.replace(/˹([^˺]*)˺/g,'<span class="gl">˹$1˺</span>'):x};
 const sname=n=>isUR()?S(n)[1]:S(n)[2];
 const smean=n=>isUR()?(S(n)[6]||S(n)[3]):S(n)[3];
 const BISM_EN2='In the name of Allah, the Most Gracious, the Most Merciful';
+const bismEN=()=>ETR[etr()].bism||BISM_EN2;
 const BISM_UR='شروع اللہ کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے';
 const BISM_HI='Allah ke naam se jo Rehman o Raheem hai';
 // Hinglish: brackets hold the translator's short explanations; shown softer so the sentence reads first
@@ -351,7 +362,10 @@ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'
 
 /* ---------- data ---------- */
 const cache={};
-async function loadSurah(n){if(cache[n])return cache[n];const r=await fetch('data/'+n+'.json');if(!r.ok)throw new Error('load');return cache[n]=await r.json()}
+async function loadSurah(n){let d=cache[n];if(!d){const r=await fetch('data/'+n+'.json');if(!r.ok)throw new Error('load');d=cache[n]=await r.json()}return loadTr(d,n)}
+// the chosen English translation for one surah (Saheeh International is shown if it can't be loaded)
+async function loadTr(d,n){const k=etr();if(k==='saheeh'||d['_'+k])return d;
+  try{const r=await fetch('data/tr/'+k+'/'+n+'.json');if(r.ok){const L=await r.json();d.v.forEach((v,i)=>{v['e_'+k]=L[i]});d['_'+k]=1}}catch(e){}return d}
 
 /* ---------- audio ----------
    P = the recitation queue. parts = what to play for each ayah: Arabic, English, or both. */
@@ -549,7 +563,7 @@ function settingsCard(){
     <button class="sc-sum" data-act="settings">
       <span><small>${t('arabicStyle')}</small><b>${tScript(PREF.script).name}</b></span>
       <span><small>${t('reciter')}</small><b>${tRec(PREF.reciter).name}</b></span>
-      <span><small>${t('translationShown')}</small><b>${TRANS()[PREF.trans]}</b></span>
+      <span><small>${t('translationShown')}</small><b>${TRANS()[PREF.trans]}${(PREF.trans==='en'||PREF.trans==='both')&&etr()!=='saheeh'?' · '+tEtr(etr()).short:''}</b></span>
       <span class="sc-go">${t('change')}</span>
     </button>
   </section>`;
@@ -572,7 +586,7 @@ function renderHome(){
       <input class="search" id="q" type="search" placeholder="${t('search')}" value="${esc(q)}" autocomplete="off">
       <div class="list">${list.map(x=>`<a class="srow" href="#surah-${x[0]}"><span class="no"><i>${x[0]}</i></span><span><b>${sname(x[0])}</b><small>${smean(x[0])} · ${t('ayahs',x[5])} · <span class="tag" style="--c:${x[4]==='meccan'?'var(--sand)':'var(--sky)'}">${t(x[4]==='meccan'?'makkah':'madinah')}</span></small></span><span class="ar">${isUR()?'':x[1]}</span></a>`).join('')||`<p class="muted">${t('noMatch')}</p>`}</div>
     </div>
-    <p class="foot">${t('credits')}<br>Version 3.3 · ${isUR()?'اردو':'English'}</p>
+    <p class="foot">${t('credits')}<br>Version 3.4 · ${isUR()?'اردو':'English'}</p>
   </div>`;
 }
 
@@ -587,7 +601,7 @@ function ayahHTML(s,d,v){
   return `<article class="ayah" id="a-${v}" data-v="${v}">
     <div class="ah"><span class="num">${s}:${v}</span><span class="sp"></span><button class="mini" data-act="ayah-play" data-v="${v}">${ICON.play}${t('listen')}</button></div>
     <div class="words" lang="ar">${words}</div>
-    <p class="tx" dir="ltr">${esc(a.en)}</p>${a.ur?`<p class="txu" lang="ur">${esc(a.ur)}</p>`:''}${a.h?`<p class="txh" dir="ltr" lang="ur-Latn">${hinglish(a.h)}</p>`:''}</article>`;
+    <p class="tx" dir="ltr">${engHTML(a)}</p>${a.ur?`<p class="txu" lang="ur">${esc(a.ur)}</p>`:''}${a.h?`<p class="txh" dir="ltr" lang="ur-Latn">${hinglish(a.h)}</p>`:''}</article>`;
 }
 function ensureRendered(upto){
   if(!cur||upto<=shown)return;const box=document.getElementById('ayahs');if(!box)return;
@@ -607,7 +621,7 @@ async function renderRead(){
   cur={s,d};shown=0;
   const prev=s>1?`<a class="btn ghost" href="#surah-${s-1}"><span class="flip">${ICON.back}</span> ${sname(s-1)}</a>`:'<span></span>';
   const next=s<114?`<a class="btn gold" href="#surah-${s+1}">${sname(s+1)} <span class="flip">${ICON.arrow}</span></a>`:'<span></span>';
-  const bt=PREF.trans==='hi'?`<p class="muted bt" dir="ltr">${BISM_HI}</p>`:PREF.trans==='ur'?`<p class="txu bt" lang="ur">${BISM_UR}</p>`:PREF.trans==='both'?`<p class="muted bt" dir="ltr">${BISM_EN2}</p><p class="txu bt" lang="ur">${BISM_UR}</p>`:`<p class="muted bt" dir="ltr">${BISM_EN2}</p>`;
+  const bt=PREF.trans==='hi'?`<p class="muted bt" dir="ltr">${BISM_HI}</p>`:PREF.trans==='ur'?`<p class="txu bt" lang="ur">${BISM_UR}</p>`:PREF.trans==='both'?`<p class="muted bt" dir="ltr">${bismEN()}</p><p class="txu bt" lang="ur">${BISM_UR}</p>`:`<p class="muted bt" dir="ltr">${bismEN()}</p>`;
   document.getElementById('rbody').innerHTML=`<div class="shead"><span class="ar" lang="ar">${meta[1]}</span><p>${t(meta[4]==='meccan'?'revealedM':'revealedMd')}</p></div>
     ${s!==1&&s!==9?'<p class="bism" id="bism" lang="ar">'+SCRIPTS[PREF.script].bism+'</p>'+bt:''}
     <div id="ayahs"></div><div class="more" id="more"><button class="btn ghost" data-act="more">${t('more')}</button></div>
@@ -663,6 +677,7 @@ function settingsSheet(){
     <div class="r" style="flex-direction:column;align-items:stretch"><span>${t('listenTo')}</span><div class="seg">${listenButtons()}</div></div>
     <div class="r"><span>${t('contNext')}</span><button class="tog ${PREF.cont?'on':''}" data-act="pref" data-k="cont" aria-label="${t('contNext')}"></button></div>
     <div class="r" style="flex-direction:column;align-items:stretch"><span>${t('translationShown')}</span><div class="seg">${Object.entries(TRANS()).map(([k,l])=>`<button class="${PREF.trans===k?'on':''}" data-act="trans" data-m="${k}"${k==='ur'?' lang="ur"':''}>${l}</button>`).join('')}</div></div>
+    <div class="r" style="flex-direction:column;align-items:stretch"><span>${t('engTr')}<br><small class="muted">${t('engTrSub')}</small></span><div class="styles">${Object.keys(ETR).map(k=>{const e=tEtr(k);return `<button class="style ${etr()===k?'on':''}" data-act="etr" data-m="${k}"><span><b>${e.name}</b><small>${e.note}</small></span><span class="rplay" aria-hidden="true">${etr()===k?CHECK:''}</span></button>`}).join('')}</div></div>
     <div class="r"><span>${t('fullTx')}</span><button class="tog ${PREF.tx?'on':''}" data-act="pref" data-k="tx" aria-label="${t('fullTx')}"></button></div>
     <div class="r"><span>${t('wbw')}</span><button class="tog ${PREF.wbw?'on':''}" data-act="pref" data-k="wbw" aria-label="${t('wbw')}"></button></div>
     <div class="r"><span>${t('arSize')}</span><span class="steps"><button data-act="size" data-d="-1" aria-label="−">ا−</button><button data-act="size" data-d="1" aria-label="+">ا+</button></span></div>
@@ -705,13 +720,16 @@ document.addEventListener('click',async e=>{
       document.querySelectorAll('[data-act="script"]').forEach(b=>b.classList.toggle('on',b.dataset.m===PREF.script));
       await rerender();break}
     case 'trans':PREF.trans=el.dataset.m;store.set('pref',PREF);applyPref();document.querySelectorAll('[data-act="trans"]').forEach(b=>b.classList.toggle('on',b.dataset.m===PREF.trans));if(R.view==='home')renderHome();else if(R.view==='read'&&cur)await rerender();break;
+    case 'etr':{PREF.etr=el.dataset.m;store.set('pref',PREF);
+      document.querySelectorAll('[data-act="etr"]').forEach(b=>{const on=b.dataset.m===etr();b.classList.toggle('on',on);b.querySelector('.rplay').innerHTML=on?CHECK:''});
+      if(cur)await loadTr(cur.d,cur.s);await rerender();if(sheetKind==='settings')settingsSheet();toast(t('toastReciter',tEtr(etr()).name));break}
     case 'close':closeSheet();break;
     case 'more':ensureRendered(shown+30);break;
     case 'settings':settingsSheet();break;
     case 'pref':PREF[el.dataset.k]=!PREF[el.dataset.k];store.set('pref',PREF);applyPref();el.classList.toggle('on',PREF[el.dataset.k]);if(R.view==='home')renderHome();break;
     case 'size':PREF.size=Math.max(0,Math.min(SIZES.length-1,PREF.size+(+el.dataset.d)));store.set('pref',PREF);applyPref();break;
     case 'offline':{const o=document.getElementById('offl');el.disabled=true;let n=0;
-      for(let s=1;s<=114;s++){try{await fetch('data/'+s+'.json')}catch(_){}n++;if(o)o.textContent=t('offSaving',n)}
+      for(let s=1;s<=114;s++){try{await fetch('data/'+s+'.json');if(etr()!=='saheeh')await fetch('data/tr/'+etr()+'/'+s+'.json')}catch(_){}n++;if(o)o.textContent=t('offSaving',n)}
       if(o)o.textContent=t('offDone');el.textContent=t('offSaved');break}
   }
 });
